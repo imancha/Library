@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use Excel;
+
 class WelcomeController extends Controller {
 
 	/*
