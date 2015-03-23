@@ -12,10 +12,13 @@
 */
 
 Route::get('/', 'WelcomeController@index');
-
 Route::get('home', 'HomeController@index');
-
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
+	Route::get('/', ['as' => 'admin.dashboard', 'uses' => 'Admin\HomeController@index']);
+	Route::get('/lockscreen', ['as' => 'admin.lockscreen', 'uses' => 'Admin\HomeController@lockscreen']);
+	Route::resource('book', 'BookController');
+});

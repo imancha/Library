@@ -23,7 +23,7 @@ class Publisher extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = [];
+	protected $hidden = ['created_at','updated_at'];
 
 	protected $guarded = ['id'];
 
