@@ -27,4 +27,9 @@ class Subject extends Model {
 
 	protected $guarded = ['id'];
 
+	public function book()
+	{
+		return $this->hasMany('App\Model\Book','subject_id','id');
+	}
+
 }

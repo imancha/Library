@@ -43,7 +43,7 @@
 					<img src="" alt="Admin" width="79" height="26">
 				</a>
 			</div>
-			<div class="navbar-center">&bull; &#9728; PERPUSTAKAAN PT. INTI &#9728; &bull;</div>
+			<div class="navbar-center">&bull; &#9728; <strong>PERPUSTAKAAN PT. INTI</strong> &#9728; &bull;</div>
 			<div class="navbar-collapse collapse">
 				<!-- BEGIN TOP NAVIGATION MENU -->
 				<ul class="nav navbar-nav pull-right header-menu">

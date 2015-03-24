@@ -12,9 +12,10 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$books = Model\Book::all();
-		$asli = Model\Book::where('jenis','=','asli')->get();
-		$pkl = Model\Book::where('jenis','=','pkl')->get();
+		$books = Model\Book::count();
+		$asli = Model\Book::where('jenis','=','asli')->count();
+		$pkl = Model\Book::where('jenis','=','pkl')->count();
+		$members = Model\Member::count();
 		return view('admin.home', compact('books','asli','pkl'));
 	}
 

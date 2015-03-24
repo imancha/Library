@@ -15,10 +15,6 @@ class DatabaseSeeder extends Seeder {
 		Model::unguard();
 
 		$this->call('UserTableSeeder');
-		$this->call('AuthorTableSeeder');
-		$this->call('PublisherTableSeeder');
-		$this->call('SubjectTableSeeder');
-		$this->call('RackTableSeeder');
 		$this->call('BookTableSeeder');
 	}
 

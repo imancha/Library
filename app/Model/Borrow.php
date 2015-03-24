@@ -2,21 +2,21 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class BookAuthor extends Model {
+class Borrow extends Model {
 
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'book_authors';
+	protected $table = 'borrows';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['book_id', 'author_id'];
+	protected $fillable = ['member_id','book_id','tanggal','tersedia'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -25,6 +25,16 @@ class BookAuthor extends Model {
 	 */
 	protected $hidden = ['created_at','updated_at'];
 
-	protected $guarded = [];
+	protected $guarded = ['id'];
+
+	public function member()
+	{
+		return $this->belongsTo('App\Model\Member','member_id','id');
+	}
+
+	public function book()
+	{
+		return $this->belongsTo('App\Model\Book','book_id','id');
+	}
 
 }

@@ -23,8 +23,13 @@ class Author extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = [];
+	protected $hidden = ['created_at','updated_at'];
 
 	protected $guarded = ['id'];
+
+	public function book()
+	{
+		return $this->belongsToMany('App\Model\Book','book_authors','book_id','author_id');
+	}
 
 }

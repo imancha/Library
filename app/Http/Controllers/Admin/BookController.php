@@ -1,4 +1,4 @@
-<?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers\Admin;
 
 use App\Model;
 use App\Http\Requests;
@@ -16,7 +16,7 @@ class BookController extends Controller {
 	public function index()
 	{
 		$books = Model\Book::orderBy('tanggal_masuk','desc')->paginate(15);
-		return view('admin.buku.index', compact('books'));
+		return view('admin.book.index', compact('books'));
 	}
 
 	/**
@@ -29,7 +29,7 @@ class BookController extends Controller {
 		$publishers = Model\Publisher::orderBy('created_at', 'desc')->get();
 		$subjects = Model\Subject::orderBy('created_at', 'desc')->get();
 		$racks = Model\Rack::orderBy('created_at', 'desc')->get();
-		return view('admin.buku.create', compact('publishers','subjects','racks'));
+		return view('admin.book.create', compact('publishers','subjects','racks'));
 	}
 
 	/**
@@ -51,7 +51,7 @@ class BookController extends Controller {
 	public function show($jenis)
 	{
 		$books = Model\Book::where('jenis','=',strtoupper($jenis))->orderBy('tanggal_masuk','desc')->paginate(15);
-		return view('admin.buku.index', compact('books'));
+		return view('admin.book.index', compact('books'));
 	}
 
 	/**

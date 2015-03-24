@@ -36,13 +36,19 @@
 											<tr>
 												<th>Kode</th>
 												<th>Judul Buku</th>
+												<th>Pengarang</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($books as $book)
+												{{ $authors = [] }}
+												@foreach($book->author as $author)
+													{{ $authors[] = $author->nama }}
+												@endforeach
 												<tr>
 													<td>{{ $book->id }}</td>
 													<td>{{ $book->judul }}</td>
+													<td>{{ implode(', ',$authors) }}</td>
 												</tr>
 											@endforeach
 										</tbody>
@@ -51,7 +57,7 @@
 								<div class="col-md-12 col-sm-12 col-xs-12 table-red">
 									<span class="pull-left">
 										<small class="c-red">
-											Showing {!! $books->perPage()*$books->currentPage()-$books->perPage()+1 !!}
+											Showing {!! count($books) > 0 ? $books->perPage()*$books->currentPage()-$books->perPage()+1 : 0 !!}
 											to {!! $books->perPage()*$books->currentPage() < $books->total() ? $books->perPage()*$books->currentPage() : $books->total() !!}
 											of {!! $books->total() !!} entries</small></span>
 									<span class="pull-right">{!! $books->render() !!}</span>

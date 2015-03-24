@@ -19,34 +19,41 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('BookController@store') }}" parsley-validate>
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('Admin\BookController@store') }}" parsley-validate>
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Kode Buku</label>
+										<div class="col-sm-7 input-icon right">
+											<i class="fa"></i>
+											<input type="text" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+										</div>
+									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Judul Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="judul" parsley-minlength="3" class="form-control" value="{{ old('judul') }}" parsley-required="true" autofocus />
+											<input type="text" name="judul" class="form-control" value="{{ old('judul') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Pengarang</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="pengarang" parsley-minlength="3" class="form-control" value="{{ old('pengarang') }}" parsley-required="true" />
+											<input type="text" name="pengarang" class="form-control" value="{{ old('pengarang') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Penerbit</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="penerbit" name="penerbit" parsley-minlength="3" class="form-control" value="{{ old('penerbit') }}" parsley-required="true" />
+											<input type="text" id="penerbit" name="penerbit" class="form-control" value="{{ old('penerbit') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Edisi</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="year" name="edisi" class="form-control" maxlength="4" size="4" value="{{ old('edisi') }}" parsley-type="digits" parsley-required="true" />
+											<input type="year" name="edisi" class="form-control" maxlength="4" size="4" value="{{ old('edisi') }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -54,7 +61,7 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input tabindex="11" type="radio" data-style="square-blue" name="jenis" value="ASLI" checked />
+													<input tabindex="11" type="radio" data-style="square-red" name="jenis" value="ASLI" checked />
 													<label class="m-r-20">ASLI</label>
 												</li>
 												<li>
@@ -68,14 +75,14 @@
 										<label class="col-sm-3 control-label">Subyek</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="subyek" name="subyek" class="form-control" value="{{ old('subyek') }}" parsley-required="true" />
+											<input type="text" id="subyek" name="subyek" class="form-control" value="{{ old('subyek') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Rak</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="rak" name="rak" class="form-control" value="{{ old('rak') }}" parsley-required="true" />
+											<input type="text" id="rak" name="rak" class="form-control" value="{{ old('rak') }}" parsley-minlength="2" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -87,8 +94,8 @@
 									<div class="form-group">
 										<label class="col-sm-3 control-label">File</label>
 										<div class="col-sm-7">
-											<a class="file-input-wrapper btn-default">
-												<input type="file" id="file" name="file" data-filename-placement="inside">
+											<a class="file-input-wrapper">
+												<input type="file" id="file" name="file" data-filename-placement="inside" class="btn-transparent">
 											</a>
 										</div>
 									</div>

@@ -27,4 +27,9 @@ class Publisher extends Model {
 
 	protected $guarded = ['id'];
 
+	public function book()
+	{
+		return $this->hasMany('App\Model\Book', 'publisher_id', 'id');
+	}
+
 }

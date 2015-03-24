@@ -13,7 +13,7 @@
 						<div class="icon"><i class="fa fa-tasks"></i></div>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="stat-num">{{ count($books) }}</div>
+								<div class="stat-num">{{ $books }}</div>
 								<h3>Total Koleksi Buku</h3>
 							</div>
 						</div>
@@ -26,7 +26,7 @@
 						<div class="icon"><i class="fa fa-align-right"></i></div>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="stat-num">{{ count($asli) }}</div>
+								<div class="stat-num">{{ $asli }}</div>
 								<h3>Total Buku Asli</h3>
 							</div>
 						</div>
@@ -39,7 +39,7 @@
 						<div class="icon"><i class="fa fa-print"></i></div>
 						<div class="row">
 							<div class="col-md-12">
-								<div class="stat-num">{{ count($pkl) }}</div>
+								<div class="stat-num">{{ $pkl }}</div>
 								<h3>Total Buku PKL</h3>
 							</div>
 						</div>

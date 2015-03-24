@@ -20,13 +20,43 @@ class BookTableSeeder extends Seeder {
 
 			foreach($results as $result)
 			{
-				Model\Book::create([
+				//	Seed publisher table
+				$publisher = 	Model\Publisher::firstOrCreate([
+					'nama'	=>	(empty($result->penerbit) ? 'NULL' : $result->penerbit)
+				]);
+
+				//	Seed subject table
+				$subject = 	Model\Subject::firstOrCreate([
+					'nama'	=>	(empty($result->subyek) ? 'NULL' : $result->subyek)
+				]);
+
+				//	Seed rack table
+				$rack = Model\Rack::firstOrCreate([
+					'nama'	=>	(empty($result->rak) ? 'NULL' : $result->rak)
+				]);
+
+				//	Seed author table
+				$author = Model\Author::firstOrCreate([
+					'nama'	=>	(empty($result->pengarang) ? 'NULL' : $result->pengarang)
+				]);
+
+				//	Seed book table
+				$book = Model\Book::create([
 					'id'		=>	$result->kode_buku,
 					'judul'	=>	$result->judul_buku,
 					'edisi'	=>	$result->edisi,
 					'jenis'	=>	$result->jenis,
 					'tanggal_masuk'	=>	$result->tanggal_masuk,
-					'keterangan'		=>	$result->keterangan,
+					'keterangan'		=>	(empty($result->keterangan) ? '' : $result->keterangan),
+					'publisher_id'	=>	$publisher->id,
+					'subject_id'		=>	$subject->id,
+					'rack_id'				=>	$rack->id,
+				]);
+
+				//	Seed book_authors table
+				Model\BookAuthor::create([
+					'book_id'		=>	$result->kode_buku,
+					'author_id'	=>	$author->id,
 				]);
 			}
 

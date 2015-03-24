@@ -19,9 +19,15 @@ class CreateBooksTable extends Migration {
 			$table->char('edisi', 4);
 			$table->enum('jenis', ['ASLI','PKL']);
 			$table->date('tanggal_masuk');
-			$table->string('keterangan')->nullable();
-			$table->timestamps();
+			$table->string('keterangan')->default('');
+			$table->integer('publisher_id')->unsigned();
+			$table->integer('subject_id')->unsigned();
+			$table->integer('rack_id')->unsigned();
 			$table->primary('id');
+			$table->foreign('publisher_id')->references('id')->on('publishers')->onDelete('cascade');
+			$table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+			$table->foreign('rack_id')->references('id')->on('racks')->onDelete('cascade');
+			$table->timestamps();
 		});
 	}
 

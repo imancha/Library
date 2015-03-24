@@ -9,10 +9,32 @@
 				<a href="#"><i class="fa fa-book"></i><span class="sidebar-text">Buku</span><span class="fa arrow"></span></a>
 				<ul class="submenu collapse">
 					<li class="{{ setCurrent('admin.book.create') }}">
-						<a href="{{ action('BookController@create') }}"><span class="sidebar-text">Tambah Buku</span></a>
+						<a href="{{ action('Admin\BookController@create') }}"><span class="sidebar-text">Tambah Buku</span></a>
 					</li>
 					<li class="{{ setCurrent('admin.book.index') }}{{ setCurrent('admin.book.show') }}">
-						<a href="{{ action('BookController@index') }}"><span class="sidebar-text">Koleksi Buku</span></a>
+						<a href="{{ action('Admin\BookController@index') }}"><span class="sidebar-text">Koleksi Buku</span></a>
+					</li>
+				</ul>
+			</li>
+			<li class="{{ setActive('admin.member.index') }}{{ setActive('admin.member.create') }}{{ setActive('admin.member.show') }}">
+				<a href="#"><i class="fa fa-group"></i><span class="sidebar-text">Anggota</span><span class="fa arrow"></span></a>
+				<ul class="submenu collapse">
+					<li class="{{ setCurrent('admin.member.create') }}">
+						<a href="{{ action('Admin\MemberController@create') }}"><span class="sidebar-text">Tambah Anggota</span></a>
+					</li>
+					<li class="{{ setCurrent('admin.member.index') }}{{ setCurrent('admin.member.show') }}">
+						<a href="{{ action('Admin\MemberController@index') }}"><span class="sidebar-text">Koleksi Anggota</span></a>
+					</li>
+				</ul>
+			</li>
+			<li class="{{ setActive('admin.borrow.index') }}{{ setActive('admin.borrow.create') }}{{ setActive('admin.borrow.show') }}">
+				<a href="#"><i class="fa fa-briefcase"></i><span class="sidebar-text">Peminjaman</span><span class="fa arrow"></span></a>
+				<ul class="submenu collapse">
+					<li class="{{ setCurrent('admin.borrow.create') }}">
+						<a href="{{ action('Admin\BorrowController@create') }}"><span class="sidebar-text">Tambah Peminjaman</span></a>
+					</li>
+					<li class="{{ setCurrent('admin.borrow.index') }}{{ setCurrent('admin.borrow.show') }}">
+						<a href="{{ action('Admin\BorrowController@index') }}"><span class="sidebar-text">Koleksi Peminjaman</span></a>
 					</li>
 				</ul>
 			</li>

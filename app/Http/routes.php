@@ -20,5 +20,7 @@ Route::controllers([
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/', ['as' => 'admin.dashboard', 'uses' => 'Admin\HomeController@index']);
 	Route::get('/lockscreen', ['as' => 'admin.lockscreen', 'uses' => 'Admin\HomeController@lockscreen']);
-	Route::resource('book', 'BookController');
+	Route::resource('book', 'Admin\BookController');
+	Route::resource('member', 'Admin\MemberController');
+	Route::resource('borrow', 'Admin\BorrowController');
 });
