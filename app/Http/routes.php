@@ -11,8 +11,12 @@
 |
 */
 
+/*
 Route::get('/', 'WelcomeController@index');
 Route::get('home', 'HomeController@index');
+*/
+Route::get('/', ['as' => 'home','uses' => 'PublicController@getIndex']);
+Route::get('/download/{file}', ['as' => 'download','uses' => 'PublicController@getDownload']);
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

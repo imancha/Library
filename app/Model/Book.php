@@ -16,7 +16,7 @@ class Book extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['id','judul','edisi','jenis','tanggal_masuk','keterangan','publisher_id','subject_id','rack_id'];
+	protected $fillable = ['id','judul','edisi','jenis','tanggal_masuk','keterangan','file','publisher_id','subject_id','rack_id'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.

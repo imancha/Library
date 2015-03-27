@@ -487,7 +487,10 @@ if ($('.datepicker').length && $.fn.datepicker) {
     $('.datepicker').each(function () {
         var datepicker_inline = $(this).data('inline') ? $(this).data('inline') : false;
         $(this).datepicker({
-            inline: datepicker_inline
+            inline: datepicker_inline,
+            showInputs : false,
+						format : 'dd/mm/yyyy',
+						autoclose : true
         });
     });
 }

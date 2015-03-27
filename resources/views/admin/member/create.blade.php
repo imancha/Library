@@ -36,7 +36,7 @@
 										<div class="col-sm-7">
 											<div class="row">
 												<div class="col-sm-3">
-													<select class="form-control" name="tanggal" data-live-search="true">
+													<select class="form-control" name="lahir[]" data-live-search="true">
 														<option value="0" selected>Tanggal</option>
 														@for($i=1;$i<32;$i++)
 															<option value="{{ $i }}">{{ $i }}</option>
@@ -44,7 +44,7 @@
 													</select>
 												</div>
 												<div class="col-sm-4">
-													<select class="form-control" name="bulan" data-live-search="true">
+													<select class="form-control" name="lahir[]" data-live-search="true">
 														<option value="0" selected>Bulan</option>
 														@for($i=0;$i<12;$i++)
 															<option value="{{ $i+1 }}">{{ bulan($i) }}</option>
@@ -52,7 +52,7 @@
 													</select>
 												</div>
 												<div class="col-sm-3">
-													<input type="year" name="tahun" class="form-control" maxlength="4" size="4" value="{{ old('year') }}" placeholder="Tahun" parsley-type="digits" autocomplete="off" />
+													<input type="year" name="lahir[]" class="form-control" maxlength="4" size="4" value="{{ old('year') }}" placeholder="Tahun" parsley-type="digits" autocomplete="off" />
 												</div>
 											</div>
 										</div>

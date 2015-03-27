@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Input;
+use Redirect;
 use App\Model;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -36,7 +38,18 @@ class MemberController extends Controller {
 	 */
 	public function store()
 	{
-		//
+		Model\Member::firstOrCreate([
+			'id'		=>	Input::get('id'),
+			'nama'	=>	Input::get('nama'),
+			'tanggal_lahir'	=>	(implode('-',array_reverse(Input::get('lahir')))),
+			'jenis_kelamin'	=>	Input::get('jk'),
+			'jenis_anggota'	=>	Input::get('ja'),
+			'phone'		=>	Input::get('phone'),
+			'alamat'	=>	Input::get('alamat'),
+			'keterangan'		=>	Input::get('keterangan'),
+		]);
+
+
 	}
 
 	/**

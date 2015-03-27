@@ -58,6 +58,8 @@ class BookTableSeeder extends Seeder {
 					'book_id'		=>	$result->kode_buku,
 					'author_id'	=>	$author->id,
 				]);
+
+				sleep(1);
 			}
 
 		});

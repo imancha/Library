@@ -9,9 +9,18 @@
 @endsection
 
 @section('content')
-	<div id="main-content" class="dashboard">
+	<div id="main-content">
 		<div class="row">
 			<div class="col-md-12">
+				@if(Session::has('message'))
+					<div class="alert alert-success w-100" role="alert">
+						<i class='fa fa-check-square-o' style='padding-right:6px'></i>
+						<button type="button" class="close" data-dismiss="alert">×</button>
+						<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
+						<span class="sr-only">Success:</span>
+						{{ Session::get('message') }}
+					</div>
+				@endif
 				<div class="panel panel-default">
 					<div class="panel-heading bg-red">
 						<h3 class="panel-title"><strong>Tambah</strong> Buku</h3>
@@ -19,13 +28,48 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
+								@if(count($errors) > 0)
+									<!-- BEGIN ERROR BOX -->
+									<div class="alert alert-danger">
+										<button type="button" class="close" data-dismiss="alert">×</button>
+										<h4><i class='fa fa-ban' style='padding-right:6px'></i> Error!</h4>
+										<ul>
+										@foreach($errors->all() as $error)
+											<li>{{ $error }}</li>
+										@endforeach
+										</ul>
+									</div>
+									<!-- END ERROR BOX -->
+								@endif
 								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('Admin\BookController@store') }}" parsley-validate>
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Jenis</label>
+										<div class="col-sm-7 skin-section">
+											<ul class="list inline m-t-5">
+												<li>
+													<input type="radio" name="jenis" value="{{ count($asli) > 0 ? ($asli->id)+1 : 1 }}" {{ is_numeric(Input::old('jenis')) ? 'checked' : '' }} />
+													<label class="m-r-20">ASLI</label>
+												</li>
+												<li>
+													<input type="radio" name="jenis" value="{{ count($pkl) > 0 ? (substr($pkl->id,0,strlen($pkl->id)-1)+1) : 1 }}P" {{ is_numeric(Input::old('jenis')) ? '' : 'checked' }} />
+													<label>PKL</label>
+												</li>
+											</ul>
+										</div>
+									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Kode Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Tanggal Masuk</label>
+										<div class="col-sm-7 input-icon right">
+											<i class="fa"></i>
+											<input type="date" name="tanggal" class="form-control datepicker" value="{{ old('tanggal') }}" size="10" maxlength="10" autocomplete="off" >
 										</div>
 									</div>
 									<div class="form-group">
@@ -39,7 +83,7 @@
 										<label class="col-sm-3 control-label">Pengarang</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="pengarang" class="form-control" value="{{ old('pengarang') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" name="pengarang" class="form-control" value="{{ old('pengarang') }}" placeholder="Nama 1 / Nama 2 / . . . " parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -54,21 +98,6 @@
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="year" name="edisi" class="form-control" maxlength="4" size="4" value="{{ old('edisi') }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label">Jenis</label>
-										<div class="col-sm-7 skin-section">
-											<ul class="list inline m-t-5">
-												<li>
-													<input tabindex="11" type="radio" data-style="square-red" name="jenis" value="ASLI" checked />
-													<label class="m-r-20">ASLI</label>
-												</li>
-												<li>
-													<input tabindex="11" type="radio" data-style="square-blue" name="jenis" value="PKL" />
-													<label>PKL</label>
-												</li>
-											</ul>
 										</div>
 									</div>
 									<div class="form-group">
@@ -117,9 +146,18 @@
 	<script src="{{ asset('/assets/plugins/parsley/parsley.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/parsley/parsley.extend.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/icheck/custom.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/icheck/icheck.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/bootstrap-fileinput/bootstrap.file-input.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/jquery-autocomplete/jquery.autocomplete.js') }}"></script>
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
+	<script>
+		var jenis = document.getElementsByName('jenis');
+		if(jenis[0].checked)
+			document.getElementById('id').value = jenis[0].value;
+		else if(jenis[1].checked)
+			document.getElementById('id').value = jenis[1].value;
+	</script>
 	<script>
 		$(document).ready(function(){
 			$('#penerbit').autocomplete({
@@ -162,6 +200,9 @@
 				}]
 			});
 			$('#file').bootstrapFileInput();
+			$('.list input:radio').on('ifClicked', function(event){
+				$('#id').val(this.value);
+			});
 		});
 	</script>
 @endsection

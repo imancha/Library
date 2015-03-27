@@ -37,18 +37,26 @@
 												<th>Kode</th>
 												<th>Judul Buku</th>
 												<th>Pengarang</th>
+												<th class="text-center">Action</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($books as $book)
-												{{ $authors = [] }}
+												<?php $authors = [] ?>
 												@foreach($book->author as $author)
-													{{ $authors[] = $author->nama }}
+													<?php $authors[] = $author->nama ?>
 												@endforeach
 												<tr>
 													<td>{{ $book->id }}</td>
 													<td>{{ $book->judul }}</td>
 													<td>{{ implode(', ',$authors) }}</td>
+													<td class="text-center">
+														@if($book->file)
+															<a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Download" href=""><i class="fa fa-download"></i></a>
+														@else
+															<i class="fa fa-download"></i>
+														@endif
+													</td>
 												</tr>
 											@endforeach
 										</tbody>
