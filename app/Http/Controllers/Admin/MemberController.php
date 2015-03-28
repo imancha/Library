@@ -2,7 +2,6 @@
 
 use App\Model;
 use App\Http\Requests;
-use App\Http\Requests\CreateMemberRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -17,6 +16,7 @@ class MemberController extends Controller {
 	public function index()
 	{
 		$members = Model\Member::orderBy('created_at','desc')->paginate(15);
+
 		return view('admin.member.index', compact('members'));
 	}
 
@@ -35,7 +35,7 @@ class MemberController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(CreateMemberRequest $request)
+	public function store(Requests\CreateMemberRequest $request)
 	{
 		Model\Member::firstOrCreate([
 			'id'		=>	trim(strip_tags($request->input('id'))),

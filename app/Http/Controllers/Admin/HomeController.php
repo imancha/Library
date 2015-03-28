@@ -18,12 +18,27 @@ class HomeController extends Controller {
 		$members = Model\Member::count();
 		$karyawan = Model\Member::where('jenis_anggota','=','Karyawan')->count();
 		$nonkaryawan = Model\Member::where('jenis_anggota','=','Non-Karyawan')->count();
+
 		return view('admin.home', compact('books','asli','pkl','members','karyawan','nonkaryawan'));
 	}
 
 	public function lockscreen()
 	{
 		return view('auth.lockscreen');
+	}
+
+	public function getBook()
+	{
+			$book = Model\Book::where('id','=',\Request::input('kode'))->get(['books.judul']);
+
+			return \Response::json($book);
+	}
+
+	public function getMember()
+	{
+			$member = Model\Member::where('id','=',\Request::input('id'))->get(['members.nama']);
+
+			return \Response::json($member);
 	}
 
 }

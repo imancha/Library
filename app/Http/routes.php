@@ -24,6 +24,8 @@ Route::controllers([
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/', ['as' => 'admin.dashboard', 'uses' => 'Admin\HomeController@index']);
 	Route::get('/lockscreen', ['as' => 'admin.lockscreen', 'uses' => 'Admin\HomeController@lockscreen']);
+	Route::post('/book/judul', ['as' => 'admin.book.get', 'uses' => 'Admin\HomeController@getBook']);
+	Route::post('/member/nama', ['as' => 'admin.member.get', 'uses' => 'Admin\HomeController@getMember']);
 	Route::resource('book', 'Admin\BookController');
 	Route::resource('member', 'Admin\MemberController');
 	Route::resource('borrow', 'Admin\BorrowController');

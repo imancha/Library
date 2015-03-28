@@ -20,7 +20,6 @@ class CreateBooksTable extends Migration {
 			$table->enum('jenis', ['ASLI','PKL']);
 			$table->date('tanggal_masuk');
 			$table->string('keterangan')->default('');
-			$table->boolean('file')->default(0);
 			$table->integer('publisher_id')->unsigned();
 			$table->integer('subject_id')->unsigned();
 			$table->integer('rack_id')->unsigned();

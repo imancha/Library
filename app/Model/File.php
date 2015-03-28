@@ -2,21 +2,21 @@
 
 use Illuminate\Database\Eloquent\Model;
 
-class Borrow extends Model {
+class File extends Model {
 
 	/**
 	 * The database table used by the model.
 	 *
 	 * @var string
 	 */
-	protected $table = 'borrows';
+	protected $table = 'files';
 
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['id','tanggal_pinjam','tanggal_kembali','status','member_id','book_id'];
+	protected $fillable = ['book_id','filename','sha1sum'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -27,14 +27,10 @@ class Borrow extends Model {
 
 	protected $guarded = [];
 
-	public function member()
-	{
-		return $this->belongsTo('App\Model\Member','member_id','id');
-	}
-
 	public function book()
 	{
 		return $this->belongsTo('App\Model\Book','book_id','id');
 	}
+
 
 }

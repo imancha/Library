@@ -16,6 +16,7 @@ class BorrowController extends Controller {
 	public function index()
 	{
 		$borrows = Model\Borrow::orderBy('created_at','desc')->paginate(15);
+
 		return view('admin.borrow.index', compact('borrows'));
 	}
 
@@ -26,7 +27,11 @@ class BorrowController extends Controller {
 	 */
 	public function create()
 	{
-		return view('admin.borrow.create');
+		$members = Model\Member::all(['members.id']);
+		$books = Model\Book::all(['books.id']);
+		$borrow = Model\Borrow::orderBy('created_at','desc')->first();
+
+		return view('admin.borrow.create',compact('members','books','borrow'));
 	}
 
 	/**
@@ -34,9 +39,19 @@ class BorrowController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(Requests\CreateBorrowRequest $request)
 	{
-		//
+		$member = Model\Member::where('id','=',trim(strip_tags($request->input('id'))))->first();
+		$book = Model\Book::where('id','=',trim(strip_tags($request->input('kode'))))->first();
+
+		Model\Borrow::create([
+			'id'	=>	trim(strip_tags($request->input('idp'))),
+			'tanggal_pinjam'	=>	new \DateTime,
+			'member_id'	=>	$member->id,
+			'book_id'		=>	$book->id,
+		]);
+
+		return \Redirect::route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 	}
 
 	/**

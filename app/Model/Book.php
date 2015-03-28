@@ -16,7 +16,7 @@ class Book extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['id','judul','edisi','jenis','tanggal_masuk','keterangan','file','publisher_id','subject_id','rack_id'];
+	protected $fillable = ['id','judul','edisi','jenis','tanggal_masuk','keterangan','publisher_id','subject_id','rack_id'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -50,6 +50,11 @@ class Book extends Model {
 	public function borrow()
 	{
 		return $this->hasMany('App\Model\Borrow','book_id','id');
+	}
+
+	public function file()
+	{
+		return $this->hasOne('App\Model\File','book_id','id');
 	}
 
 }

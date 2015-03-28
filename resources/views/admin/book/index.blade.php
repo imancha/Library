@@ -51,8 +51,8 @@
 													<td>{{ $book->judul }}</td>
 													<td>{{ implode(', ',$authors) }}</td>
 													<td class="text-center">
-														@if($book->file)
-															<a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Download" href=""><i class="fa fa-download"></i></a>
+														@if(!empty($book->file->book_id))
+															<a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Download" href="{{ route('download',$book->file->sha1sum) }}"><i class="fa fa-download"></i></a>
 														@else
 															<i class="fa fa-download"></i>
 														@endif

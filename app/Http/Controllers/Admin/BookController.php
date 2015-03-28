@@ -2,7 +2,6 @@
 
 use App\Model;
 use App\Http\Requests;
-use App\Http\Requests\CreateBookRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -17,6 +16,7 @@ class BookController extends Controller {
 	public function index()
 	{
 		$books = Model\Book::orderBy('created_at','desc')->paginate(15);
+
 		return view('admin.book.index', compact('books'));
 	}
 
@@ -27,9 +27,9 @@ class BookController extends Controller {
 	 */
 	public function create()
 	{
-		$publishers = Model\Publisher::orderBy('created_at', 'desc')->get();
-		$subjects = Model\Subject::orderBy('created_at', 'desc')->get();
-		$racks = Model\Rack::orderBy('created_at', 'desc')->get();
+		$publishers = Model\Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
+		$subjects = Model\Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
+		$racks = Model\Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
 		$asli = Model\Book::where('jenis','=','ASLI')->orderBy('created_at','desc')->first();
 		$pkl = Model\Book::where('jenis','=','PKL')->orderBy('created_at','desc')->first();
 
@@ -41,19 +41,8 @@ class BookController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(CreateBookRequest $request)
+	public function store(Requests\CreateBookRequest $request)
 	{
-		if(!is_numeric($request->input('jenis')))
-		{
-			if($request->hasFile('file'))
-			{
-				if($request->file('file')->move(public_path('files'),(trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).'.'.($request->file('file')->getClientOriginalExtension())))
-				{
-					$file = 1;
-				}
-			}
-		}
-
 		$publisher = Model\Publisher::firstOrCreate([
 			'nama'	=>	trim(strip_tags($request->input('penerbit'))),
 		]);
@@ -73,7 +62,6 @@ class BookController extends Controller {
 			'jenis'					=>	trim(strip_tags(is_numeric($request->input('jenis')) ? 'ASLI' : 'PKL')),
 			'tanggal_masuk'	=>	trim(strip_tags(implode('-',array_reverse(explode('/',$request->input('tanggal')))))),
 			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
-			'file'					=>	(isset($file) ? $file : 0),
 			'publisher_id'	=>	$publisher->id,
 			'subject_id'		=>	$subject->id,
 			'rack_id'				=>	$rack->id,
@@ -91,6 +79,27 @@ class BookController extends Controller {
 			]);
 		}
 
+		if(!is_numeric($request->input('jenis')))
+		{
+			if($request->hasFile('file'))
+			{
+				$path = public_path('files/');
+				$filename = (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).'.'.($request->file('file')->getClientOriginalExtension());
+				$file = $path.$filename;
+				if(\File::exists($file)){
+					\File::delete($file);
+				}
+				if($request->file('file')->move($path,$filename))
+				{
+					Model\File::create([
+						'book_id'		=>	trim(strip_tags($request->input('id'))),
+						'filename'	=>	$filename,
+						'sha1sum'		=>	sha1_file($file),
+					]);
+				}
+			}
+		}
+
 		return \Redirect::route('admin.book.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
 	}
 
@@ -103,6 +112,7 @@ class BookController extends Controller {
 	public function show($jenis)
 	{
 		$books = Model\Book::where('jenis','=',strtoupper($jenis))->orderBy('created_at','desc')->paginate(15);
+
 		return view('admin.book.index', compact('books'));
 	}
 

@@ -161,43 +161,28 @@
 	<script>
 		$(document).ready(function(){
 			$('#penerbit').autocomplete({
+				source:[{
+					data:{!! $publishers !!}
+				}],
 				valueKey:'nama',
 				limit:'10',
-				source:[{
-					data:{!! $publishers !!},
-					getTitle:function(item){
-						return item['nama']
-					},
-					getValue:function(item){
-						return item['nama']
-					},
-				}]
+				openOnFocus:false,
 			});
 			$('#subyek').autocomplete({
+				source:[{
+					data:{!! $subjects !!}
+				}],
 				valueKey:'nama',
 				limit:'10',
-				source:[{
-					data:{!! $subjects !!},
-					getTitle:function(item){
-						return item['nama']
-					},
-					getValue:function(item){
-						return item['nama']
-					},
-				}]
+				openOnFocus:false,
 			});
 			$('#rak').autocomplete({
+				source:[{
+					data:{!! $racks !!}
+				}],
 				valueKey:'nama',
 				limit:'10',
-				source:[{
-					data:{!! $racks !!},
-					getTitle:function(item){
-						return item['nama']
-					},
-					getValue:function(item){
-						return item['nama']
-					},
-				}]
+				openOnFocus:false,
 			});
 			$('#file').bootstrapFileInput();
 			$('.list input:radio').on('ifClicked', function(event){
