@@ -16,7 +16,7 @@ class Member extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nama','tanggal_lahir','jenis_kelamin','jenis_anggota','phone','alamat','keterangan'];
+	protected $fillable = ['id','nama','tanggal_lahir','jenis_kelamin','jenis_anggota','phone','alamat','keterangan'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
@@ -25,7 +25,7 @@ class Member extends Model {
 	 */
 	protected $hidden = ['created_at','updated_at'];
 
-	protected $guarded = ['id'];
+	protected $guarded = [];
 
 	public function borrow()
 	{

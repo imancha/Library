@@ -111,7 +111,7 @@
 										<label class="col-sm-3 control-label">Rak</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="rak" name="rak" class="form-control" value="{{ old('rak') }}" parsley-minlength="2" parsley-required="true" autocomplete="off" />
+											<input type="text" id="rak" name="rak" class="form-control" value="{{ old('rak') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">

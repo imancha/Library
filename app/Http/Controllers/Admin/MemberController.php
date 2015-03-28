@@ -1,9 +1,8 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use Input;
-use Redirect;
 use App\Model;
 use App\Http\Requests;
+use App\Http\Requests\CreateMemberRequest;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -36,20 +35,20 @@ class MemberController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(CreateMemberRequest $request)
 	{
 		Model\Member::firstOrCreate([
-			'id'		=>	Input::get('id'),
-			'nama'	=>	Input::get('nama'),
-			'tanggal_lahir'	=>	(implode('-',array_reverse(Input::get('lahir')))),
-			'jenis_kelamin'	=>	Input::get('jk'),
-			'jenis_anggota'	=>	Input::get('ja'),
-			'phone'		=>	Input::get('phone'),
-			'alamat'	=>	Input::get('alamat'),
-			'keterangan'		=>	Input::get('keterangan'),
+			'id'		=>	trim(strip_tags($request->input('id'))),
+			'nama'	=>	trim(strip_tags($request->input('nama'))),
+			'tanggal_lahir'	=>	trim(strip_tags($request->input('tahun').'-'.$request->input('bulan').'-'.$request->input('tanggal'))),
+			'jenis_kelamin'	=>	trim(strip_tags($request->input('jk'))),
+			'jenis_anggota'	=>	trim(strip_tags($request->input('ja'))),
+			'phone'		=>	trim(strip_tags($request->input('phone'))),
+			'alamat'	=>	trim(strip_tags($request->input('alamat'))),
+			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
 		]);
 
-
+		return \Redirect::route('admin.member.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -58,9 +57,10 @@ class MemberController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show($jenis)
 	{
-		//
+		$members = Model\Member::where('jenis_anggota','=',$jenis)->orderBy('created_at','desc')->paginate(15);
+		return view('admin.member.index', compact('members'));
 	}
 
 	/**

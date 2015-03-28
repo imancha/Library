@@ -16,6 +16,11 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-12 m-b-20">
+									<div class="btn-group m-b-20">
+										<span class="btn btn-default {{ setActiv('admin/member') }}"  onclick="window.location='{{ url('/admin/member') }}'">ALL</span>
+										<span class="btn btn-default {{ setActiv('admin/member/Karyawan') }}" onclick="window.location='{{ url('/admin/member/Karyawan') }}'">Karyawan</span>
+										<span class="btn btn-default {{ setActiv('admin/member/Non-Karyawan') }}" onclick="window.location='{{ url('/admin/member/Non-Karyawan') }}'">Non-Karyawan</span>
+									</div>
 									<div class="btn-group pull-right">
 										<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i></button>
 										<ul class="dropdown-menu pull-right">
@@ -31,6 +36,7 @@
 											<tr>
 												<th>ID</th>
 												<th>Nama</th>
+												<th>Jenis Anggota</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -38,6 +44,7 @@
 												<tr>
 													<td>{{ $member->id }}</td>
 													<td>{{ $member->nama }}</td>
+													<td>{{ $member->jenis_anggota }}</td>
 												</tr>
 											@endforeach
 										</tbody>

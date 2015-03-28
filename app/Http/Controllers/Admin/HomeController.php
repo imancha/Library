@@ -16,7 +16,9 @@ class HomeController extends Controller {
 		$asli = Model\Book::where('jenis','=','asli')->count();
 		$pkl = Model\Book::where('jenis','=','pkl')->count();
 		$members = Model\Member::count();
-		return view('admin.home', compact('books','asli','pkl'));
+		$karyawan = Model\Member::where('jenis_anggota','=','Karyawan')->count();
+		$nonkaryawan = Model\Member::where('jenis_anggota','=','Non-Karyawan')->count();
+		return view('admin.home', compact('books','asli','pkl','members','karyawan','nonkaryawan'));
 	}
 
 	public function lockscreen()
