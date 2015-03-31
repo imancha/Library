@@ -1,10 +1,15 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Model;
-use App\Http\Requests;
+use Redirect;
+use App\Model\Author;
+use App\Model\Book;
+use App\Model\BookAuthor;
+use App\Model\File;
+use App\Model\Publisher;
+use App\Model\Rack;
+use App\Model\Subject;
+use App\Http\Requests\CreateBookRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 
 class BookController extends Controller {
 
@@ -15,7 +20,7 @@ class BookController extends Controller {
 	 */
 	public function index()
 	{
-		$books = Model\Book::orderBy('created_at','desc')->paginate(15);
+		$books = Book::orderBy('created_at','desc')->paginate(15);
 
 		return view('admin.book.index', compact('books'));
 	}
@@ -27,11 +32,11 @@ class BookController extends Controller {
 	 */
 	public function create()
 	{
-		$publishers = Model\Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
-		$subjects = Model\Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
-		$racks = Model\Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = Model\Book::where('jenis','=','ASLI')->orderBy('created_at','desc')->first();
-		$pkl = Model\Book::where('jenis','=','PKL')->orderBy('created_at','desc')->first();
+		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
+		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
+		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
+		$asli = Book::where('jenis','=','ASLI')->orderBy('created_at','desc')->first();
+		$pkl = Book::where('jenis','=','PKL')->orderBy('created_at','desc')->first();
 
 		return view('admin.book.create', compact('publishers','subjects','racks','asli','pkl'));
 	}
@@ -41,21 +46,21 @@ class BookController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Requests\CreateBookRequest $request)
+	public function store(CreateBookRequest $request)
 	{
-		$publisher = Model\Publisher::firstOrCreate([
+		$publisher = Publisher::firstOrCreate([
 			'nama'	=>	trim(strip_tags($request->input('penerbit'))),
 		]);
 
-		$subject = Model\Subject::firstOrCreate([
+		$subject = Subject::firstOrCreate([
 			'nama'	=>	trim(strip_tags($request->input('subyek'))),
 		]);
 
-		$rack = Model\Rack::firstOrCreate([
+		$rack = Rack::firstOrCreate([
 			'nama'	=>	trim(strip_tags($request->input('rak'))),
 		]);
 
-		$book = Model\Book::create([
+		$book = Book::create([
 			'id'						=>	trim(strip_tags($request->input('id'))),
 			'judul'					=>	trim(strip_tags($request->input('judul'))),
 			'edisi'					=>	trim(strip_tags($request->input('edisi'))),
@@ -69,11 +74,11 @@ class BookController extends Controller {
 
 		foreach(explode('/',$request->input('pengarang')) as $value)
 		{
-			$author = Model\Author::firstOrCreate([
+			$author = Author::firstOrCreate([
 				'nama'	=>	trim(strip_tags($value)),
 			]);
 
-			Model\BookAuthor::firstOrCreate([
+			BookAuthor::firstOrCreate([
 				'book_id'		=>	trim(strip_tags($request->input('id'))),
 				'author_id'	=>	$author->id,
 			]);
@@ -91,7 +96,7 @@ class BookController extends Controller {
 				}
 				if($request->file('file')->move($path,$filename))
 				{
-					Model\File::create([
+					File::create([
 						'book_id'		=>	trim(strip_tags($request->input('id'))),
 						'filename'	=>	$filename,
 						'sha1sum'		=>	sha1_file($file),
@@ -100,7 +105,7 @@ class BookController extends Controller {
 			}
 		}
 
-		return \Redirect::route('admin.book.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
+		return Redirect::route('admin.book.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -111,7 +116,7 @@ class BookController extends Controller {
 	 */
 	public function show($jenis)
 	{
-		$books = Model\Book::where('jenis','=',strtoupper($jenis))->orderBy('created_at','desc')->paginate(15);
+		$books = Book::where('jenis','=',strtoupper($jenis))->orderBy('created_at','desc')->paginate(15);
 
 		return view('admin.book.index', compact('books'));
 	}

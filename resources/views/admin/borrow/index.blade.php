@@ -16,6 +16,11 @@
 						<div class="panel-body">
 							<div class="row">
 								<div class="col-md-12 m-b-20">
+									<div class="btn-group m-b-20">
+										<span class="btn btn-default {{ setActiv('admin/borrow') }}"  onclick="window.location='{{ route('admin.borrow.index') }}'">ALL</span>
+										<span class="btn btn-default {{ setActiv('admin/borrow/pinjam') }}" onclick="window.location='{{ route('admin.borrow.show','pinjam') }}'">PINJAM</span>
+										<span class="btn btn-default {{ setActiv('admin/borrow/kembali') }}" onclick="window.location='{{ route('admin.borrow.show','kembali') }}'">KEMBALI</span>
+									</div>
 									<div class="btn-group pull-right">
 										<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i></button>
 										<ul class="dropdown-menu pull-right">
@@ -30,14 +35,24 @@
 										<thead>
 											<tr>
 												<th>ID</th>
+												<th>NIS/NIM/NIP</th>
 												<th>Nama</th>
+												<th>Kode Buku</th>
+												<th>Tanggal Pinjam</th>
+												<th>Tanggal Kembali</th>
+												<th>Status</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($borrows as $borrow)
 												<tr>
 													<td>{{ $borrow->id }}</td>
+													<td>{{ $borrow->member->id }}</td>
 													<td>{{ $borrow->member->nama }}</td>
+													<td>{{ $borrow->book->id }}</td>
+													<td>{{ implode('/',array_reverse(explode('-',$borrow->tanggal_pinjam))) }}</td>
+													<td>{{ implode('/',array_reverse(explode('-',$borrow->tanggal_kembali))) }}</td>
+													<td>{{ $borrow->status }}</td>
 												</tr>
 											@endforeach
 										</tbody>

@@ -1,6 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Model;
+use Response;
+use Request;
+use App\Model\Book;
+use App\Model\Borrow;
+use App\Model\Member;
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller {
@@ -12,12 +16,12 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$books = Model\Book::count();
-		$asli = Model\Book::where('jenis','=','asli')->count();
-		$pkl = Model\Book::where('jenis','=','pkl')->count();
-		$members = Model\Member::count();
-		$karyawan = Model\Member::where('jenis_anggota','=','Karyawan')->count();
-		$nonkaryawan = Model\Member::where('jenis_anggota','=','Non-Karyawan')->count();
+		$books = Book::count();
+		$asli = Book::where('jenis','=','asli')->count();
+		$pkl = Book::where('jenis','=','pkl')->count();
+		$members = Member::count();
+		$karyawan = Member::where('jenis_anggota','=','Karyawan')->count();
+		$nonkaryawan = Member::where('jenis_anggota','=','Non-Karyawan')->count();
 
 		return view('admin.home', compact('books','asli','pkl','members','karyawan','nonkaryawan'));
 	}
@@ -27,18 +31,33 @@ class HomeController extends Controller {
 		return view('auth.lockscreen');
 	}
 
-	public function getBook()
+	public function postBook()
 	{
-			$book = Model\Book::where('id','=',\Request::input('kode'))->get(['books.judul']);
+		$book = Book::whereNotIn('id',function($query){
+			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','=','Dipinjam');
+		})->where('id','=',Request::input('kode'))->get(['books.judul']);
 
-			return \Response::json($book);
+		return Response::json($book);
 	}
 
-	public function getMember()
+	public function postMember()
 	{
-			$member = Model\Member::where('id','=',\Request::input('id'))->get(['members.nama']);
+		$member = Member::where('id','=',Request::input('id'))->get(['members.nama']);
 
-			return \Response::json($member);
+		return Response::json($member);
+	}
+
+	public function postReturn()
+	{
+		$borrow = Borrow::find(Request::input('id'));
+
+		if(count($borrow) > 0)
+		{
+			$member = Member::findOrFail($borrow->member_id)->get(['members.id','members.nama']);
+			$book = Book::findOrFail($borrow->book_id)->get(['books.id','books.judul']);
+
+			return Response::json(['member' => $member, 'book' => $book]);
+		}
 	}
 
 }

@@ -69,7 +69,7 @@
 										<label class="col-sm-3 control-label">Tanggal Masuk</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="date" name="tanggal" class="form-control datepicker" value="{{ old('tanggal') }}" size="10" maxlength="10" autocomplete="off" >
+											<input type="date" name="tanggal" class="form-control datepicker" value="{{ old('tanggal') }}" size="10" maxlength="10" parsley-minlength="8" parsley-required="true" autocomplete="off" >
 										</div>
 									</div>
 									<div class="form-group">

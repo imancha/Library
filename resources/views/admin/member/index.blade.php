@@ -17,9 +17,9 @@
 							<div class="row">
 								<div class="col-md-12 m-b-20">
 									<div class="btn-group m-b-20">
-										<span class="btn btn-default {{ setActiv('admin/member') }}"  onclick="window.location='{{ url('/admin/member') }}'">ALL</span>
-										<span class="btn btn-default {{ setActiv('admin/member/Karyawan') }}" onclick="window.location='{{ url('/admin/member/Karyawan') }}'">Karyawan</span>
-										<span class="btn btn-default {{ setActiv('admin/member/Non-Karyawan') }}" onclick="window.location='{{ url('/admin/member/Non-Karyawan') }}'">Non-Karyawan</span>
+										<span class="btn btn-default {{ setActiv('admin/member') }}"  onclick="window.location='{{ route('admin.member.index') }}'">ALL</span>
+										<span class="btn btn-default {{ setActiv('admin/member/Karyawan') }}" onclick="window.location='{{ route('admin.member.show','Karyawan') }}'">Karyawan</span>
+										<span class="btn btn-default {{ setActiv('admin/member/Non-Karyawan') }}" onclick="window.location='{{ route('admin.member.show','Non-Karyawan') }}'">Non-Karyawan</span>
 									</div>
 									<div class="btn-group pull-right">
 										<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i></button>

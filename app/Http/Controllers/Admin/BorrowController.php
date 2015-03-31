@@ -1,10 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use App\Model;
-use App\Http\Requests;
+use Redirect;
+use App\Model\Book;
+use App\Model\Borrow;
+use App\Model\Member;
+use App\Http\Requests\UpdateBorrowRequest;
 use App\Http\Controllers\Controller;
-
-use Illuminate\Http\Request;
 
 class BorrowController extends Controller {
 
@@ -15,7 +16,7 @@ class BorrowController extends Controller {
 	 */
 	public function index()
 	{
-		$borrows = Model\Borrow::orderBy('created_at','desc')->paginate(15);
+		$borrows = Borrow::orderBy('created_at','desc')->paginate(15);
 
 		return view('admin.borrow.index', compact('borrows'));
 	}
@@ -27,9 +28,11 @@ class BorrowController extends Controller {
 	 */
 	public function create()
 	{
-		$members = Model\Member::all(['members.id']);
-		$books = Model\Book::all(['books.id']);
-		$borrow = Model\Borrow::orderBy('created_at','desc')->first();
+		$members = Member::all(['members.id']);
+		$books = Book::whereNotIn('id', function($query){
+			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','=','Dipinjam');
+		})->get(['books.id']);
+		$borrow = Borrow::orderBy('created_at','desc')->first();
 
 		return view('admin.borrow.create',compact('members','books','borrow'));
 	}
@@ -39,19 +42,19 @@ class BorrowController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(Requests\CreateBorrowRequest $request)
+	public function store(CreateBorrowRequest $request)
 	{
-		$member = Model\Member::where('id','=',trim(strip_tags($request->input('id'))))->first();
-		$book = Model\Book::where('id','=',trim(strip_tags($request->input('kode'))))->first();
+		$member = Member::where('id','=',trim(strip_tags($request->input('id'))))->first();
+		$book = Book::where('id','=',trim(strip_tags($request->input('kode'))))->first();
 
-		Model\Borrow::create([
+		Borrow::create([
 			'id'	=>	trim(strip_tags($request->input('idp'))),
 			'tanggal_pinjam'	=>	new \DateTime,
 			'member_id'	=>	$member->id,
 			'book_id'		=>	$book->id,
 		]);
 
-		return \Redirect::route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
+		return Redirect::route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -60,10 +63,20 @@ class BorrowController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show($status)
 	{
-		//
+		$borrows = Borrow::where('status','like','%'.$status.'%')->orderBy('created_at','desc')->paginate(15);
+
+		return view('admin.borrow.index', compact('borrows'));
 	}
+
+	public function patch()
+	{
+		$borrows = Borrow::where('status','=','Dipinjam')->get(['borrows.id']);
+
+		return view('admin.borrow.patch',compact('borrows'));
+	}
+
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -82,9 +95,14 @@ class BorrowController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(UpdateBorrowRequest $request)
 	{
-		//
+		$borrow = Borrow::find($request->input('idp'));
+		$borrow->tanggal_kembali = new \DateTime;
+		$borrow->status = 'Dikembalikan';
+		$borrow->save();
+
+		return Redirect::route('admin.borrow.return')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 	}
 
 	/**

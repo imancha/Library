@@ -1,7 +1,7 @@
 @extends('admin.master.app')
 
 @section('title')
-	Tambah Peminjaman
+	Tambah Pengembalian
 @endsection
 
 @section('style')
@@ -23,7 +23,7 @@
 				@endif
 				<div class="panel panel-default">
 					<div class="panel-heading bg-red">
-						<h3 class="panel-title"><strong>Tambah</strong> Peminjaman</h3>
+						<h3 class="panel-title"><strong>Tambah</strong> Pengembalian</h3>
 					</div>
 					<div class="panel-body">
 						<div class="row">
@@ -41,20 +41,21 @@
 									</div>
 									<!-- END ERROR BOX -->
 								@endif
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@store') }}" parsley-validate>
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@update','return') }}" parsley-validate>
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
+									<input name="_method" type="hidden" value="PATCH">
 									<div class="form-group">
 										<label class="col-sm-3 control-label">ID Peminjaman</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="idp" name="idp" class="form-control" value="P{{ count($borrow) > 0 ? (substr($borrow->id,1)+1) : 1 }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
+											<input type="text" id="idp" name="idp" class="form-control" value="{{ old('idp') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">NIP/NIM/NIS</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />
 										</div>
 									</div>
 									<div class="form-group">
@@ -68,7 +69,7 @@
 										<label class="col-sm-3 control-label">Kode Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="kode" name="kode" class="form-control" value="{{ old('kode') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
+											<input type="text" id="kode" name="kode" class="form-control" value="{{ old('kode') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" readonly />
 										</div>
 									</div>
 									<div class="form-group">
@@ -99,17 +100,9 @@
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 	<script>
 		$(document).ready(function(){
-			$('#id').autocomplete({
+			$('#idp').autocomplete({
 				source:[{
-					data:{!! $members !!}
-				}],
-				valueKey:'id',
-				limit:'10',
-				openOnFocus:false,
-			});
-			$('#kode').autocomplete({
-				source:[{
-					data:{!! $books !!}
+					data:{!! $borrows !!}
 				}],
 				valueKey:'id',
 				limit:'10',
@@ -120,31 +113,24 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
 			});
-			$('#id').keypress(function(){
+			$('#idp').keypress(function(){
 				$.ajax({
-					url:'{!! route('admin.member.borrow') !!}',
-					dataType:'json',
+					url:'{!! route('admin.book.return') !!}',
+					dataType:'',
 					type:'POST',
-					data:{'id':$('#id').val()},
+					data:{'id':$('#idp').val()},
 					cache:false,
 					success:function(data){
+						$('#id').val('');
 						$('#nama').val('');
-						for(row in data)
-							$('#nama').val(data[row].nama);
-					},
-				});
-			});
-			$('#kode').keypress(function(){
-				$.ajax({
-					url:'{!! route('admin.book.borrow') !!}',
-					dataType:'json',
-					type:'POST',
-					data:{'kode':$('#kode').val()},
-					cache:false,
-					success:function(data){
+						$('#kode').val('');
 						$('#judul').val('');
-						for(row in data)
-							$('#judul').val(data[row].judul);
+						if((data != null) && (data != undefined) && (data.length != 0)){
+							$('#id').val(data['member'][0]['id']);
+							$('#nama').val(data['member'][0]['nama']);
+							$('#kode').val(data['book'][0]['id']);
+							$('#judul').val(data['book'][0]['judul']);
+						}
 					},
 				});
 			});

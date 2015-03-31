@@ -17,9 +17,9 @@
 							<div class="row">
 								<div class="col-md-12 m-b-20">
 									<div class="btn-group m-b-20">
-										<span class="btn btn-default {{ setActiv('admin/book') }}"  onclick="window.location='{{ url('/admin/book') }}'">ALL</span>
-										<span class="btn btn-default {{ setActiv('admin/book/asli') }}" onclick="window.location='{{ url('/admin/book/asli') }}'">ASLI</span>
-										<span class="btn btn-default {{ setActiv('admin/book/pkl') }}" onclick="window.location='{{ url('/admin/book/pkl') }}'">PKL</span>
+										<span class="btn btn-default {{ setActiv('admin/book') }}"  onclick="window.location='{{ route('admin.book.index') }}'">ALL</span>
+										<span class="btn btn-default {{ setActiv('admin/book/asli') }}" onclick="window.location='{{ route('admin.book.show','asli') }}'">ASLI</span>
+										<span class="btn btn-default {{ setActiv('admin/book/pkl') }}" onclick="window.location='{{ route('admin.book.show','pkl') }}'">PKL</span>
 									</div>
 									<div class="btn-group pull-right">
 										<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Tools <i class="fa fa-angle-down"></i></button>
