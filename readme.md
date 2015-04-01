@@ -73,9 +73,7 @@ You can now view the library homepage.
 ### Site loading very slow
 
 	composer dump-autoload
-AND/OR
-
-    php artisan optimize
+	php artisan optimize
 
 -----
 ### License
