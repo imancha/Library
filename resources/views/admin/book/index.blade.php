@@ -37,6 +37,7 @@
 												<th>Kode</th>
 												<th>Judul Buku</th>
 												<th>Pengarang</th>
+												<th>Penerbit</th>
 												<th class="text-center">Action</th>
 											</tr>
 										</thead>
@@ -50,6 +51,7 @@
 													<td>{{ $book->id }}</td>
 													<td>{{ $book->judul }}</td>
 													<td>{{ implode(', ',$authors) }}</td>
+													<td>{{ $book->publisher->nama }}</td>
 													<td class="text-center">
 														@if(!empty($book->file->book_id))
 															<a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Download" href="{{ route('download',$book->file->sha1sum) }}"><i class="fa fa-download"></i></a>

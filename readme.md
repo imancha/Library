@@ -30,7 +30,7 @@ Extract it in www(or htdocs if you using XAMPP) folder and put it for example in
 
 Laravel utilizes [Composer](http://getcomposer.org/) to manage its dependencies. First, download a copy of the composer.phar.
 Once you have the PHAR archive, you can either keep it in your local project directory or move to
-usr/local/bin to use it globally on your system. 
+usr/local/bin to use it globally on your system.
 On Windows, you can use the Composer [Windows installer](https://getcomposer.org/Composer-Setup.exe).
 
 Then run:
@@ -42,9 +42,13 @@ to install dependencies Laravel and other packages.
 <a name="step3"></a>
 ### Step 3: Create database
 
-If you finished first three steps, now you can create database on your database server(MySQL). You must create database
-with utf-8 collation(uft8_general_ci), to install and application work perfectly.
+Now you can create database on your database server(MySQL). You must create database with utf-8 collation(uft8_general_ci), to install and application work perfectly.
 After that, copy .env.example and rename it as .env and put connection and change default database connection name, only database connection, put name database, database username and password.
+
+Then run:
+
+    php artisan key:generate
+to generate key for the application.
 
 -----
 <a name="step4"></a>
@@ -65,7 +69,7 @@ And to initial populate database use this:
 If you install on your localhost in folder library, you can type on web browser:
 
 	http://localhost/library/public
-	
+
 You can now view the library homepage.
 
 -----

@@ -43,11 +43,11 @@ class BookController extends Controller {
 
 		if(count($asli) > 0)
 		{
-			$next = false;
+			$next = true;
 			$asli = $asli->id;
 			do
 			{
-				if(count(Book::find($asli++)) == 0) $next = true;
+				if(count(Book::find(++$asli)) == 0) $next = false;
 			}while($next);
 		}else{
 			$asli = 1;
@@ -55,11 +55,11 @@ class BookController extends Controller {
 
 		if(count($pkl) > 0)
 		{
-			$next = false;
+			$next = true;
 			$pkl = substr($pkl->id,0,strlen($pkl->id)-1);
 			do
 			{
-				if(count(Book::find($pkl++.'P')) == 0) $next = true;
+				if(count(Book::find(++$pkl.'P')) == 0) $next = false;
 			}while($next);
 		}else{
 			$pkl = 1;
