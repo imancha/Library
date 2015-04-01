@@ -8,7 +8,7 @@ function setActive($route, $class = 'current active hasSub')
 {
 	return (Route::currentRouteName() == $route) ? $class : '';
 }
-function setActiv($route, $class = 'active')
+function setActiv($route, $class = 'disabled')
 {
 	return (Request::path() === $route) ? $class : '';
 }

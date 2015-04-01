@@ -1,9 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Excel;
 use Redirect;
 use App\Model\Book;
 use App\Model\Borrow;
 use App\Model\Member;
+use App\Http\Requests\CreateBorrowRequest;
 use App\Http\Requests\UpdateBorrowRequest;
 use App\Http\Controllers\Controller;
 
@@ -17,6 +19,7 @@ class BorrowController extends Controller {
 	public function index()
 	{
 		$borrows = Borrow::orderBy('created_at','desc')->paginate(15);
+		$borrows->setPath('../admin/borrow');
 
 		return view('admin.borrow.index', compact('borrows'));
 	}
@@ -66,6 +69,7 @@ class BorrowController extends Controller {
 	public function show($status)
 	{
 		$borrows = Borrow::where('status','like','%'.$status.'%')->orderBy('created_at','desc')->paginate(15);
+		$borrows->setPath('../borrow/'.$status);
 
 		return view('admin.borrow.index', compact('borrows'));
 	}
@@ -114,6 +118,43 @@ class BorrowController extends Controller {
 	public function destroy($id)
 	{
 		//
+	}
+
+	public function export($type)
+	{
+		set_time_limit (500);
+		ini_set('memory_limit', '500M');
+		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
+
+		$borrows = Borrow::orderBy('created_at','asc')->get();
+
+		if($type == 'xlsx'){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman', function($excel) use($borrows){
+				$excel->setTitle('Data Peminjaman');
+				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
+				$excel->setDescription('Data Peminjaman Perpustakaan PT. INTI');
+				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
+				$excel->sheet('Peminjaman', function($sheet) use($borrows){
+					$row = 1;
+					$sheet->freezeFirstRow();
+					$sheet->setFontFamily('Sans Serif');
+					$sheet->row($row, ['ID','NIP/NIM/NIS','NAMA','KODE BUKU','JUDUL BUKU','TANGGAL PINJAM','TANGGAL KEMBALI','STATUS']);
+					foreach($borrows as $borrow)
+					{
+						$sheet->row(++$row, [
+							$borrow->id,
+							$borrow->member_id,
+							$borrow->member->nama,
+							$borrow->book_id,
+							$borrow->book->judul,
+							implode('-',array_reverse(explode('-',$borrow->tanggal_pinjam))),
+							implode('-',array_reverse(explode('-',$borrow->tanggal_kembali))),
+							$borrow->status,
+						]);
+					}
+				});
+			})->export($type);
+		}
 	}
 
 }

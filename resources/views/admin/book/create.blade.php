@@ -48,11 +48,11 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input type="radio" name="jenis" value="{{ count($asli) > 0 ? ($asli->id)+1 : 1 }}" {{ is_numeric(Input::old('jenis')) ? 'checked' : '' }} />
+													<input type="radio" name="jenis" value="{{ $asli }}" {{ is_numeric(Input::old('jenis')) ? 'checked' : '' }} />
 													<label class="m-r-20">ASLI</label>
 												</li>
 												<li>
-													<input type="radio" name="jenis" value="{{ count($pkl) > 0 ? (substr($pkl->id,0,strlen($pkl->id)-1)+1) : 1 }}P" {{ is_numeric(Input::old('jenis')) ? '' : 'checked' }} />
+													<input type="radio" name="jenis" value="{{ $pkl }}P" {{ is_numeric(Input::old('jenis')) ? '' : 'checked' }} />
 													<label>PKL</label>
 												</li>
 											</ul>

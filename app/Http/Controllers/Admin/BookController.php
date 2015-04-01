@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Excel;
+use PDF;
 use Redirect;
 use App\Model\Author;
 use App\Model\Book;
@@ -21,6 +23,7 @@ class BookController extends Controller {
 	public function index()
 	{
 		$books = Book::orderBy('created_at','desc')->paginate(15);
+		$books->setPath('../admin/book');
 
 		return view('admin.book.index', compact('books'));
 	}
@@ -37,6 +40,30 @@ class BookController extends Controller {
 		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
 		$asli = Book::where('jenis','=','ASLI')->orderBy('created_at','desc')->first();
 		$pkl = Book::where('jenis','=','PKL')->orderBy('created_at','desc')->first();
+
+		if(count($asli) > 0)
+		{
+			$next = false;
+			$asli = $asli->id;
+			do
+			{
+				if(count(Book::find($asli++)) == 0) $next = true;
+			}while($next);
+		}else{
+			$asli = 1;
+		}
+
+		if(count($pkl) > 0)
+		{
+			$next = false;
+			$pkl = substr($pkl->id,0,strlen($pkl->id)-1);
+			do
+			{
+				if(count(Book::find($pkl++.'P')) == 0) $next = true;
+			}while($next);
+		}else{
+			$pkl = 1;
+		}
 
 		return view('admin.book.create', compact('publishers','subjects','racks','asli','pkl'));
 	}
@@ -91,9 +118,9 @@ class BookController extends Controller {
 				$path = public_path('files/');
 				$filename = (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).'.'.($request->file('file')->getClientOriginalExtension());
 				$file = $path.$filename;
-				if(\File::exists($file)){
-					\File::delete($file);
-				}
+
+				if(\File::exists($file)) \File::delete($file);
+
 				if($request->file('file')->move($path,$filename))
 				{
 					File::create([
@@ -117,6 +144,7 @@ class BookController extends Controller {
 	public function show($jenis)
 	{
 		$books = Book::where('jenis','=',strtoupper($jenis))->orderBy('created_at','desc')->paginate(15);
+		$books->setPath('../book/'.$jenis);
 
 		return view('admin.book.index', compact('books'));
 	}
@@ -152,6 +180,50 @@ class BookController extends Controller {
 	public function destroy($id)
 	{
 		//
+	}
+
+	public function export($type)
+	{
+		set_time_limit (500);
+		ini_set('memory_limit', '500M');
+		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
+
+		$books = Book::orderBy('created_at','asc')->get();
+
+		if($type == 'xlsx'){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Buku', function($excel) use($books){
+				$excel->setTitle('Data Buku');
+				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
+				$excel->setDescription('Data Buku Perpustakaan PT. INTI');
+				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
+				$excel->sheet('Buku', function($sheet) use($books){
+					$row = 1;
+					$sheet->freezeFirstRow();
+					$sheet->setFontFamily('Sans Serif');
+					$sheet->row($row, ['KODE BUKU','JUDUL BUKU','PENGARANG','PENERBIT','EDISI','JENIS','SUBYEK','RAK','TANGGAL MASUK','KETERANGAN']);
+					foreach($books as $book)
+					{
+						$authors = [];
+						foreach($book->author as $author) $authors[] = $author->nama;
+						$sheet->row(++$row, [
+							$book->id,
+							$book->judul,
+							implode(', ',$authors),
+							$book->publisher->nama,
+							$book->edisi,
+							$book->jenis,
+							$book->subject->nama,
+							$book->rack->nama,
+							implode('-',array_reverse(explode('-',$book->tanggal_masuk))),
+							$book->keterangan,
+						]);
+					}
+				});
+			})->export($type);
+		}elseif($type == 'pdf'){
+			$pdf = PDF::loadView('admin.book.export', compact('books'));
+			return $pdf->setPaper('a4')->setOrientation('landscape')->setWarnings(false)->download('['.date('Y.m.d H.m.s').'] Koleksi Buku.pdf');
+		}
 	}
 
 }

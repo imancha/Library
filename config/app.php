@@ -146,6 +146,7 @@ return [
 		'App\Providers\RouteServiceProvider',
 
 		'Maatwebsite\Excel\ExcelServiceProvider',
+		'Barryvdh\DomPDF\ServiceProvider',
 
 	],
 
@@ -196,6 +197,7 @@ return [
 		'View'      => 'Illuminate\Support\Facades\View',
 
 		'Excel' 		=> 'Maatwebsite\Excel\Facades\Excel',
+		'PDF' 			=> 'Barryvdh\DomPDF\Facade',
 
 	],
 

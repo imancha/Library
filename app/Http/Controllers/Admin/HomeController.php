@@ -22,8 +22,11 @@ class HomeController extends Controller {
 		$members = Member::count();
 		$karyawan = Member::where('jenis_anggota','=','Karyawan')->count();
 		$nonkaryawan = Member::where('jenis_anggota','=','Non-Karyawan')->count();
+		$borrows = Borrow::count();
+		$pinjam = Borrow::where('status','=','Dipinjam')->count();
+		$kembali = Borrow::where('status','=','Dikembalikan')->count();
 
-		return view('admin.home', compact('books','asli','pkl','members','karyawan','nonkaryawan'));
+		return view('admin.home', compact('books','asli','pkl','members','karyawan','nonkaryawan','borrows','pinjam','kembali'));
 	}
 
 	public function lockscreen()

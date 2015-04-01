@@ -12,7 +12,7 @@
 						<a href="{{ action('Admin\BookController@create') }}"><span class="sidebar-text">Tambah Buku</span></a>
 					</li>
 					<li class="{{ setCurrent('admin.book.index') }}{{ setCurrent('admin.book.show') }}">
-						<a href="{{ action('Admin\BookController@index') }}"><span class="sidebar-text">Koleksi Buku</span></a>
+						<a href="{{ action('Admin\BookController@index') }}"><span class="sidebar-text">Data Buku</span></a>
 					</li>
 				</ul>
 			</li>
@@ -23,12 +23,12 @@
 						<a href="{{ action('Admin\MemberController@create') }}"><span class="sidebar-text">Tambah Anggota</span></a>
 					</li>
 					<li class="{{ setCurrent('admin.member.index') }}{{ setCurrent('admin.member.show') }}">
-						<a href="{{ action('Admin\MemberController@index') }}"><span class="sidebar-text">Koleksi Anggota</span></a>
+						<a href="{{ action('Admin\MemberController@index') }}"><span class="sidebar-text">Data Anggota</span></a>
 					</li>
 				</ul>
 			</li>
 			<li class="{{ setActive('admin.borrow.index') }}{{ setActive('admin.borrow.create') }}{{ setActive('admin.borrow.show') }}{{ setActive('admin.borrow.return') }}">
-				<a href="#"><i class="fa fa-briefcase"></i><span class="sidebar-text">Peminjaman</span><span class="fa arrow"></span></a>
+				<a href="#"><i class="fa fa-retweet"></i><span class="sidebar-text">Peminjaman</span><span class="fa arrow"></span></a>
 				<ul class="submenu collapse">
 					<li class="{{ setCurrent('admin.borrow.create') }}">
 						<a href="{{ action('Admin\BorrowController@create') }}"><span class="sidebar-text">Tambah Peminjaman</span></a>
@@ -37,7 +37,7 @@
 						<a href="{{ route('admin.borrow.return') }}"><span class="sidebar-text">Tambah Pengembalian</span></a>
 					</li>
 					<li class="{{ setCurrent('admin.borrow.index') }}{{ setCurrent('admin.borrow.show') }}">
-						<a href="{{ action('Admin\BorrowController@index') }}"><span class="sidebar-text">Koleksi Peminjaman</span></a>
+						<a href="{{ action('Admin\BorrowController@index') }}"><span class="sidebar-text">Data Peminjaman</span></a>
 					</li>
 				</ul>
 			</li>

@@ -22,22 +22,22 @@ class BookTableSeeder extends Seeder {
 			{
 				//	Seed publisher table
 				$publisher = 	Model\Publisher::firstOrCreate([
-					'nama'	=>	(empty($result->penerbit) ? 'NULL' : $result->penerbit)
+					'nama'	=>	(empty($result->penerbit) ? '-' : $result->penerbit)
 				]);
 
 				//	Seed subject table
 				$subject = 	Model\Subject::firstOrCreate([
-					'nama'	=>	(empty($result->subyek) ? 'NULL' : $result->subyek)
+					'nama'	=>	(empty($result->subyek) ? '-' : $result->subyek)
 				]);
 
 				//	Seed rack table
 				$rack = Model\Rack::firstOrCreate([
-					'nama'	=>	(empty($result->rak) ? 'NULL' : $result->rak)
+					'nama'	=>	(empty($result->rak) ? '-' : $result->rak)
 				]);
 
 				//	Seed author table
 				$author = Model\Author::firstOrCreate([
-					'nama'	=>	(empty($result->pengarang) ? 'NULL' : $result->pengarang)
+					'nama'	=>	(empty($result->pengarang) ? '-' : $result->pengarang)
 				]);
 
 				//	Seed book table
