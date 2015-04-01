@@ -1,23 +1,83 @@
-## Laravel PHP Framework
+# Library
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/downloads.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+Library Site with Laravel 5
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
+##Requirements
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+	PHP >= 5.4.0
+	MCrypt PHP Extension
+	SQL server(for example MySQL)
 
-## Official Documentation
+-----
+##How to install:
+* [Step 1: Get the code](#step1)
+* [Step 2: Use Composer to install dependencies](#step2)
+* [Step 3: Create database](#step3)
+* [Step 4: Install](#step4)
+* [Step 5: Start Page](#step5)
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+-----
+<a name="step1"></a>
+### Step 1: Get the code - Download the repository
 
-## Contributing
+    https://github.com/imancha/Library/archive/master.zip
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+Extract it in www(or htdocs if you using XAMPP) folder and put it for example in library folder.
 
+-----
+<a name="step2"></a>
+### Step 2: Use Composer to install dependencies
+
+Laravel utilizes [Composer](http://getcomposer.org/) to manage its dependencies. First, download a copy of the composer.phar.
+Once you have the PHAR archive, you can either keep it in your local project directory or move to
+usr/local/bin to use it globally on your system. 
+On Windows, you can use the Composer [Windows installer](https://getcomposer.org/Composer-Setup.exe).
+
+Then run:
+
+    composer install
+to install dependencies Laravel and other packages.
+
+-----
+<a name="step3"></a>
+### Step 3: Create database
+
+If you finished first three steps, now you can create database on your database server(MySQL). You must create database
+with utf-8 collation(uft8_general_ci), to install and application work perfectly.
+After that, copy .env.example and rename it as .env and put connection and change default database connection name, only database connection, put name database, database username and password.
+
+-----
+<a name="step4"></a>
+### Step 4: Install
+
+Now that you have the environment configured, you need to create a database configuration for it. For create database tables use this command:
+
+    php artisan migrate
+
+And to initial populate database use this:
+
+    php artisan db:seed
+
+If you install on your localhost in folder library, you can type on web browser:
+
+	http://localhost/library/public
+-----
+<a name="step5"></a>
+### Step 5: Start Page
+
+You can now view the library homepage.
+
+-----
+## Troubleshooting
+
+### Site loading very slow
+
+	composer dump-autoload
+AND/OR
+
+    php artisan optimize
+
+-----
 ### License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+This is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
