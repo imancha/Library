@@ -58,13 +58,14 @@ And to initial populate database use this:
 
     php artisan db:seed
 
-If you install on your localhost in folder library, you can type on web browser:
-
-	http://localhost/library/public
 -----
 <a name="step5"></a>
 ### Step 5: Start Page
 
+If you install on your localhost in folder library, you can type on web browser:
+
+	http://localhost/library/public
+	
 You can now view the library homepage.
 
 -----
