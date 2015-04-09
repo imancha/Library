@@ -1,7 +1,7 @@
 @extends('admin.master.app')
 
 @section('title')
-	Tambah Anggota
+	Edit Anggota
 @endsection
 
 @section('content')
@@ -19,7 +19,7 @@
 				@endif
 				<div class="panel panel-default">
 					<div class="panel-heading bg-red">
-						<h3 class="panel-title"><strong>Tambah</strong> Anggota</h3>
+						<h3 class="panel-title"><strong>Edit</strong> Anggota</h3>
 					</div>
 					<div class="panel-body">
 						<div class="row">
@@ -37,20 +37,27 @@
 									</div>
 									<!-- END ERROR BOX -->
 								@endif
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\MemberController@store') }}" parsley-validate>
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ route('admin.member.update',$member->id) }}" parsley-validate>
+									<input name="_method" type="hidden" value="PATCH">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
 										<label class="col-sm-3 control-label">NIP/NIM/NIS</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" name="id" class="form-control" value="{{ $member->id }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Nama</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="nama" class="form-control" value="{{ old('nama') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" name="nama" class="form-control" value="{{ $member->nama }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label class="col-sm-3 control-label">Tempat &amp; Tanggal Lahir</label>
+										<div class="col-sm-7">
+											<input type="text" name="lahir" class="form-control" value="{{ $member->tanggal_lahir }}" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -58,20 +65,14 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input tabindex="11" type="radio" name="jk" value="Laki-Laki" {{ Input::old('jk') != 'Perempuan' ? 'checked' : '' }} />
+													<input tabindex="11" type="radio" name="jk" value="Laki-Laki" {{ $member->jenis_kelamin != 'Perempuan' ? 'checked' : '' }} />
 													<label class="m-r-20">Laki-Laki</label>
 												</li>
 												<li>
-													<input tabindex="11" type="radio" name="jk" value="Perempuan" {{ Input::old('jk') == 'Perempuan' ? 'checked' : '' }} />
+													<input tabindex="11" type="radio" name="jk" value="Perempuan" {{ $member->jenis_kelamin == 'Perempuan' ? 'checked' : '' }} />
 													<label>Perempuan</label>
 												</li>
 											</ul>
-										</div>
-									</div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label">Tempat &amp; Tanggal Lahir</label>
-										<div class="col-sm-7">
-											<input type="text" name="lahir" class="form-control" value="{{ old('lahir') }}" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -79,11 +80,11 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input id="k" tabindex="11" type="radio" name="ja" value="Karyawan" {{ Input::old('ja') == 'Karyawan' ? 'checked' : '' }} />
+													<input id="k" tabindex="11" type="radio" name="ja" value="Karyawan" {{ $member->jenis_anggota == 'Karyawan' ? 'checked' : '' }} />
 													<label class="m-r-20">Karyawan</label>
 												</li>
 												<li>
-													<input id="nk" tabindex="11" type="radio" name="ja" value="Non-Karyawan" {{ Input::old('ja') != 'Karyawan' ? 'checked' : '' }} />
+													<input id="nk" tabindex="11" type="radio" name="ja" value="Non-Karyawan" {{ $member->jenis_anggota != 'Karyawan' ? 'checked' : '' }} />
 													<label>Non-Karyawan</label>
 												</li>
 											</ul>
@@ -93,24 +94,24 @@
 										<label class="col-sm-3 control-label">Nomor Telepon</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="phone" class="form-control" value="{{ old('phone') }}" maxlength="12" parsley-type="digits" autocomplete="off" />
+											<input type="text" name="phone" class="form-control" value="{{ $member->phone }}" maxlength="12" parsley-type="digits" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Alamat / Divisi</label>
 										<div class="col-sm-7">
-											<textarea class="form-control" name="alamat">{{ old('alamat') }}</textarea>
+											<textarea class="form-control" name="alamat">{{ $member->alamat }}</textarea>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Keterangan</label>
 										<div class="col-sm-7">
-											<textarea class="form-control" name="keterangan">{{ old('keterangan') }}</textarea>
+											<textarea class="form-control" name="keterangan">{{ $member->keterangan }}</textarea>
 										</div>
 									</div>
 									<div class="form-group text-center">
 										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
-										<button type="reset" class="btn btn-default">Cancel</button>
+										<button type="reset" class="btn btn-default" onclick="history.go(-1)">Cancel</button>
 									</div>
 								</form>
 							</div>

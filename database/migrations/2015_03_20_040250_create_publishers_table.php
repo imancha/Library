@@ -17,6 +17,7 @@ class CreatePublishersTable extends Migration {
 			$table->increments('id');
 			$table->string('nama')->unique();
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

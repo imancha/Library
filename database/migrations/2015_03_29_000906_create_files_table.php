@@ -19,6 +19,7 @@ class CreateFilesTable extends Migration {
 			$table->string('sha1sum');
 			$table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

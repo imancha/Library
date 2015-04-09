@@ -5,24 +5,24 @@
 			<li class="{{ setCurrent('admin.dashboard') }}">
 				<a href="{{ route('admin.dashboard') }}"><i class="fa fa-dashboard"></i><span class="sidebar-text">Dashboard</span></a>
 			</li>
-			<li class="{{ setActive('admin.book.index') }}{{ setActive('admin.book.create') }}{{ setActive('admin.book.show') }}">
+			<li class="{{ setActive('admin.book.index') }}{{ setActive('admin.book.create') }}{{ setActive('admin.book.show') }}{{ setActive('admin.book.edit') }}">
 				<a href="#"><i class="fa fa-book"></i><span class="sidebar-text">Buku</span><span class="fa arrow"></span></a>
 				<ul class="submenu collapse">
 					<li class="{{ setCurrent('admin.book.create') }}">
-						<a href="{{ action('Admin\BookController@create') }}"><span class="sidebar-text">Tambah Buku</span></a>
+						<a href="{{ route('admin.book.create') }}"><span class="sidebar-text">Tambah Buku</span></a>
 					</li>
-					<li class="{{ setCurrent('admin.book.index') }}{{ setCurrent('admin.book.show') }}">
-						<a href="{{ action('Admin\BookController@index') }}"><span class="sidebar-text">Data Buku</span></a>
+					<li class="{{ setCurrent('admin.book.index') }}{{ setCurrent('admin.book.show') }}{{ setCurrent('admin.book.edit') }}">
+						<a href="{{ route('admin.book.index') }}"><span class="sidebar-text">Data Buku</span></a>
 					</li>
 				</ul>
 			</li>
-			<li class="{{ setActive('admin.member.index') }}{{ setActive('admin.member.create') }}{{ setActive('admin.member.show') }}">
+			<li class="{{ setActive('admin.member.index') }}{{ setActive('admin.member.create') }}{{ setActive('admin.member.show') }}{{ setActive('admin.member.edit') }}">
 				<a href="#"><i class="fa fa-group"></i><span class="sidebar-text">Anggota</span><span class="fa arrow"></span></a>
 				<ul class="submenu collapse">
 					<li class="{{ setCurrent('admin.member.create') }}">
 						<a href="{{ action('Admin\MemberController@create') }}"><span class="sidebar-text">Tambah Anggota</span></a>
 					</li>
-					<li class="{{ setCurrent('admin.member.index') }}{{ setCurrent('admin.member.show') }}">
+					<li class="{{ setCurrent('admin.member.index') }}{{ setCurrent('admin.member.show') }}{{ setCurrent('admin.member.edit') }}">
 						<a href="{{ action('Admin\MemberController@index') }}"><span class="sidebar-text">Data Anggota</span></a>
 					</li>
 				</ul>
@@ -38,6 +38,20 @@
 					</li>
 					<li class="{{ setCurrent('admin.borrow.index') }}{{ setCurrent('admin.borrow.show') }}">
 						<a href="{{ action('Admin\BorrowController@index') }}"><span class="sidebar-text">Data Peminjaman</span></a>
+					</li>
+				</ul>
+			</li>
+			<li class="{{ setActive('admin.trash.show') }}">
+				<a href="#"><i class="fa fa-trash-o"></i> <span class="sidebar-text">Trash</span><span class="fa arrow"></span></a>
+				<ul class="submenu collapse">
+					<li class="{{ setCurren('admin/trash/book') }}">
+						<a href="{{ route('admin.trash.show','book') }}"><span class="sidebar-text">Data Buku</span></a>
+					</li>
+					<li class="{{ setCurren('admin/trash/member') }}">
+						<a href="{{ route('admin.trash.show','member') }}"><span class="sidebar-text">Data Anggota</span></a>
+					</li>
+					<li class="{{ setCurren('admin/trash/borrow') }}">
+						<a href="{{ route('admin.trash.show','borrow') }}"><span class="sidebar-text">Data Peminjaman</span></a>
 					</li>
 				</ul>
 			</li>

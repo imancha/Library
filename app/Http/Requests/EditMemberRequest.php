@@ -2,14 +2,7 @@
 
 use App\Http\Requests\Request;
 
-class CreateMemberRequest extends Request {
-
-	/**
-	 * The URI to redirect to if validation fails
-	 *
-	 * @var string
-	 */
-	protected $redirect = 'admin/member/create';
+class EditMemberRequest extends Request {
 
 	public function __construct() {
 		$this->validator = app('validator');
@@ -34,9 +27,9 @@ class CreateMemberRequest extends Request {
 	public function rules()
 	{
 		return [
-			'id'					=>	'required|numeric|min:3|unique:members,id',
+			'id'					=>	'required|numeric|min:3|exists:members,id',
 			'nama'				=>	'required|min:3|alay',
-			'lahir'				=>	Request::has('lahir') ? 'min:3' : '',
+			'lahir'				=>	Request::has('lahir') ? 'min:3|max:255' : '',
 			'jk'					=>	'required',
 			'ja'					=>	'required',
 			'phone'				=>	is_numeric(Request::input('phone')) ? 'string|min:8|max:12' : 'numeric',

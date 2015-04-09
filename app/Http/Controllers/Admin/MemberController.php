@@ -2,9 +2,14 @@
 
 use Excel;
 use Redirect;
+use App\Model\Borrow;
 use App\Model\Member;
+use App\Http\Requests;
 use App\Http\Requests\CreateMemberRequest;
+use App\Http\Requests\EditMemberRequest;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
 
 class MemberController extends Controller {
 
@@ -15,10 +20,11 @@ class MemberController extends Controller {
 	 */
 	public function index()
 	{
-		$members = Member::orderBy('created_at','desc')->paginate(15);
+		$borrows = Borrow::groupBy('id')->get();
+		$members = Member::orderBy('created_at','asc')->paginate(15);
 		$members->setPath('../admin/member');
 
-		return view('admin.member.index', compact('members'));
+		return view('admin.member.index', compact('borrows','members'));
 	}
 
 	/**
@@ -41,7 +47,7 @@ class MemberController extends Controller {
 		Member::firstOrCreate([
 			'id'		=>	trim(strip_tags($request->input('id'))),
 			'nama'	=>	trim(strip_tags($request->input('nama'))),
-			'tanggal_lahir'	=>	trim(strip_tags($request->input('tahun').'-'.$request->input('bulan').'-'.$request->input('tanggal'))),
+			'tanggal_lahir'	=>	trim(strip_tags($request->input('lahir'))),
 			'jenis_kelamin'	=>	trim(strip_tags($request->input('jk'))),
 			'jenis_anggota'	=>	trim(strip_tags($request->input('ja'))),
 			'phone'		=>	trim(strip_tags($request->input('phone'))),
@@ -60,10 +66,11 @@ class MemberController extends Controller {
 	 */
 	public function show($jenis)
 	{
+		$borrows = Borrow::groupBy('id')->get();
 		$members = Member::where('jenis_anggota','=',$jenis)->orderBy('created_at','desc')->paginate(15);
 		$members->setPath('../member/'.$jenis);
 
-		return view('admin.member.index', compact('members'));
+		return view('admin.member.index', compact('borrows','members'));
 	}
 
 	/**
@@ -74,7 +81,9 @@ class MemberController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+		$member = Member::find($id);
+
+		return view('admin.member.edit', compact('member'));
 	}
 
 	/**
@@ -83,9 +92,20 @@ class MemberController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(EditMemberRequest $request, $id)
 	{
-		//
+		$member = Member::find($id);
+		$member->id = trim(strip_tags($request->input('id')));
+		$member->nama = trim(strip_tags($request->input('nama')));
+		$member->tanggal_lahir = trim(strip_tags($request->input('lahir')));
+		$member->jenis_kelamin = trim(strip_tags($request->input('jk')));
+		$member->jenis_anggota = trim(strip_tags($request->input('ja')));
+		$member->phone = trim(strip_tags($request->input('phone')));
+		$member->alamat = trim(strip_tags($request->input('alamat')));
+		$member->keterangan = trim(strip_tags($request->input('keterangan')));
+		$member->save();
+
+		return Redirect::route('admin.member.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -94,9 +114,12 @@ class MemberController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function destroy(Request $request, $id)
 	{
-		//
+		Member::where('id','=',$id)->delete();
+		Borrow::where('member_id','=',$id)->delete();
+
+		return redirect()->back()->with('message', $request->input('id').' - '.$request->input('nama').' berhasil dihapus.');
 	}
 
 	public function export($type)
@@ -108,16 +131,16 @@ class MemberController extends Controller {
 		$members = Member::orderBy('created_at','asc')->get();
 
 		if($type == 'xlsx'){
-			Excel::create('['.date('Y.m.d H.m.s').'] Data Anggota', function($excel) use($members){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Anggota Perpustakaan PT. INTI', function($excel) use($members){
 				$excel->setTitle('Data Anggota');
 				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
 				$excel->setDescription('Data Anggota Perpustakaan PT. INTI');
 				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
-				$excel->sheet('Anggota', function($sheet) use($members){
+				$excel->sheet('ANGGOTA', function($sheet) use($members){
 					$row = 1;
 					$sheet->freezeFirstRow();
 					$sheet->setFontFamily('Sans Serif');
-					$sheet->row($row, ['NIP/NIM/NIS','NAMA','TANGGAL LAHIR','JENIS KELAMIN','JENIS ANGGOTA','NOMOR TELEPON','ALAMAT','KETERANGAN']);
+					$sheet->row($row, ['NIP/NIM/NIS','NAMA','TANGGAL LAHIR','JENIS KELAMIN','JENIS ANGGOTA','NOMOR TELEPON','ALAMAT/DIVISI','KETERANGAN']);
 					foreach($members as $member)
 					{
 						$sheet->row(++$row, [

@@ -1,8 +1,11 @@
 <?php namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class File extends Model {
+
+	use SoftDeletes;
 
 	/**
 	 * The database table used by the model.
@@ -26,6 +29,8 @@ class File extends Model {
 	protected $hidden = ['created_at','updated_at'];
 
 	protected $guarded = [];
+
+	protected $primaryKey = 'book_id';
 
 	public function book()
 	{

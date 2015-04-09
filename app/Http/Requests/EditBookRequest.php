@@ -2,14 +2,7 @@
 
 use App\Http\Requests\Request;
 
-class CreateMemberRequest extends Request {
-
-	/**
-	 * The URI to redirect to if validation fails
-	 *
-	 * @var string
-	 */
-	protected $redirect = 'admin/member/create';
+class EditBookRequest extends Request {
 
 	public function __construct() {
 		$this->validator = app('validator');
@@ -34,21 +27,23 @@ class CreateMemberRequest extends Request {
 	public function rules()
 	{
 		return [
-			'id'					=>	'required|numeric|min:3|unique:members,id',
-			'nama'				=>	'required|min:3|alay',
-			'lahir'				=>	Request::has('lahir') ? 'min:3' : '',
-			'jk'					=>	'required',
-			'ja'					=>	'required',
-			'phone'				=>	is_numeric(Request::input('phone')) ? 'string|min:8|max:12' : 'numeric',
-			'alamat'			=>	Request::has('alamat') ? 'min:3|max:255' : '',
+			'jenis'				=>	'required',
+			'id'					=>	is_numeric(Request::input('jenis')) ? 'required|numeric|min:1|exists:books,id' : 'required|alpha_num|min:1|exists:books,id',
+			'judul'				=>	'required|min:3|max:255',
+			'pengarang'		=>	'required|min:3|max:255|alay',
+			'penerbit'		=>	'required|min:3|max:255',
+			'edisi'				=>	'required|digits:4',
+			'subyek'			=>	'required|min:3',
+			'rak'					=>	'required|min:3',
 			'keterangan'	=>	Request::has('keterangan') ? 'min:3|max:255' : '',
+			'file'				=>	Request::has('file') ? 'mimes|pdf,doc,docx' : '',
 		];
 	}
 
 	public function messages()
 	{
 		return [
-			'nama.alay'	=>	'The :attribute may only contain letters.',
+			'pengarang.alay'	=>	'The :attribute may only contain letters.',
 		];
 	}
 

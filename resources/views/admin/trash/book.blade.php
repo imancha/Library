@@ -1,7 +1,7 @@
 @extends('admin.master.app')
 
 @section('title')
-	Data Buku
+	Trash Data Buku
 @endsection
 
 @section('style')
@@ -10,7 +10,7 @@
 
 @section('content')
 	<div id="main-content">
-		@if(!empty($books))
+		@if(!empty($result))
 			<div class="row">
 				<div class="col-md-12">
 				@if(Session::has('message'))
@@ -24,8 +24,8 @@
 				@endif
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red">
-							<h3 class="panel-title"><strong>Data </strong> Buku</h3>
-							<ul class="pull-right header-menu">
+							<h3 class="panel-title"><strong>Trash </strong> Data Buku</h3>
+							<ul class="pull-right header-menu sr-only">
 								<li class="dropdown" id="user-header">
 									<a href="#" class="dropdown-toggle c-white" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 										<i class="fa fa-cog f-20"></i>
@@ -68,41 +68,29 @@
 											<tr>
 												<th class="text-center">Kode</th>
 												<th class="text-center">Judul Buku</th>
-												<th class="text-center">Subyek</th>
-												<th class="text-center">Rak</th>
+												<th class="text-center">Tanggal Masuk</th>
+												<th class="text-center">Tanggal Hapus</th>
 												<th class="text-center" colspan="3">Actions</th>
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($books as $book)
-												<?php $authors = []; $borrowed = false; ?>
+											@foreach($result as $book)
+												<?php $authors = []; ?>
 												@foreach($book->author as $author)
 													<?php $authors[] = $author->nama ?>
-												@endforeach
-												@foreach($borrows as $borrow)
-													@if($borrow->book_id == $book->id)
-														<?php $borrowed = true ?>
-													@endif
 												@endforeach
 												<tr>
 													<td>{{ $book->id }}</td>
 													<td>{{ $book->judul }}</td>
-													<td class="text-center">{{ $book->subject->nama }}</td>
-													<td class="text-center">{{ $book->rack->nama }}</td>
-													<td class="text-center"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
-													<td class="text-center"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.book.edit',$book->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td class="text-center"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $book->id }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
-													<td class="text-center sr-only">
-														@if(!empty($book->file->book_id))
-															<a class="c-green" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Download" href="{{ route('download',$book->file->sha1sum) }}"><i class="fa fa-save"></i></a>
-														@else
-															<i class="fa fa-save transparent-color"></i>
-														@endif
-													</td>
+													<td class="text-center">{{ tanggal($book->created_at) }}</td>
+													<td class="text-center">{{ tanggal($book->deleted_at) }}</td>
+													<td class="text-center"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="View" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
+													<td class="text-center"><a class="c-orange md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Restore" href="#restore-{{ $book->id }}" data-modal="restore-{{ $book->id }}"><i class="fa fa-undo"></i></a></td>
+													<td class="text-center"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Delete" href="#delete-{{ $book->id }}" data-modal="delete-{{ $book->id }}"><i class="fa fa-times"></i></a></td>
 												</tr>
 												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
 													<div class="md-content">
-														<h3 class="c-white">Lihat Buku</h3>
+														<h3 class="c-white">View Buku</h3>
 														<div>
 															<ul>
 																<li><strong>Kode:</strong> {{ $book->id }}</li>
@@ -113,18 +101,41 @@
 																<li><strong>Jenis:</strong> {{ $book->jenis }}</li>
 																<li><strong>Subyek:</strong> {{ $book->subject->nama }}</li>
 																<li><strong>Rak:</strong> {{ $book->rack->nama }}</li>
-																<li><strong>Tanggal Masuk:</strong> {{ tanggal($book->tanggal_masuk) }}</li>
-																<li><strong>Status:</strong> {{ $borrowed ? 'Dipinjam' : 'Tersedia' }}</li>
 															</ul>
 															<button class="btn btn-default btn-transparent md-close">Close</button>
 														</div>
 													</div>
 												</div>
-												<div class="md-modal md-effect-1" id="remove-{{ $book->id }}">
-													<div class="md-content md-content-red">
-														<h3 class="c-white">Hapus Buku . . . ?</h3>
+												<div class="md-modal md-effect-9" id="restore-{{ $book->id }}">
+													<div class="md-content md-content-orange">
+														<h3 class="c-white">Restore Buku . . . ?</h3>
 														<div>
-															<form role="form" method="POST" action="{{ action('Admin\BookController@destroy',$book->id) }}">
+															<form role="form" method="POST" action="{{ route('admin.trash.update','book-'.$book->id) }}">
+																<input name="_method" type="hidden" value="PATCH">
+																<input type="hidden" name="_token" value="{{ csrf_token() }}">
+																<input type="hidden" name="id" value="{{ $book->id }}">
+																<input type="hidden" name="judul" value="{{ $book->judul }}">
+																<ul>
+																	<li><strong>Kode:</strong> {{ $book->id }}</li>
+																	<li><strong>Judul:</strong> {{ $book->judul }}</li>
+																</ul>
+																<p class="m-20 m-t-0">
+																	<span class="pull-left">
+																		<button type="submit" class="btn btn-default btn-transparent">Restore</button>
+																	</span>
+																	<span class="pull-right">
+																		<button type="reset" class="btn btn-default btn-transparent md-close">Close</button>
+																	</span>
+																</p>
+															</form>
+														</div>
+													</div>
+												</div>
+												<div class="md-modal md-effect-1" id="delete-{{ $book->id }}">
+													<div class="md-content md-content-red">
+														<h3 class="c-white">Delete Buku . . . ?</h3>
+														<div>
+															<form role="form" method="POST" action="{{ route('admin.trash.destroy','book-'.$book->id) }}">
 																<input name="_method" type="hidden" value="DELETE">
 																<input type="hidden" name="_token" value="{{ csrf_token() }}">
 																<input type="hidden" name="id" value="{{ $book->id }}">
@@ -135,7 +146,7 @@
 																</ul>
 																<p class="m-20 m-t-0">
 																	<span class="pull-left">
-																		<button type="submit" class="btn btn-default btn-transparent">Hapus</button>
+																		<button type="submit" class="btn btn-default btn-transparent">Delete</button>
 																	</span>
 																	<span class="pull-right">
 																		<button type="reset" class="btn btn-default btn-transparent md-close">Close</button>
@@ -153,12 +164,12 @@
 								<div class="col-md-12 col-sm-12 col-xs-12 table-red">
 									<span class="pull-left">
 										<small class="c-red">
-											Showing {!! count($books) > 0 ? $books->perPage()*$books->currentPage()-$books->perPage()+1 : 0 !!}
-											to {!! $books->perPage()*$books->currentPage() < $books->total() ? $books->perPage()*$books->currentPage() : $books->total() !!}
-											of {!! $books->total() !!} entries
+											Showing {!! count($result) > 0 ? $result->perPage()*$result->currentPage()-$result->perPage()+1 : 0 !!}
+											to {!! $result->perPage()*$result->currentPage() < $result->total() ? $result->perPage()*$result->currentPage() : $result->total() !!}
+											of {!! $result->total() !!} entries
 										</small>
 									</span>
-									<span class="pull-right">{!! $books->render() !!}</span>
+									<span class="pull-right">{!! $result->render() !!}</span>
 								</div>
 							</div>
 						</div>

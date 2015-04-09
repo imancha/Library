@@ -5,9 +5,11 @@ use Redirect;
 use App\Model\Book;
 use App\Model\Borrow;
 use App\Model\Member;
+use App\Http\Requests;
 use App\Http\Requests\CreateBorrowRequest;
-use App\Http\Requests\UpdateBorrowRequest;
 use App\Http\Controllers\Controller;
+
+use Illuminate\Http\Request;
 
 class BorrowController extends Controller {
 
@@ -37,6 +39,17 @@ class BorrowController extends Controller {
 		})->get(['books.id']);
 		$borrow = Borrow::orderBy('created_at','desc')->first();
 
+		if(count($borrow) > 0)
+		{
+			$borrow = substr($borrow->id,1);
+			do
+			{
+				empty(Borrow::find('P'.++$borrow)) ? $next = false : $next = true;
+			}while($next);
+		}else{
+			$borrow = 1;
+		}
+
 		return view('admin.borrow.create',compact('members','books','borrow'));
 	}
 
@@ -47,15 +60,27 @@ class BorrowController extends Controller {
 	 */
 	public function store(CreateBorrowRequest $request)
 	{
-		$member = Member::where('id','=',trim(strip_tags($request->input('id'))))->first();
-		$book = Book::where('id','=',trim(strip_tags($request->input('kode'))))->first();
+		empty(Member::find(trim(strip_tags($request->input('id'))))) ? $empty = true : $empty = false;
 
-		Borrow::create([
-			'id'	=>	trim(strip_tags($request->input('idp'))),
-			'tanggal_pinjam'	=>	new \DateTime,
-			'member_id'	=>	$member->id,
-			'book_id'		=>	$book->id,
+		$member = Member::firstOrCreate([
+			'id' => trim(strip_tags($request->input('id'))),
+			'nama' => trim(strip_tags($request->input('nama'))),
 		]);
+
+		foreach($request->input('kode') as $kode)
+		{
+			$book = Book::find(trim(strip_tags($kode)));
+
+			Borrow::create([
+				'id'	=>	trim(strip_tags($request->input('idp'))),
+				'tanggal_pinjam'	=>	new \DateTime,
+				'member_id'	=>	trim(strip_tags($request->input('id'))),
+				'book_id'		=>	$book->id,
+			]);
+		}
+
+		if($empty)
+			return Redirect::route('admin.member.edit',trim(strip_tags($request->input('id'))))->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 
 		return Redirect::route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 	}
@@ -71,16 +96,15 @@ class BorrowController extends Controller {
 		$borrows = Borrow::where('status','like','%'.$status.'%')->orderBy('created_at','desc')->paginate(15);
 		$borrows->setPath('../borrow/'.$status);
 
-		return view('admin.borrow.index', compact('borrows'));
+		return view('admin.borrow.index',compact('borrows'));
 	}
 
 	public function patch()
 	{
-		$borrows = Borrow::where('status','=','Dipinjam')->get(['borrows.id']);
+		$borrows = Borrow::where('status','=','Dipinjam')->distinct()->get(['borrows.member_id']);
 
 		return view('admin.borrow.patch',compact('borrows'));
 	}
-
 
 	/**
 	 * Show the form for editing the specified resource.
@@ -99,14 +123,21 @@ class BorrowController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(UpdateBorrowRequest $request)
+	public function update(Request $request)
 	{
-		$borrow = Borrow::find($request->input('idp'));
-		$borrow->tanggal_kembali = new \DateTime;
-		$borrow->status = 'Dikembalikan';
-		$borrow->save();
+		$book = [];
+		if(!empty($request->input('kode')))
+		{
+			foreach($request->input('kode') as $kode)
+			{
+				$kode = explode('/',$kode);
+				$borrow = Borrow::where('id','=',$kode[0])->where('book_id','=',$kode[1])->where('status','=','Dipinjam')->update(['tanggal_kembali' => new \DateTime,'status' => 'Dikembalikan']);
+				$book[] = $kode[1];
+				$kode = [];
+			}
+		}
 
-		return Redirect::route('admin.borrow.return')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
+		return Redirect::back()->with('message', implode(', ',$book).' berhasil disimpan.');
 	}
 
 	/**
@@ -129,12 +160,12 @@ class BorrowController extends Controller {
 		$borrows = Borrow::orderBy('created_at','asc')->get();
 
 		if($type == 'xlsx'){
-			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman', function($excel) use($borrows){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman Buku Perpustakaan PT. INTI', function($excel) use($borrows){
 				$excel->setTitle('Data Peminjaman');
 				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
-				$excel->setDescription('Data Peminjaman Perpustakaan PT. INTI');
+				$excel->setDescription('Data Peminjaman Buku Perpustakaan PT. INTI');
 				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
-				$excel->sheet('Peminjaman', function($sheet) use($borrows){
+				$excel->sheet('PEMINJAMAN', function($sheet) use($borrows){
 					$row = 1;
 					$sheet->freezeFirstRow();
 					$sheet->setFontFamily('Sans Serif');

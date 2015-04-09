@@ -28,6 +28,7 @@ class CreateBooksTable extends Migration {
 			$table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
 			$table->foreign('rack_id')->references('id')->on('racks')->onDelete('cascade');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

@@ -34,4 +34,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::resource('book', 'Admin\BookController');
 	Route::resource('member', 'Admin\MemberController');
 	Route::resource('borrow', 'Admin\BorrowController');
+	Route::resource('trash', 'Admin\TrashController');
 });

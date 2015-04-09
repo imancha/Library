@@ -13,7 +13,7 @@
 		<div class="row">
 			<div class="col-md-12">
 				@if(Session::has('message'))
-					<div class="alert alert-success w-100" role="alert">
+					<div class="alert alert-success w-100 m-t-0 m-b-10" role="alert">
 						<i class='fa fa-check-square-o' style='padding-right:6px'></i>
 						<button type="button" class="close" data-dismiss="alert">×</button>
 						<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
@@ -41,13 +41,13 @@
 									</div>
 									<!-- END ERROR BOX -->
 								@endif
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@store') }}" parsley-validate>
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ route('admin.borrow.store') }}" parsley-validate>
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
 										<label class="col-sm-3 control-label">ID Peminjaman</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="idp" name="idp" class="form-control" value="P{{ count($borrow) > 0 ? (substr($borrow->id,1)+1) : 1 }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
+											<input type="text" id="idp" name="idp" class="form-control" value="P{{ $borrow }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -61,14 +61,15 @@
 										<label class="col-sm-3 control-label">Nama</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="nama" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />
+											<input type="text" id="nama" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
+									<div id="added"></div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Kode Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="kode" name="kode" class="form-control" value="{{ old('kode') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
+											<input type="text" id="kode" name="kode[]" class="form-control" value="" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -78,9 +79,19 @@
 											<input type="text" id="judul" name="judul" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />
 										</div>
 									</div>
+									<div class="form-group">
+										<div class="col-sm-10">
+											<button id="plus" class="btn btn-sm btn-success btn-icon btn-rounded pull-right" data-placement="left" data-toggle="tooltip" rel="tooltip" data-original-title="Tambah Buku" type="button">
+												<i class="fa fa-plus"></i>
+											</button>
+											<button id="minus" class="btn btn-sm btn-icon btn-rounded btn-warning pull-right" data-placement="left" data-toggle="tooltip" rel="tooltip" data-original-title="Kurangi Buku" type="button">
+												<i class="fa fa-minus"></i>
+											</button>
+										</div>
+									</div>
 									<div class="form-group text-center">
 										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
-										<button type="reset" class="btn btn-default">Cancel</button>
+										<button id="cancel" type="reset" class="btn btn-default">Cancel</button>
 									</div>
 								</form>
 							</div>
@@ -99,6 +110,7 @@
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 	<script>
 		$(document).ready(function(){
+			var i = 0;
 			$('#id').autocomplete({
 				source:[{
 					data:{!! $members !!}
@@ -147,6 +159,41 @@
 							$('#judul').val(data[row].judul);
 					},
 				});
+			});
+			$('#minus').hide();
+			$('#plus').click(function(){
+				++i;
+				var html = '';
+				html += '<div class="form-group">';
+				html += '	<label class="col-sm-3 control-label">Kode Buku</label>';
+				html += '	<div class="col-sm-7 input-icon right">';
+				html += '		<i class="fa"></i>';
+				html += '		<input type="text" id="kode-'+i+'" name="kode[]" class="kode form-control" value="'+$('#kode').val()+'" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />';
+				html += '	</div>';
+				html += '</div>';
+				html += '<div class="form-group">';
+				html += '	<label class="col-sm-3 control-label">Judul</label>';
+				html += '	<div class="col-sm-7 input-icon right">';
+				html += '		<i class="fa"></i>';
+				html += '		<input type="text" id="judul-'+i+'" name="judul" class="form-control" value="'+$('#judul').val()+'" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />';
+				html += '	</div>';
+				html += '</div>';
+				$('#kode').val('');
+				$('#judul').val('');
+				$('#added').append(html);
+				$('#minus').show();
+			});
+			$('#minus').click(function(){
+				$('#kode').val($('#kode-'+i).val());
+				$('#judul').val($('#judul-'+i).val());
+				$('#added').children().last().remove();
+				$('#added').children().last().remove();
+				--i;
+				if(i==0) $('#minus').hide();
+			});
+			$('#cancel').click(function(){
+				$('#added').empty();
+				i = 0;
 			});
 		});
 	</script>

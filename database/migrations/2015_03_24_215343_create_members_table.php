@@ -16,7 +16,7 @@ class CreateMembersTable extends Migration {
 		{
 			$table->char('id',15);
 			$table->string('nama');
-			$table->date('tanggal_lahir');
+			$table->string('tanggal_lahir')->default('');
 			$table->enum('jenis_kelamin', ['Laki-Laki','Perempuan']);
 			$table->enum('jenis_anggota', ['Karyawan','Non-Karyawan']);
 			$table->char('phone',12)->default('');
@@ -24,6 +24,7 @@ class CreateMembersTable extends Migration {
 			$table->text('keterangan')->default('');
 			$table->primary('id');
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 

@@ -1,12 +1,12 @@
 @extends('admin.master.app')
 
 @section('title')
-	Data Peminjaman
+	Trash Data Peminjaman
 @endsection
 
 @section('content')
 	<div id="main-content">
-		@if(!empty($borrows))
+		@if(!empty($result))
 			<div class="row">
 				<div class="col-md-12">
 					@if(Session::has('message'))
@@ -20,8 +20,8 @@
 					@endif
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red">
-							<h3 class="panel-title"><strong>Data </strong> Peminjaman</h3>
-							<ul class="pull-right header-menu">
+							<h3 class="panel-title"><strong>Trash </strong> Data Peminjaman</h3>
+							<ul class="pull-right header-menu sr-only">
 								<li class="dropdown" id="user-header">
 									<a href="#" class="dropdown-toggle c-white" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 										<i class="fa fa-cog f-20"></i>
@@ -64,23 +64,23 @@
 											<tr>
 												<th>ID</th>
 												<th>NIS/NIM/NIP</th>
-												<th>Nama</th>
 												<th>Kode Buku</th>
 												<th>Tanggal Pinjam</th>
 												<th>Tanggal Kembali</th>
 												<th>Status</th>
+												<th>Tanggal Hapus</th>
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($borrows as $borrow)
+											@foreach($result as $borrow)
 												<tr>
 													<td>{{ $borrow->id }}</td>
-													<td>{{ $borrow->member->id }}</td>
-													<td>{{ $borrow->member->nama }}</td>
-													<td>{{ $borrow->book->id }}</td>
+													<td>{{ $borrow->member_id }}</td>
+													<td>{{ $borrow->book_id }}</td>
 													<td>{{ tanggal($borrow->tanggal_pinjam) }}</td>
 													<td>{{ empty($borrow->tanggal_kembali) ? '' : tanggal($borrow->tanggal_kembali) }}</td>
 													<td>{{ $borrow->status }}</td>
+													<td>{{ tanggal($borrow->deleted_at) }}</td>
 												</tr>
 											@endforeach
 										</tbody>
@@ -89,10 +89,10 @@
 								<div class="col-md-12 col-sm-12 col-xs-12 table-red">
 									<span class="pull-left">
 										<small class="c-red">
-											Showing {!! count($borrows) > 0 ? $borrows->perPage()*$borrows->currentPage()-$borrows->perPage()+1 : 0 !!}
-											to {!! $borrows->perPage()*$borrows->currentPage() < $borrows->total() ? $borrows->perPage()*$borrows->currentPage() : $borrows->total() !!}
-											of {!! $borrows->total() !!} entries</small></span>
-									<span class="pull-right">{!! $borrows->render() !!}</span>
+											Showing {!! count($result) > 0 ? $result->perPage()*$result->currentPage()-$result->perPage()+1 : 0 !!}
+											to {!! $result->perPage()*$result->currentPage() < $result->total() ? $result->perPage()*$result->currentPage() : $result->total() !!}
+											of {!! $result->total() !!} entries</small></span>
+									<span class="pull-right">{!! $result->render() !!}</span>
 								</div>
 							</div>
 						</div>

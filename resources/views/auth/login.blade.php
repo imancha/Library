@@ -35,7 +35,7 @@
 						<img src="{{ asset('/assets/img/account/user-icon.png') }}" alt="Key icon">
 					</div>
 					<div class="login-logo">
-						<img src="{{ asset('/assets/img/account/login-logo.png') }}" alt="Company Logo">
+						<img src="" alt="PERPUSTAKAAN PT. INTI">
 					</div>
 					<hr>
 					<div class="login-form">
@@ -58,7 +58,7 @@
 							<input type="password" name="password" placeholder="Password" class="input-field form-control password" />
 							<button type="submit" class="btn btn-login">Login</button>
 						</form>
-						<div class="login-links">
+						<div class="login-links sr-only">
 							<a href="{{ url('/password/email') }}">Forgot password?</a>
 						</div>
 					</div>

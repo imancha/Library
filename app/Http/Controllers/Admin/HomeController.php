@@ -26,7 +26,7 @@ class HomeController extends Controller {
 		$pinjam = Borrow::where('status','=','Dipinjam')->count();
 		$kembali = Borrow::where('status','=','Dikembalikan')->count();
 
-		return view('admin.home', compact('books','asli','pkl','members','karyawan','nonkaryawan','borrows','pinjam','kembali'));
+		return view('admin.index', compact('books','asli','pkl','members','karyawan','nonkaryawan','borrows','pinjam','kembali'));
 	}
 
 	public function lockscreen()
@@ -52,15 +52,11 @@ class HomeController extends Controller {
 
 	public function postReturn()
 	{
-		$borrow = Borrow::find(Request::input('id'));
+		$borrows = Book::join('borrows', function($join){
+			$join->on('borrows.book_id','=','books.id')->where('borrows.status','=','Dipinjam')->where('borrows.member_id','=',Request::input('id'));
+		})->get(['borrows.id','borrows.book_id','books.judul','borrows.tanggal_pinjam']);
 
-		if(count($borrow) > 0)
-		{
-			$member = Member::findOrFail($borrow->member_id)->get(['members.id','members.nama']);
-			$book = Book::findOrFail($borrow->book_id)->get(['books.id','books.judul']);
-
-			return Response::json(['member' => $member, 'book' => $book]);
-		}
+		return Response::json($borrows);
 	}
 
 }
