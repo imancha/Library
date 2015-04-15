@@ -17,7 +17,7 @@ class CreateBooksTable extends Migration {
 			$table->char('id', 10);
 			$table->string('judul');
 			$table->char('edisi', 4);
-			$table->enum('jenis', ['ASLI','PKL']);
+			$table->enum('jenis', ['asli','pkl']);
 			$table->date('tanggal_masuk');
 			$table->string('keterangan')->default('');
 			$table->integer('publisher_id')->unsigned();

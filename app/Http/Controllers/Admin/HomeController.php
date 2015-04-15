@@ -20,11 +20,11 @@ class HomeController extends Controller {
 		$asli = Book::where('jenis','=','asli')->count();
 		$pkl = Book::where('jenis','=','pkl')->count();
 		$members = Member::count();
-		$karyawan = Member::where('jenis_anggota','=','Karyawan')->count();
-		$nonkaryawan = Member::where('jenis_anggota','=','Non-Karyawan')->count();
+		$karyawan = Member::where('jenis_anggota','=','karyawan')->count();
+		$nonkaryawan = Member::where('jenis_anggota','=','non-karyawan')->count();
 		$borrows = Borrow::count();
-		$pinjam = Borrow::where('status','=','Dipinjam')->count();
-		$kembali = Borrow::where('status','=','Dikembalikan')->count();
+		$pinjam = Borrow::where('status','like','%pinjam%')->count();
+		$kembali = Borrow::where('status','like','%kembali%')->count();
 
 		return view('admin.index', compact('books','asli','pkl','members','karyawan','nonkaryawan','borrows','pinjam','kembali'));
 	}
@@ -37,7 +37,7 @@ class HomeController extends Controller {
 	public function postBook()
 	{
 		$book = Book::whereNotIn('id',function($query){
-			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','=','Dipinjam');
+			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','like','%pinjam%');
 		})->where('id','=',Request::input('kode'))->get(['books.judul']);
 
 		return Response::json($book);
@@ -53,7 +53,7 @@ class HomeController extends Controller {
 	public function postReturn()
 	{
 		$borrows = Book::join('borrows', function($join){
-			$join->on('borrows.book_id','=','books.id')->where('borrows.status','=','Dipinjam')->where('borrows.member_id','=',Request::input('id'));
+			$join->on('borrows.book_id','=','books.id')->where('borrows.status','like','%pinjam%')->where('borrows.member_id','=',Request::input('id'));
 		})->get(['borrows.id','borrows.book_id','books.judul','borrows.tanggal_pinjam']);
 
 		return Response::json($borrows);

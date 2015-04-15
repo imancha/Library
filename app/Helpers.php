@@ -2,11 +2,15 @@
 
 function setCurrent($route, $class = 'current')
 {
-	return (Route::currentRouteName() == $route) ? $class : '';
+	return (Route::currentRouteName() == $route  && !Request::has('q')) ? $class : '';
 }
 function setCurren($route, $class = 'current')
 {
 	return (Request::path() == $route) ? $class : '';
+}
+function setCurrenq($route, $class = 'current')
+{
+	return (Request::path() == $route && Request::has('q')) ? $class : '';
 }
 function setActive($route, $class = 'current active hasSub')
 {
@@ -22,21 +26,7 @@ function setSelected($route, $class = 'selected')
 }
 function tanggal($date)
 {
-	$Bulan = [
-		"00",
-		"Januari",
-		"Februari",
-		"Maret",
-		"April",
-		"Mei",
-		"Juni",
-		"Juli",
-		"Agustus",
-		"September",
-		"Oktober",
-		"November",
-		"Desember"
-	];
+	$Bulan = ["00","Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 	$tahun = substr($date,0,4);
 	$bulan = substr($date,5,2);
 	$tgl = substr($date,8,2);

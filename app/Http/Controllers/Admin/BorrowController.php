@@ -13,15 +13,24 @@ use Illuminate\Http\Request;
 
 class BorrowController extends Controller {
 
+	private $perpage = 10;
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$borrows = Borrow::orderBy('created_at','desc')->paginate(15);
-		$borrows->setPath('../admin/borrow');
+		if($request->has('q'))
+		{
+			$q = $request->input('q');
+			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('tanggal_pinjam','like','%'.$q.'%')->orWhere('tanggal_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->orderBy('created_at','desc')->paginate($this->perpage);
+			$borrows->setPath('../admin/borrow^q='.$q);
+		}else{
+			$borrows = Borrow::orderBy('created_at','desc')->paginate($this->perpage);
+			$borrows->setPath('../admin/borrow');
+		}
 
 		return view('admin.borrow.index', compact('borrows'));
 	}
@@ -35,7 +44,7 @@ class BorrowController extends Controller {
 	{
 		$members = Member::all(['members.id']);
 		$books = Book::whereNotIn('id', function($query){
-			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','=','Dipinjam');
+			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','like','%pinjam%');
 		})->get(['books.id']);
 		$borrow = Borrow::orderBy('created_at','desc')->first();
 
@@ -91,12 +100,9 @@ class BorrowController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($status)
+	public function show($id)
 	{
-		$borrows = Borrow::where('status','like','%'.$status.'%')->orderBy('created_at','desc')->paginate(15);
-		$borrows->setPath('../borrow/'.$status);
-
-		return view('admin.borrow.index',compact('borrows'));
+		//
 	}
 
 	public function patch()
@@ -131,7 +137,7 @@ class BorrowController extends Controller {
 			foreach($request->input('kode') as $kode)
 			{
 				$kode = explode('/',$kode);
-				$borrow = Borrow::where('id','=',$kode[0])->where('book_id','=',$kode[1])->where('status','=','Dipinjam')->update(['tanggal_kembali' => new \DateTime,'status' => 'Dikembalikan']);
+				$borrow = Borrow::where('id','=',$kode[0])->where('book_id','=',$kode[1])->where('status','like','%pinjam%')->update(['tanggal_kembali' => new \DateTime,'status' => 'pengembalian/tersedia']);
 				$book[] = $kode[1];
 				$kode = [];
 			}
@@ -180,7 +186,7 @@ class BorrowController extends Controller {
 							$borrow->book->judul,
 							implode('-',array_reverse(explode('-',$borrow->tanggal_pinjam))),
 							implode('-',array_reverse(explode('-',$borrow->tanggal_kembali))),
-							$borrow->status,
+							empty($borrow->status) ? '' : $borrow->status == 'peminjaman/dipinjam' ? 'Peminjaman' : 'Pengembalian',
 						]);
 					}
 				});

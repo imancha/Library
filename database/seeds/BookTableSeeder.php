@@ -45,7 +45,7 @@ class BookTableSeeder extends Seeder {
 					'id'		=>	$result->kode_buku,
 					'judul'	=>	$result->judul_buku,
 					'edisi'	=>	$result->edisi,
-					'jenis'	=>	$result->jenis,
+					'jenis'	=>	strtolower($result->jenis),
 					'tanggal_masuk'	=>	$result->tanggal_masuk,
 					'keterangan'		=>	(empty($result->keterangan) ? '' : $result->keterangan),
 					'publisher_id'	=>	$publisher->id,

@@ -6,7 +6,7 @@
 
 @section('content')
 	<div id="main-content">
-		@if(!empty($result))
+		@if(count($result) > 0)
 			<div class="row">
 				<div class="col-md-12">
 					@if(Session::has('message'))
@@ -28,26 +28,6 @@
 									</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="#" class="p-t-0 p-b-0">
-													<strong>Filter By:</strong>
-												</a>
-											</li>
-											<li {{ setActiv('admin/borrow') }}>
-												<a href="{{ route('admin.borrow.index') }}">
-													<i class="glyphicon glyphicon-sort"></i> Semua Peminjaman
-												</a>
-											</li>
-											<li {{ setActiv('admin/borrow/pinjam') }}>
-												<a href="{{ route('admin.borrow.show','pinjam') }}">
-													<i class="glyphicon glyphicon-sort-by-attributes-alt"></i> Sedang Dipinjam
-												</a>
-											</li>
-											<li {{ setActiv('admin/borrow/kembali') }}>
-												<a href="{{ route('admin.borrow.show','kembali') }}">
-													<i class="glyphicon glyphicon-sort-by-attributes"></i> Telah Dikembalikan
-												</a>
-											</li>
-											<li class="border-top">
 												<a href="{{ route('admin.borrow.export','xlsx') }}">
 													<i class="glyphicon glyphicon-file"></i> Export to Excel
 												</a>
@@ -56,7 +36,7 @@
 								</li>
 							</ul>
 						</div>
-						<div class="panel-body">
+						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
 									<table class="table table-striped table-hover">
@@ -98,6 +78,13 @@
 						</div>
 					</div>
 				</div>
+			</div>
+		@else
+			<div class="alert alert-warning w-100 m-t-0 m-b-10" role="alert">
+				<i class='fa fa-frown-o' style='padding-right:3px'></i>
+				<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
+				<span class="sr-only">Error:</span>
+				Oops! Trash data peminjaman tidak ditemukan . . .
 			</div>
 		@endif
 	</div>

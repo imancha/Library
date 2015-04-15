@@ -8,17 +8,14 @@
 <head>
 	<!-- BEGIN META SECTION -->
 	<meta charset="utf-8">
-	<title>@yield('title') | Admin Library</title>
+	<title>@yield('title') - Admin Library</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
 	<meta content="" name="description" />
 	<meta content="" name="author" />
 	<!-- END META SECTION -->
 	<!-- BEGIN MANDATORY STYLE -->
-	<link href="{{ asset('/assets/css/icons/icons.min.css') }}" rel="stylesheet">
-	<link href="{{ asset('/assets/css/bootstrap.min.css') }}" rel="stylesheet">
-	<link href="{{ asset('/assets/css/plugins.min.css') }}" rel="stylesheet">
-	<link href="{{ asset('/assets/css/style.min.css') }}" rel="stylesheet">
+	<link href="{{ asset('/assets/css/style.css') }}" rel="stylesheet">
 	<!-- END  MANDATORY STYLE -->
 	<!-- BEGIN PAGE LEVEL STYLE -->
 	@yield('style')
@@ -44,7 +41,7 @@
 					<img src="" alt="Admin" width="79" height="26">
 				</a>
 			</div>
-			<div class="navbar-center">&bull; &#9728; <strong>PERPUSTAKAAN PT. INTI</strong> &#9728; &bull;</div>
+			<div class="navbar-center"><strong>PERPUSTAKAAN PT. INTI</strong></div>
 			<div class="navbar-collapse collapse">
 				<!-- BEGIN TOP NAVIGATION MENU -->
 				<ul class="nav navbar-nav pull-right header-menu">
@@ -91,6 +88,7 @@
 		<!-- BEGIN MAIN CONTENT -->
 		@yield('content')
 		<!-- END MAIN CONTENT -->
+		@include('admin.master.search')
 	</div>
 	<!-- END WRAPPER -->
 	<!-- BEGIN MANDATORY SCRIPTS -->
@@ -107,6 +105,17 @@
 	<script src="{{ asset('/assets/plugins/charts-sparkline/sparkline.min.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/breakpoints/breakpoints.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/numerator/jquery-numerator.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/modal-effects/js/modernizr.custom.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/modal-effects/js/classie.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/modal-effects/js/modalEffects.js') }}"></script>
+	<!-- for the blur effect -->
+	<!-- by @derSchepp https://github.com/Schepp/CSS-Filters-Polyfill -->
+	<script>
+		// this is important for IEs
+		var polyfilter_scriptpath = '{{ asset('/assets/plugins/modal-effects/js/') }}';
+	</script>
+	<script src="{{ asset('/assets/plugins/modal-effects/js/cssParser.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/modal-effects/js/css-filters-polyfill.js') }}"></script>
 	<!-- END MANDATORY SCRIPTS -->
 	@yield('script')
 	<script src="{{ asset('/assets/js/application.js') }}"></script>

@@ -65,11 +65,11 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input tabindex="11" type="radio" name="jk" value="Laki-Laki" {{ $member->jenis_kelamin != 'Perempuan' ? 'checked' : '' }} />
+													<input tabindex="11" type="radio" name="jk" value="laki-Laki" {{ $member->jenis_kelamin != 'perempuan' ? 'checked' : '' }} />
 													<label class="m-r-20">Laki-Laki</label>
 												</li>
 												<li>
-													<input tabindex="11" type="radio" name="jk" value="Perempuan" {{ $member->jenis_kelamin == 'Perempuan' ? 'checked' : '' }} />
+													<input tabindex="11" type="radio" name="jk" value="perempuan" {{ $member->jenis_kelamin == 'perempuan' ? 'checked' : '' }} />
 													<label>Perempuan</label>
 												</li>
 											</ul>
@@ -80,11 +80,11 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input id="k" tabindex="11" type="radio" name="ja" value="Karyawan" {{ $member->jenis_anggota == 'Karyawan' ? 'checked' : '' }} />
+													<input id="k" tabindex="11" type="radio" name="ja" value="karyawan" {{ $member->jenis_anggota == 'karyawan' ? 'checked' : '' }} />
 													<label class="m-r-20">Karyawan</label>
 												</li>
 												<li>
-													<input id="nk" tabindex="11" type="radio" name="ja" value="Non-Karyawan" {{ $member->jenis_anggota != 'Karyawan' ? 'checked' : '' }} />
+													<input id="nk" tabindex="11" type="radio" name="ja" value="non-karyawan" {{ $member->jenis_anggota != 'karyawan' ? 'checked' : '' }} />
 													<label>Non-Karyawan</label>
 												</li>
 											</ul>

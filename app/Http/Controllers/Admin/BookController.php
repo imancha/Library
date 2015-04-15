@@ -1,8 +1,6 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Excel;
-use Input;
-use PDF;
 use Redirect;
 use App\Model\Author;
 use App\Model\Book;
@@ -21,16 +19,25 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller {
 
+	private $perpage = 10;
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
-		$borrows = Borrow::where('status','=','Dipinjam')->get();
-		$books = Book::orderBy('created_at','desc')->paginate(15);
-		$books->setPath('../admin/book');
+		$borrows = Borrow::where('status','like','%pinjam%')->get();
+		if($request->has('q'))
+		{
+			$q = $request->input('q');
+			$books = Book::where('id','like','%'.$q.'%')->orWhere('judul','like','%'.$q.'%')->orWhere('edisi','like','%'.$q.'%')->orWhere('jenis','like','%'.$q.'%')->orWhereIn('id',BookAuthor::whereIn('author_id',Author::where('nama','like','%'.$q.'%')->get(['authors.id'])->toArray())->get(['book_id'])->toArray())->orWhereIn('publisher_id',Publisher::where('nama','like','%'.$q.'%')->get(['publishers.id'])->toArray())->orWhereIn('subject_id',Subject::where('nama','like','%'.$q.'%')->get(['subjects.id'])->toArray())->orWhereIn('rack_id',Rack::where('nama','like','%'.$q.'%')->get(['racks.id'])->toArray())->orWhereIn('id',Borrow::where('status','like','%'.$q.'%')->get(['borrows.book_id'])->toArray())->orderBy('created_at','desc')->paginate($this->perpage);
+			$books->setPath('../admin/book^q='.$q);
+		}else{
+			$books = Book::orderBy('created_at','desc')->paginate($this->perpage);
+			$books->setPath('../admin/book');
+		}
 
 		return view('admin.book.index', compact('borrows','books'));
 	}
@@ -45,8 +52,8 @@ class BookController extends Controller {
 		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
 		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
 		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = Book::where('jenis','=','ASLI')->orderBy('created_at','desc')->first();
-		$pkl = Book::where('jenis','=','PKL')->orderBy('created_at','desc')->first();
+		$asli = Book::where('jenis','=','asli')->orderBy('created_at','desc')->first();
+		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','desc')->first();
 
 		if(count($asli) > 0)
 		{
@@ -96,7 +103,7 @@ class BookController extends Controller {
 			'id'						=>	trim(strip_tags($request->input('id'))),
 			'judul'					=>	trim(strip_tags($request->input('judul'))),
 			'edisi'					=>	trim(strip_tags($request->input('edisi'))),
-			'jenis'					=>	trim(strip_tags(is_numeric($request->input('jenis')) ? 'ASLI' : 'PKL')),
+			'jenis'					=>	trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl')),
 			'tanggal_masuk'	=>	new \DateTime,
 			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
 			'publisher_id'	=>	$publisher->id,
@@ -145,11 +152,7 @@ class BookController extends Controller {
 	 */
 	public function show($jenis)
 	{
-		$borrows = Borrow::where('status','=','Dipinjam')->get();
-		$books = Book::where('jenis','=',strtoupper($jenis))->orderBy('created_at','desc')->paginate(15);
-		$books->setPath('../book/'.$jenis);
-
-		return view('admin.book.index', compact('borrows','books'));
+		//
 	}
 
 	/**
@@ -260,8 +263,8 @@ class BookController extends Controller {
 		ini_set('memory_limit', '500M');
 		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
 
-		$asli = Book::where('jenis','=','ASLI')->orderBy('created_at','asc')->get();
-		$pkl = Book::where('jenis','=','PKL')->orderBy('created_at','asc')->get();
+		$asli = Book::where('jenis','=','asli')->orderBy('created_at','asc')->get();
+		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','asc')->get();
 
 		if($type == 'xlsx'){
 			Excel::create('['.date('Y.m.d H.m.s').'] Data Buku Perpustakaan PT. INTI', function($excel) use($asli,$pkl){
@@ -313,12 +316,6 @@ class BookController extends Controller {
 				});
 			})->export($type);
 		}
-/*
-		elseif($type == 'pdf'){
-			$pdf = PDF::loadView('admin.book.export', compact('books'));
-			return $pdf->setPaper('a4')->setOrientation('landscape')->setWarnings(false)->download('['.date('Y.m.d H.m.s').'] Koleksi Buku.pdf');
-		}
-*/
 	}
 
 }

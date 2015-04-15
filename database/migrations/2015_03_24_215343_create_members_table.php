@@ -17,8 +17,8 @@ class CreateMembersTable extends Migration {
 			$table->char('id',15);
 			$table->string('nama');
 			$table->string('tanggal_lahir')->default('');
-			$table->enum('jenis_kelamin', ['Laki-Laki','Perempuan']);
-			$table->enum('jenis_anggota', ['Karyawan','Non-Karyawan']);
+			$table->enum('jenis_kelamin', ['laki-laki','perempuan']);
+			$table->enum('jenis_anggota', ['karyawan','non-karyawan']);
 			$table->char('phone',12)->default('');
 			$table->text('alamat')->default('');
 			$table->text('keterangan')->default('');

@@ -13,16 +13,25 @@ use Illuminate\Http\Request;
 
 class MemberController extends Controller {
 
+	private $perpage = 10;
+
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index(Request $request)
 	{
 		$borrows = Borrow::groupBy('id')->get();
-		$members = Member::orderBy('created_at','asc')->paginate(15);
-		$members->setPath('../admin/member');
+		if($request->has('q'))
+		{
+			$q = $request->input('q');
+			$members = Member::where('id','like','%'.$q.'%')->orWhere('nama','like','%'.$q.'%')->orWhere('jenis_kelamin','like','%'.$q.'%')->orWhere('jenis_anggota','like','%'.$q.'%')->orWhere('alamat','like','%'.$q.'%')->orderBy('created_at','asc')->paginate($this->perpage);
+			$members->setPath('../admin/member^q='.$q);
+		}else{
+			$members = Member::orderBy('created_at','asc')->paginate($this->perpage);
+			$members->setPath('../admin/member');
+		}
 
 		return view('admin.member.index', compact('borrows','members'));
 	}
@@ -64,13 +73,9 @@ class MemberController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($jenis)
+	public function show($id)
 	{
-		$borrows = Borrow::groupBy('id')->get();
-		$members = Member::where('jenis_anggota','=',$jenis)->orderBy('created_at','desc')->paginate(15);
-		$members->setPath('../member/'.$jenis);
-
-		return view('admin.member.index', compact('borrows','members'));
+		//
 	}
 
 	/**
@@ -147,8 +152,8 @@ class MemberController extends Controller {
 							$member->id,
 							$member->nama,
 							implode('-',array_reverse(explode('-',$member->tanggal_lahir))),
-							$member->jenis_kelamin,
-							$member->jenis_anggota,
+							strtoupper($member->jenis_kelamin),
+							strtoupper($member->jenis_anggota),
 							$member->phone,
 							$member->alamat,
 							$member->keterangan,

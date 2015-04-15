@@ -17,7 +17,7 @@ class CreateBorrowsTable extends Migration {
 			$table->char('id',10);
 			$table->date('tanggal_pinjam');
 			$table->date('tanggal_kembali')->nullable();
-			$table->enum('status',['Dipinjam','Dikembalikan'])->default('Dipinjam');
+			$table->enum('status',['peminjaman/dipinjam','pengembalian/tersedia'])->default('peminjaman/dipinjam');
 			$table->char('member_id',15);
 			$table->char('book_id',10);
 			$table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
