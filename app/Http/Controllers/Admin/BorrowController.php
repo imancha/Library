@@ -107,7 +107,7 @@ class BorrowController extends Controller {
 
 	public function patch()
 	{
-		$borrows = Borrow::where('status','=','Dipinjam')->distinct()->get(['borrows.member_id']);
+		$borrows = Borrow::where('status','like','%pinjam%')->distinct()->get(['borrows.member_id']);
 
 		return view('admin.borrow.patch',compact('borrows'));
 	}

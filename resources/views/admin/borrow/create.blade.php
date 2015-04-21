@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-	<div id="main-content" class="dashboard">
+	<div id="main-content">
 		<div class="row">
 			<div class="col-md-12">
 				@if(Session::has('message'))
@@ -74,19 +74,13 @@
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Judul</label>
-										<div class="col-sm-7 input-icon right">
-											<i class="fa"></i>
-											<input type="text" id="judul" name="judul" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-sm-10">
-											<button id="plus" class="btn btn-sm btn-success btn-icon btn-rounded pull-right" data-placement="left" data-toggle="tooltip" rel="tooltip" data-original-title="Tambah Buku" type="button">
-												<i class="fa fa-plus"></i>
-											</button>
-											<button id="minus" class="btn btn-sm btn-icon btn-rounded btn-warning pull-right" data-placement="left" data-toggle="tooltip" rel="tooltip" data-original-title="Kurangi Buku" type="button">
-												<i class="fa fa-minus"></i>
-											</button>
+										<div class="col-sm-7">
+											<div class="input-group">
+												<input type="text" id="judul" name="judul" class="form-control" value="" autocomplete="off" readonly />
+												<span id="plus" class="input-group-addon btn btn-sm" data-placement="right" data-toggle="tooltip" rel="tooltip" data-original-title="Tambah Buku">
+													<i class="fa fa-plus"></i>
+												</span>
+											</div>
 										</div>
 									</div>
 									<div class="form-group text-center">
@@ -160,41 +154,38 @@
 					},
 				});
 			});
-			$('#minus').hide();
 			$('#plus').click(function(){
-				++i;
 				var html = '';
+				html += '<div id="'+(++i)+'">';
 				html += '<div class="form-group">';
 				html += '	<label class="col-sm-3 control-label">Kode Buku</label>';
 				html += '	<div class="col-sm-7 input-icon right">';
 				html += '		<i class="fa"></i>';
-				html += '		<input type="text" id="kode-'+i+'" name="kode[]" class="kode form-control" value="'+$('#kode').val()+'" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />';
+				html += '		<input type="text" name="kode[]" class="form-control" value="'+$('#kode').val()+'" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />';
 				html += '	</div>';
 				html += '</div>';
 				html += '<div class="form-group">';
 				html += '	<label class="col-sm-3 control-label">Judul</label>';
-				html += '	<div class="col-sm-7 input-icon right">';
-				html += '		<i class="fa"></i>';
-				html += '		<input type="text" id="judul-'+i+'" name="judul" class="form-control" value="'+$('#judul').val()+'" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />';
+				html += '	<div class="col-sm-7">';
+				html += '		<div class="input-group">';
+				html += '			<input type="text" name="judul" class="form-control" value="'+$('#judul').val()+'" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />';
+				html += '			<span class="input-group-addon btn btn-sm" data-placement="right" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus Buku" onclick="remover('+i+');">';
+				html += '				<i class="fa fa-minus"></i>';
+				html += '			</span>';
+				html += '		</div>';
 				html += '	</div>';
 				html += '</div>';
-				$('#kode').val('');
-				$('#judul').val('');
+				html += '</div>';
+				$('#kode,#judul').val('');
 				$('#added').append(html);
-				$('#minus').show();
-			});
-			$('#minus').click(function(){
-				$('#kode').val($('#kode-'+i).val());
-				$('#judul').val($('#judul-'+i).val());
-				$('#added').children().last().remove();
-				$('#added').children().last().remove();
-				--i;
-				if(i==0) $('#minus').hide();
 			});
 			$('#cancel').click(function(){
 				$('#added').empty();
 				i = 0;
 			});
 		});
+		function remover(x){
+			$("#"+x).remove();
+		}
 	</script>
 @endsection

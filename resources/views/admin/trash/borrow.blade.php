@@ -39,16 +39,16 @@
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-striped table-hover">
+									<table class="table table-bordered table-hover">
 										<thead>
 											<tr>
-												<th>ID</th>
-												<th>NIS/NIM/NIP</th>
-												<th>Kode Buku</th>
-												<th>Tanggal Pinjam</th>
-												<th>Tanggal Kembali</th>
-												<th>Status</th>
-												<th>Tanggal Hapus</th>
+												<th class="text-center">ID</th>
+												<th class="text-center">NIS/NIM/NIP</th>
+												<th class="text-center">Kode Buku</th>
+												<th class="text-center">Tanggal Pinjam</th>
+												<th class="text-center">Tanggal Kembali</th>
+												<th class="text-center">Keterangan</th>
+												<th class="text-center">Waktu Hapus</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -59,8 +59,8 @@
 													<td>{{ $borrow->book_id }}</td>
 													<td>{{ tanggal($borrow->tanggal_pinjam) }}</td>
 													<td>{{ empty($borrow->tanggal_kembali) ? '' : tanggal($borrow->tanggal_kembali) }}</td>
-													<td>{{ $borrow->status }}</td>
-													<td>{{ tanggal($borrow->deleted_at) }}</td>
+													<td>{{ empty($borrow->tanggal_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
+													<td>{{ $borrow->deleted_at }}</td>
 												</tr>
 											@endforeach
 										</tbody>

@@ -20,8 +20,8 @@ class CreateBorrowsTable extends Migration {
 			$table->enum('status',['peminjaman/dipinjam','pengembalian/tersedia'])->default('peminjaman/dipinjam');
 			$table->char('member_id',15);
 			$table->char('book_id',10);
-			$table->foreign('member_id')->references('id')->on('members')->onDelete('cascade');
-			$table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+			$table->foreign('member_id')->references('id')->on('members')->onUpdate('cascade')->onDelete('cascade');
+			$table->foreign('book_id')->references('id')->on('books')->onUpdate('cascade')->onDelete('cascade');
 			$table->timestamps();
 			$table->softDeletes();
 		});

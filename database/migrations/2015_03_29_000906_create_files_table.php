@@ -16,8 +16,9 @@ class CreateFilesTable extends Migration {
 		{
 			$table->char('book_id',10);
 			$table->string('filename');
+			$table->char('mime',4);
 			$table->string('sha1sum');
-			$table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
+			$table->foreign('book_id')->references('id')->on('books')->onUpdate('cascade')->onDelete('cascade');
 			$table->timestamps();
 			$table->softDeletes();
 		});

@@ -39,7 +39,7 @@
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-bordered table-hover">
+									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
 												<th class="text-center">ID</th>

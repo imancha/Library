@@ -39,7 +39,7 @@
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-striped table-bordered">
+									<table class="table table-striped table-bordered  table-hover">
 										<thead>
 											<tr>
 												<th class="text-center">NIP/NIM/NIS</th>
@@ -52,39 +52,16 @@
 										</thead>
 										<tbody>
 											@foreach($members as $member)
-												<?php $record = 0 ?>
-												@foreach($borrows as $borrow)
-													@if($member->id == $borrow->member_id)
-														<?php ++$record ?>
-													@endif
-												@endforeach
 												<tr>
 													<td>{{ $member->id }}</td>
 													<td>{{ $member->nama }}</td>
 													<td>{{ ucfirst($member->jenis_kelamin) }}</td>
 													<td>{{ ucfirst($member->jenis_anggota) }}</td>
 													<td>{{ $member->alamat }}</td>
-													<td><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="#view-{{ $member->id }}" data-modal="view-{{ $member->id }}"><i class="fa fa-eye"></i></a></td>
+													<td><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ route('admin.member.show',$member->id) }}"><i class="fa fa-eye"></i></a></td>
 													<td><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.member.edit',$member->id) }}"><i class="fa fa-edit"></i></a></td>
 													<td><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $member->id }}" data-modal="remove-{{ $member->id }}"><i class="fa fa-trash-o"></i></a></td>
 												</tr>
-												<div class="md-modal md-effect-13" id="view-{{ $member->id }}">
-													<div class="md-content">
-														<h3 class="c-white">Lihat Anggota<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
-														<div class="text-left p-b-0">
-															<ul>
-																<li><strong>NIP/NIM/NIS:</strong> {{ $member->id }}</li>
-																<li><strong>Nama:</strong> {{ $member->nama }}</li>
-																<li><strong>Jenis Kelamin:</strong> {{ ucfirst($member->jenis_kelamin) }}</li>
-																<li><strong>Tempat &amp; Tanggal Lahir:</strong> {{ $member->tanggal_lahir }}</li>
-																<li><strong>Jenis Anggota:</strong> {{ ucfirst($member->jenis_anggota) }}</li>
-																<li><strong>Alamat/Divisi:</strong> {{ $member->alamat }}</li>
-																<li><strong>Anggota Sejak:</strong> {{ tanggal($member->created_at) }}</li>
-																<li><strong>Peminjaman:</strong> {{ $record }} Kali</li>
-															</ul>
-														</div>
-													</div>
-												</div>
 												<div class="md-modal md-effect-1" id="remove-{{ $member->id }}">
 													<div class="md-content md-content-red">
 														<h3 class="c-white">Hapus Anggota . . . ?<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>

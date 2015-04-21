@@ -43,7 +43,7 @@ class CreateBookRequest extends Request {
 			'subyek'			=>	'required|min:3',
 			'rak'					=>	'required|min:3',
 			'keterangan'	=>	Request::has('keterangan') ? 'min:3|max:255' : '',
-			'file'				=>	Request::has('file') ? 'mimes|pdf,doc,docx' : '',
+			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx',
 		];
 	}
 

@@ -24,9 +24,9 @@ class CreateBooksTable extends Migration {
 			$table->integer('subject_id')->unsigned();
 			$table->integer('rack_id')->unsigned();
 			$table->primary('id');
-			$table->foreign('publisher_id')->references('id')->on('publishers')->onDelete('cascade');
-			$table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
-			$table->foreign('rack_id')->references('id')->on('racks')->onDelete('cascade');
+			$table->foreign('publisher_id')->references('id')->on('publishers')->onUpdate('cascade')->onDelete('cascade');
+			$table->foreign('subject_id')->references('id')->on('subjects')->onUpdate('cascade')->onDelete('cascade');
+			$table->foreign('rack_id')->references('id')->on('racks')->onUpdate('cascade')->onDelete('cascade');
 			$table->timestamps();
 			$table->softDeletes();
 		});

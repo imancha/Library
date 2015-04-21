@@ -6,6 +6,7 @@
 
 @section('style')
 	<link href="{{ asset('/assets/plugins/jquery-autocomplete/jquery.autocomplete.css') }}" rel="stylesheet">
+	<link href="{{ asset('/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -48,11 +49,11 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input type="radio" name="jenis" value="{{ $asli }}" {{ is_numeric(Input::old('jenis')) ? 'checked' : '' }} />
+													<input type="radio" name="jenis" value="{{ $asli }}" {{ is_numeric(old('jenis')) ? 'checked' : '' }} />
 													<label class="m-r-20">ASLI</label>
 												</li>
 												<li>
-													<input type="radio" name="jenis" value="{{ $pkl }}P" {{ is_numeric(Input::old('jenis')) ? '' : 'checked' }} />
+													<input type="radio" name="jenis" value="{{ $pkl }}P" {{ is_numeric(old('jenis')) ? '' : 'checked' }} />
 													<label>PKL</label>
 												</li>
 											</ul>
@@ -76,7 +77,7 @@
 										<label class="col-sm-3 control-label">Pengarang</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="pengarang" class="form-control" value="{{ old('pengarang') }}" placeholder="Nama 1 / Nama 2 / . . . " parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" name="pengarang" data-role="tagsinput" class="form-control" value="{{ old('pengarang') }}" placeholder="Nama 1, Nama 2, . . . " parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -142,16 +143,14 @@
 	<script src="{{ asset('/assets/plugins/icheck/icheck.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/bootstrap-fileinput/bootstrap.file-input.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/jquery-autocomplete/jquery.autocomplete.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 	<script>
-		var jenis = document.getElementsByName('jenis');
-		if(jenis[0].checked)
-			document.getElementById('id').value = jenis[0].value;
-		else if(jenis[1].checked)
-			document.getElementById('id').value = jenis[1].value;
-	</script>
-	<script>
 		$(document).ready(function(){
+			$('#id').val($('input:radio[name=jenis]:checked').val());
+			$('input:text[name=pengarang]').tagsinput({
+				trimValue: true
+			});
 			$('#penerbit').autocomplete({
 				source:[{
 					data:{!! $publishers !!}

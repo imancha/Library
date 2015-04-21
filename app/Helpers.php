@@ -16,7 +16,7 @@ function setActive($route, $class = 'current active hasSub')
 {
 	return (Route::currentRouteName() == $route) ? $class : '';
 }
-function setActiv($route, $class = 'class=active')
+function setActiv($route, $class = 'active')
 {
 	return (Request::path() === $route) ? $class : '';
 }
@@ -37,7 +37,7 @@ function is_alay($string)
 {
 	for($i=0;$i<strlen($string);$i++)
 	{
-		if(is_numeric($string[$i]))
+		if(!ctype_alpha($string[$i]) && $string[$i] != '.' && $string[$i] != ',' && $string[$i] != ' ')
 		{
 			return true;
 			break;

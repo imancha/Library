@@ -75,7 +75,10 @@ class MemberController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		$member = Member::find($id);
+		$borrows = Borrow::where('member_id','=',$member->id)->orderBy('created_at','asc')->get();
+
+		return view('admin.member.show', compact('member','borrows'));
 	}
 
 	/**

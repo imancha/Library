@@ -6,6 +6,7 @@
 
 @section('style')
 	<link href="{{ asset('/assets/plugins/jquery-autocomplete/jquery.autocomplete.css') }}" rel="stylesheet">
+	<link href="{{ asset('/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -46,23 +47,31 @@
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Jenis</label>
-										<div class="col-sm-7 input-icon right">
-											<i class="fa"></i>
-											<input type="text" id="jenis" name="jenis" class="form-control" value="{{ $book->jenis }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" readonly />
+										<div class="col-sm-7 skin-section">
+											<ul class="list inline m-t-5">
+												<li>
+													<input type="radio" name="jenis" value="{{ $book->jenis == 'asli' ? $book->id : $asli  }}" {{ empty(old('jenis')) ? ($book->jenis == 'asli' ? 'checked' : '') : (is_numeric(old('jenis')) ? 'checked' : '') }} />
+													<label class="m-r-20">ASLI</label>
+												</li>
+												<li>
+													<input type="radio" name="jenis" value="{{ $book->jenis == 'pkl' ? $book->id : $pkl.'P' }}" {{ empty(old('jenis')) ? ($book->jenis == 'pkl' ? 'checked' : '') : (is_numeric(old('jenis')) ? '' : 'checked') }} />
+													<label>PKL</label>
+												</li>
+											</ul>
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Kode Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ $book->id }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" readonly />
+											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Judul Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="judul" class="form-control" value="{{ $book->judul }}" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" name="judul" class="form-control" value="{{ empty(old('judul')) ? $book->judul : old('judul') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
@@ -73,41 +82,41 @@
 											@foreach($book->author as $author)
 												<?php $authors[] = $author->nama ?>
 											@endforeach
-											<input type="text" name="pengarang" class="form-control" value="{{ implode(' / ',$authors) }}" placeholder="Nama 1 / Nama 2 / . . . " parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" name="pengarang" data-role="tagsinput" class="form-control" value="{{ empty(old('pengarang')) ? implode(',',$authors) : old('pengarang') }}" placeholder="Nama 1, Nama 2, . . . " parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Penerbit</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="penerbit" name="penerbit" class="form-control" value="{{ $book->publisher->nama }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" id="penerbit" name="penerbit" class="form-control" value="{{ empty(old('penerbit')) ? $book->publisher->nama : old('penerbit') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Edisi</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="year" name="edisi" class="form-control" maxlength="4" size="4" value="{{ $book->edisi }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
+											<input type="year" name="edisi" class="form-control" maxlength="4" size="4" value="{{ empty(old('edisi')) ? $book->edisi : old('edisi') }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Subyek</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="subyek" name="subyek" class="form-control" value="{{ $book->subject->nama }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" id="subyek" name="subyek" class="form-control" value="{{ empty(old('subyek')) ? $book->subject->nama : old('subyek') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Rak</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="rak" name="rak" class="form-control" value="{{ $book->rack->nama }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" id="rak" name="rak" class="form-control" value="{{ empty(old('rak')) ? $book->rack->nama : old('rak') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Keterangan</label>
 										<div class="col-sm-7">
-											<textarea class="form-control" name="keterangan">{{ $book->keterangan }}</textarea>
+											<textarea class="form-control" name="keterangan">{{ empty(old('keterangan')) ? $book->keterangan : old('keterangan') }}</textarea>
 										</div>
 									</div>
 									<div class="form-group">
@@ -140,9 +149,14 @@
 	<script src="{{ asset('/assets/plugins/bootstrap-fileinput/bootstrap.file-input.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/bootstrap-datepicker/bootstrap-datepicker.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/jquery-autocomplete/jquery.autocomplete.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js') }}"></script>
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
-		<script>
+	<script>
 		$(document).ready(function(){
+			$('#id').val($('input:radio[name=jenis]:checked').val());
+			$('input:text[name=pengarang]').tagsinput({
+				trimValue: true
+			});
 			$('#penerbit').autocomplete({
 				source:[{
 					data:{!! $publishers !!}
@@ -168,6 +182,9 @@
 				openOnFocus:false,
 			});
 			$('#file').bootstrapFileInput();
+			$('.list input:radio').on('ifClicked', function(event){
+				$('#id').val(this.value);
+			});
 		});
 	</script>
 @endsection

@@ -39,13 +39,13 @@
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-striped table-bordered">
+									<table class="table table-bordered table-hover">
 										<thead>
 											<tr>
 												<th class="text-center">Kode</th>
 												<th class="text-center">Judul Buku</th>
 												<th class="text-center">Tanggal Masuk</th>
-												<th class="text-center">Tanggal Hapus</th>
+												<th class="text-center">Waktu Hapus</th>
 												<th class="text-center" colspan="3">Actions</th>
 											</tr>
 										</thead>
@@ -59,7 +59,7 @@
 													<td>{{ $book->id }}</td>
 													<td>{{ $book->judul }}</td>
 													<td>{{ tanggal($book->created_at) }}</td>
-													<td>{{ tanggal($book->deleted_at) }}</td>
+													<td>{{ $book->deleted_at }}</td>
 													<td><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="View" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
 													<td><a class="c-orange md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Restore" href="#restore-{{ $book->id }}" data-modal="restore-{{ $book->id }}"><i class="fa fa-undo"></i></a></td>
 													<td><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Delete" href="#delete-{{ $book->id }}" data-modal="delete-{{ $book->id }}"><i class="fa fa-times"></i></a></td>
@@ -74,9 +74,10 @@
 																<li><strong>Edisi:</strong> {{$book->edisi }}</li>
 																<li><strong>Pengarang:</strong> {{ implode(', ',$authors) }}</li>
 																<li><strong>Penerbit:</strong> {{ $book->publisher->nama }}</li>
-																<li><strong>Jenis:</strong> {{ $book->jenis }}</li>
+																<li><strong>Jenis:</strong> {{ strtoupper($book->jenis) }}</li>
 																<li><strong>Subyek:</strong> {{ $book->subject->nama }}</li>
 																<li><strong>Rak:</strong> {{ $book->rack->nama }}</li>
+																<li><strong>Keterangan:</strong> {{ $book->keterangan }}</li>
 															</ul>
 														</div>
 													</div>

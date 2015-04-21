@@ -1,9 +1,15 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Redirect;
+use App\Model\Author;
 use App\Model\Book;
+use App\Model\BookAuthor;
 use App\Model\Borrow;
+use App\Model\File;
 use App\Model\Member;
+use App\Model\Publisher;
+use App\Model\Rack;
+use App\Model\Subject;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -112,9 +118,26 @@ class TrashController extends Controller {
 		$id = explode('-',$id);
 
 		if($id[0] == 'book')
-			$result = Book::onlyTrashed()->where('id','=',$id[1])->forceDelete();
-		elseif($id[0] == 'member')
+		{
+			$book = Book::onlyTrashed()->find($id[1]);
+			$file = File::onlyTrashed()->find($id[1]);
+			$auth = $book->author[0]->id;
+			$book->forceDelete();
+
+			if(count(Book::withTrashed()->where('publisher_id','=',$book->publisher_id)->get()) == 0)
+				Publisher::where('id','=',$book->publisher_id)->forceDelete();
+			if(count(Book::withTrashed()->where('subject_id','=',$book->subject_id)->get()) == 0)
+				Subject::where('id','=',$book->subject_id)->forceDelete();
+			if(count(Book::withTrashed()->where('rack_id','=',$book->rack_id)->get()) == 0)
+				Rack::where('id','=',$book->rack_id)->forceDelete();
+			if(count(BookAuthor::where('author_id','=',$auth)->get()) == 0)
+				Author::where('id','=',$auth)->forceDelete();
+			if(!empty($file))
+				if(\File::exists(public_path('files/').$file->filename.'.'.$file->mime))
+					\File::delete(public_path('files/').$file->filename.'.'.$file->mime);
+		}elseif($id[0] == 'member'){
 			$result = Member::onlyTrashed()->where('id','=',$id[1])->forceDelete();
+		}
 
 		return Redirect::back()->with('message', $id[1].' berhasil dihapus.');
 	}

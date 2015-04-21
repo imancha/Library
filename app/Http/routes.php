@@ -12,8 +12,8 @@
 */
 
 Route::get('/', ['as' => 'home','uses' => 'PublicController@getIndex']);
-Route::get('/buku/{jenis}', ['as' => 'buku','uses' => 'PublicController@getBook']);
-Route::get('/download/{file}', ['as' => 'download','uses' => 'PublicController@getDownload']);
+Route::get('/book/{jenis?}', ['as' => 'book','uses' => 'PublicController@getBook']);
+Route::get('/book/download/{file}', ['as' => 'book.download','uses' => 'PublicController@getDownload']);
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',

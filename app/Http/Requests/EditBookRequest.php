@@ -28,7 +28,7 @@ class EditBookRequest extends Request {
 	{
 		return [
 			'jenis'				=>	'required',
-			'id'					=>	is_numeric(Request::input('jenis')) ? 'required|numeric|min:1|exists:books,id' : 'required|alpha_num|min:1|exists:books,id',
+			'id'					=>	is_numeric(Request::input('jenis')) ? 'required|numeric|min:1' : 'required|alpha_num|min:1',
 			'judul'				=>	'required|min:3|max:255',
 			'pengarang'		=>	'required|min:3|max:255|alay',
 			'penerbit'		=>	'required|min:3|max:255',
@@ -36,7 +36,7 @@ class EditBookRequest extends Request {
 			'subyek'			=>	'required|min:3',
 			'rak'					=>	'required|min:3',
 			'keterangan'	=>	Request::has('keterangan') ? 'min:3|max:255' : '',
-			'file'				=>	Request::has('file') ? 'mimes|pdf,doc,docx' : '',
+			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx',
 		];
 	}
 

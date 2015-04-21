@@ -18,7 +18,7 @@
 						{{ Session::get('message') }}
 					</div>
 				@endif
-					<div class="panel panel-default">
+					<div class="panel-default">
 						<div class="panel-heading bg-red">
 							<h3 class="panel-title"><strong>Data </strong> Buku</h3>
 							<ul class="pull-right header-menu">
@@ -39,7 +39,7 @@
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-striped table-bordered">
+									<table class="table table-striped table-bordered table-hover">
 										<thead>
 											<tr>
 												<th class="text-center">Kode</th>
@@ -47,7 +47,7 @@
 												<th class="text-center">Pengarang<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
 												<th class="text-center">Penerbit<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
 												<th width="66px">Edisi<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th class="text-center">Subyek<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
+												<th width="83px">Subyek<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
 												<th width="60px">Rak<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
 												<th width="85px">Status<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
 												<th class="text-center" colspan="3">Actions</th>
@@ -91,10 +91,11 @@
 																<li><strong>Edisi:</strong> {{$book->edisi }}</li>
 																<li><strong>Pengarang:</strong> {{ implode(', ',$authors) }}</li>
 																<li><strong>Penerbit:</strong> {{ $book->publisher->nama }}</li>
-																<li><strong>Jenis:</strong> {{ $book->jenis }}</li>
+																<li><strong>Jenis:</strong> {{ strtoupper($book->jenis) }}</li>
 																<li><strong>Subyek:</strong> {{ $book->subject->nama }}</li>
 																<li><strong>Rak:</strong> {{ $book->rack->nama }}</li>
 																<li><strong>Tanggal Masuk:</strong> {{ tanggal($book->tanggal_masuk) }}</li>
+																<li><strong>Keterangan:</strong> {{ $book->keterangan }}</li>
 																<li><strong>Status:</strong> {{ $borrowed ? 'Dipinjam' : 'Tersedia' }}</li>
 															</ul>
 														</div>

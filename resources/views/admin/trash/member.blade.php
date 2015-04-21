@@ -39,13 +39,13 @@
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-striped table-bordered">
+									<table class="table table-bordered table-hover">
 										<thead>
 											<tr>
 												<th class="text-center">NIP/NIM/NIS</th>
 												<th class="text-center">Nama</th>
 												<th class="text-center">Tanggal Daftar</th>
-												<th class="text-center">Tanggal Hapus</th>
+												<th class="text-center">Waktu Hapus</th>
 												<th class="text-center" colspan="3">Actions</th>
 											</tr>
 										</thead>
@@ -55,7 +55,7 @@
 													<td>{{ $member->id }}</td>
 													<td>{{ $member->nama }}</td>
 													<td>{{ tanggal($member->created_at) }}</td>
-													<td>{{ tanggal($member->deleted_at) }}</td>
+													<td>{{ $member->deleted_at }}</td>
 													<td><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="View" href="#view-{{ $member->id }}" data-modal="view-{{ $member->id }}"><i class="fa fa-eye"></i></a></td>
 													<td><a class="c-orange md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Restore" href="#restore-{{ $member->id }}" data-modal="restore-{{ $member->id }}"><i class="fa fa-undo"></i></a></td>
 													<td><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Delete" href="#delete-{{ $member->id }}" data-modal="delete-{{ $member->id }}"><i class="fa fa-times"></i></a></td>
@@ -67,10 +67,11 @@
 															<ul>
 																<li><strong>NIP/NIM/NIS:</strong> {{ $member->id }}</li>
 																<li><strong>Nama:</strong> {{ $member->nama }}</li>
-																<li><strong>Jenis Kelamin:</strong> {{ $member->jenis_kelamin }}</li>
+																<li><strong>Jenis Kelamin:</strong> {{ $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki' }}</li>
 																<li><strong>Tempat &amp; Tanggal Lahir:</strong> {{ $member->tanggal_lahir }}</li>
-																<li><strong>Jenis Anggota:</strong> {{ $member->jenis_anggota }}</li>
+																<li><strong>Jenis Anggota:</strong> {{ $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan' }}</li>
 																<li><strong>Alamat/Divisi:</strong> {{ $member->alamat }}</li>
+																<li><strong>Keterangan:</strong> {{ $member->keterangan }}</li>
 															</ul>
 														</div>
 													</div>

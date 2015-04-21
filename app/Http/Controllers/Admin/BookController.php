@@ -52,30 +52,8 @@ class BookController extends Controller {
 		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
 		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
 		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = Book::where('jenis','=','asli')->orderBy('created_at','desc')->first();
-		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','desc')->first();
-
-		if(count($asli) > 0)
-		{
-			$asli = $asli->id;
-			do
-			{
-				empty(Book::find(++$asli)) ? $next = false : $next = true;
-			}while($next);
-		}else{
-			$asli = 1;
-		}
-
-		if(count($pkl) > 0)
-		{
-			$pkl = substr($pkl->id,0,strlen($pkl->id)-1);
-			do
-			{
-				empty(Book::find(++$pkl.'P')) ? $next = false : $next = true;
-			}while($next);
-		}else{
-			$pkl = 1;
-		}
+		$asli = $this->asli();
+		$pkl = $this->pkl();
 
 		return view('admin.book.create', compact('publishers','subjects','racks','asli','pkl'));
 	}
@@ -111,7 +89,7 @@ class BookController extends Controller {
 			'rack_id'				=>	$rack->id,
 		]);
 
-		foreach(explode('/',$request->input('pengarang')) as $value)
+		foreach(explode(',',$request->input('pengarang')) as $value)
 		{
 			$author = Author::firstOrCreate([
 				'nama'	=>	trim(strip_tags($value)),
@@ -126,16 +104,18 @@ class BookController extends Controller {
 		if($request->hasFile('file'))
 		{
 			$path = public_path('files/');
-			$filename = (trim(strip_tags($request->input('id')))).'.'.($request->file('file')->getClientOriginalExtension());
-			$file = $path.$filename;
+			$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
+			$mime = trim(strip_tags($request->file('file')->getClientOriginalExtension()));
+			$file = $path.$name.'.'.$mime;
 
 			if(\File::exists($file)) \File::delete($file);
 
-			if($request->file('file')->move($path,$filename))
+			if($request->file('file')->move($path,$name.'.'.$mime))
 			{
 				File::create([
 					'book_id'		=>	trim(strip_tags($request->input('id'))),
-					'filename'	=>	$filename,
+					'filename'	=>	$name,
+					'mime'			=>	$mime,
 					'sha1sum'		=>	sha1_file($file),
 				]);
 			}
@@ -167,8 +147,10 @@ class BookController extends Controller {
 		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
 		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
 		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
+		$asli = $this->asli();
+		$pkl = $this->pkl();
 
-		return view('admin.book.edit', compact('book','publishers','subjects','racks'));
+		return view('admin.book.edit', compact('book','publishers','subjects','racks','asli','pkl'));
 	}
 
 	/**
@@ -179,6 +161,8 @@ class BookController extends Controller {
 	 */
 	public function update(EditBookRequest $request, $id)
 	{
+		$book = Book::find($id);
+
 		$publisher = Publisher::firstOrCreate([
 			'nama'	=>	trim(strip_tags($request->input('penerbit'))),
 		]);
@@ -191,18 +175,19 @@ class BookController extends Controller {
 			'nama'	=>	trim(strip_tags($request->input('rak'))),
 		]);
 
-		$book = Book::find($id);
+		$book->id = trim(strip_tags($request->input('id')));
 		$book->judul = trim(strip_tags($request->input('judul')));
 		$book->edisi = trim(strip_tags($request->input('edisi')));
+		$book->jenis = trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl'));
 		$book->keterangan = trim(strip_tags($request->input('keterangan')));
 		$book->publisher_id = $publisher->id;
 		$book->subject_id = $subject->id;
 		$book->rack_id = $rack->id;
 		$book->save();
 
-		BookAuthor::where('book_id','=',$id)->delete();
+		BookAuthor::where('book_id','=',$id)->forceDelete();
 
-		foreach(explode('/',$request->input('pengarang')) as $value)
+		foreach(explode(',',$request->input('pengarang')) as $value)
 		{
 			$author = Author::firstOrCreate([
 				'nama'	=>	trim(strip_tags($value)),
@@ -217,25 +202,27 @@ class BookController extends Controller {
 		if($request->hasFile('file'))
 		{
 			$path = public_path('files/');
-			$filename = (trim(strip_tags($request->input('id')))).'.'.($request->file('file')->getClientOriginalExtension());
-			$file = $path.$filename;
+			$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
+			$mime = trim(strip_tags($request->file('file')->getClientOriginalExtension()));
+			$file = $path.$name.'.'.$mime;
 
 			if(\File::exists($file)) \File::delete($file);
 
-			if($request->file('file')->move($path,$filename))
+			if($request->file('file')->move($path,$name.'.'.$mime))
 			{
 				$files = File::find($id);
 
 				if(empty($files)) $files = new File;
 
 				$files->book_id = $book->id;
-				$files->filename = $filename;
+				$files->filename = $name;
+				$files->mime = $mime;
 				$files->sha1sum = sha1_file($file);
 				$files->save();
 			}
 		}
 
-		return Redirect::back()->with('message', $book->id.' - '.$book->judul.' berhasil disimpan.');
+		return Redirect::route('admin.book.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -246,13 +233,9 @@ class BookController extends Controller {
 	 */
 	public function destroy(Request $request, $id)
 	{
-		$file = File::find($id);
-
-		if(!empty($file))
-			if(\File::exists(public_path('files/').$file->filename)) \File::delete(public_path('files/').$file->filename);
-
 		Book::where('id','=',$id)->delete();
 		Borrow::where('book_id','=',$id)->delete();
+		File::where('book_id','=',$id)->delete();
 
 		return Redirect::back()->with('message', $request->input('id').' - '.$request->input('judul').' berhasil dihapus.');
 	}
@@ -316,6 +299,40 @@ class BookController extends Controller {
 				});
 			})->export($type);
 		}
+	}
+
+	public function asli()
+	{
+		$asli = Book::where('jenis','=','asli')->orderBy('created_at','desc')->first();
+
+		if(count($asli) > 0)
+		{
+			$asli = $asli->id;
+			do
+				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
+			while($next);
+		}else{
+			$asli = 1;
+		}
+
+		return $asli;
+	}
+
+	public function pkl()
+	{
+		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','desc')->first();
+
+		if(count($pkl) > 0)
+		{
+			$pkl = substr($pkl->id,0,strlen($pkl->id)-1);
+			do
+				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
+			while($next);
+		}else{
+			$pkl = 1;
+		}
+
+		return $pkl;
 	}
 
 }

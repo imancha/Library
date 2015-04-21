@@ -1,7 +1,12 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use App\Model;
+use App\Model\Author;
+use App\Model\Book;
+use App\Model\BookAuthor;
+use App\Model\Publisher;
+use App\Model\Rack;
+use App\Model\Subject;
 
 class BookTableSeeder extends Seeder {
 
@@ -21,27 +26,27 @@ class BookTableSeeder extends Seeder {
 			foreach($results as $result)
 			{
 				//	Seed publisher table
-				$publisher = 	Model\Publisher::firstOrCreate([
+				$publisher = 	Publisher::firstOrCreate([
 					'nama'	=>	(empty($result->penerbit) ? '-' : $result->penerbit)
 				]);
 
 				//	Seed subject table
-				$subject = 	Model\Subject::firstOrCreate([
+				$subject = 	Subject::firstOrCreate([
 					'nama'	=>	(empty($result->subyek) ? '-' : $result->subyek)
 				]);
 
 				//	Seed rack table
-				$rack = Model\Rack::firstOrCreate([
+				$rack = Rack::firstOrCreate([
 					'nama'	=>	(empty($result->rak) ? '-' : $result->rak)
 				]);
 
 				//	Seed author table
-				$author = Model\Author::firstOrCreate([
+				$author = Author::firstOrCreate([
 					'nama'	=>	(empty($result->pengarang) ? '-' : $result->pengarang)
 				]);
 
 				//	Seed book table
-				$book = Model\Book::create([
+				$book = Book::create([
 					'id'		=>	$result->kode_buku,
 					'judul'	=>	$result->judul_buku,
 					'edisi'	=>	$result->edisi,
@@ -54,7 +59,7 @@ class BookTableSeeder extends Seeder {
 				]);
 
 				//	Seed book_authors table
-				Model\BookAuthor::create([
+				BookAuthor::create([
 					'book_id'		=>	$result->kode_buku,
 					'author_id'	=>	$author->id,
 				]);

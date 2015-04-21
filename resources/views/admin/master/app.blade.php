@@ -8,7 +8,7 @@
 <head>
 	<!-- BEGIN META SECTION -->
 	<meta charset="utf-8">
-	<title>@yield('title') - Admin Library</title>
+	<title>@yield('title') - Admin Perpustakaan INTI</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}" />
 	<meta content="" name="description" />
@@ -41,7 +41,7 @@
 					<img src="" alt="Admin" width="79" height="26">
 				</a>
 			</div>
-			<div class="navbar-center"><strong>PERPUSTAKAAN PT. INTI</strong></div>
+			<div class="navbar-center"><strong>PERPUSTAKAAN INTI</strong></div>
 			<div class="navbar-collapse collapse">
 				<!-- BEGIN TOP NAVIGATION MENU -->
 				<ul class="nav navbar-nav pull-right header-menu">

@@ -25,7 +25,7 @@
 					<li class="{{ setCurrent('admin.member.create') }}">
 						<a href="{{ action('Admin\MemberController@create') }}"><span class="sidebar-text">Tambah Anggota</span></a>
 					</li>
-					<li class="{{ setCurrent('admin.member.index') }}{{ setCurrent('admin.member.edit') }}">
+					<li class="{{ setCurrent('admin.member.index') }}{{ setCurrent('admin.member.show') }}{{ setCurrent('admin.member.edit') }}">
 						<a href="{{ action('Admin\MemberController@index') }}"><span class="sidebar-text">Data Anggota</span></a>
 					</li>
 					<li class="{{ setCurrenq('admin/member') }}">
