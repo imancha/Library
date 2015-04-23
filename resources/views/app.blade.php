@@ -55,7 +55,7 @@
 									<div class="searchbox">
 										<div class="input-group">
 											<input class="searchinput" type="text" name="q" placeholder="Search..." required>
-											<button class="fa fa-search fa-fw" type="submit" title="Search"></button>
+											<button class="fa fa-search fa-fw fa-flip-horizontal" type="submit" title="Search"></button>
 										</div>
 									</div>
 								</form>
@@ -71,7 +71,7 @@
 					<div class="input-group searchbox">
 						<input class="form-control" type="text" name="q" placeholder="Search..." required>
 						<span class="input-group-addon">
-							<button type="submit"><i class="fa fa-search"></i></button>
+							<button type="submit"><i class="fa fa-search fa-flip-horizontal"></i></button>
 						</span>
 					</div>
 				</form>

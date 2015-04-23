@@ -105,7 +105,8 @@ class BookController extends Controller {
 		{
 			$path = public_path('files/');
 			$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
-			$mime = trim(strip_tags($request->file('file')->getClientOriginalExtension()));
+			$mime = $request->file('file')->getClientOriginalExtension();
+			$size = $request->file('file')->getSize();
 			$file = $path.$name.'.'.$mime;
 
 			if(\File::exists($file)) \File::delete($file);
@@ -115,7 +116,8 @@ class BookController extends Controller {
 				File::create([
 					'book_id'		=>	trim(strip_tags($request->input('id'))),
 					'filename'	=>	$name,
-					'mime'			=>	$mime,
+					'mime'			=>	strtolower($mime),
+					'size'			=>	humanFileSize($size),
 					'sha1sum'		=>	sha1_file($file),
 				]);
 			}
@@ -203,7 +205,8 @@ class BookController extends Controller {
 		{
 			$path = public_path('files/');
 			$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
-			$mime = trim(strip_tags($request->file('file')->getClientOriginalExtension()));
+			$mime = $request->file('file')->getClientOriginalExtension();
+			$size = $request->file('file')->getSize();
 			$file = $path.$name.'.'.$mime;
 
 			if(\File::exists($file)) \File::delete($file);
@@ -216,7 +219,8 @@ class BookController extends Controller {
 
 				$files->book_id = $book->id;
 				$files->filename = $name;
-				$files->mime = $mime;
+				$files->mime = strtolower($mime);
+				$files->size = humanFileSize($size);
 				$files->sha1sum = sha1_file($file);
 				$files->save();
 			}

@@ -8,7 +8,7 @@
 <head>
 	<!-- BEGIN META SECTION -->
 	<meta charset="utf-8">
-	<title>Login | Admin Library</title>
+	<title>Login - Admin Perpustakaan INTI</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -35,7 +35,7 @@
 						<img src="{{ asset('/assets/img/account/user-icon.png') }}" alt="Key icon">
 					</div>
 					<div class="login-logo">
-						<img src="" alt="PERPUSTAKAAN PT. INTI">
+						<img src="" alt="PERPUSTAKAAN INTI">
 					</div>
 					<hr>
 					<div class="login-form">

@@ -74,7 +74,7 @@
 							<div class="panel-body recent">
 								<ul>
 									@foreach($books as $book)
-										<li class="item"><a href="#">{{ $book->judul }}</a></li>
+										<li class="item"><a href="{{ route('book') }}#{{ $book->id }}">{{ $book->judul }}</a></li>
 									@endforeach
 								</ul>
 							</div>

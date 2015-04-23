@@ -19,7 +19,7 @@ class File extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['book_id','filename','mime','sha1sum'];
+	protected $fillable = ['book_id','filename','mime','size','sha1sum'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.

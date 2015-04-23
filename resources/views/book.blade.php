@@ -50,7 +50,7 @@
 									@foreach($book->author as $author)
 										<?php $authors[] = $author->nama ?>
 									@endforeach
-									<tr>
+									<tr id="{{ $book->id }}">
 										<td>{{ $book->id }}</td>
 										<td>{{ $book->judul }}</td>
 										<td>{{ implode(', ',$authors) }}</td>
@@ -60,7 +60,7 @@
 										<td>
 											@if(!empty($book->file->book_id))
 												@if(file_exists(public_path('files/').$book->file->filename.'.'.$book->file->mime))
-													<a href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="bottom" data-toggle="tooltip" rel="tooltip" data-original-title="Download">
+													<a href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="bottom" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}">
 														@if($book->file->mime == 'pdf')
 															<i class="fa fa-file-pdf-o"></i>
 														@elseif($book->file->mime == 'doc' || $book->file->mime == 'docx')
