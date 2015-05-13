@@ -74,7 +74,7 @@
 													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.book.edit',$book->id) }}"><i class="fa fa-edit"></i></a></td>
 													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $book->id }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
 													<td class="no-print">
-														@if(!empty($book->file->book_id) AND file_exists(public_path('files/').$book->file->filename.'.'.$book->file->mime))
+														@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 															<a class="c-green" href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>
 														@else
 															<i class="fa fa-download c-gray ch-disabled"></i>

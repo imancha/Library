@@ -59,7 +59,7 @@
 										<td>{{ $book->edisi }}</td>
 										<td>{{ $book->subject->nama }}</td>
 										<td>
-											@if(!empty($book->file->book_id) AND file_exists(public_path('files/').$book->file->filename.'.'.$book->file->mime))
+											@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 												<a href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="bottom" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}">
 													@if($book->file->mime == 'pdf') <i class="fa fa-file-pdf-o"></i>
 													@elseif($book->file->mime == 'doc' || $book->file->mime == 'docx') <i class="fa fa-file-word-o"></i>

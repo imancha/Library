@@ -86,18 +86,20 @@ class TrashController extends Controller {
 		$id = explode('-',$id);
 
 		if($id[0] == 'book')
-			$result = Book::onlyTrashed()->where('id','=',$id[1])->restore();
-		elseif($id[0] == 'member')
-			$result = Member::onlyTrashed()->where('id','=',$id[1])->restore();
+		{
+			Book::onlyTrashed()->where('id','=',$id[1])->restore();
+			File::onlyTrashed()->where('book_id','=',$id[1])->restore();
+		}elseif($id[0] == 'member'){
+			Member::onlyTrashed()->where('id','=',$id[1])->restore();
+		}
 
-		$borrows = Borrow::onlyTrashed()->where($id[0].'_id','=',$id[1])->get();
 		$restore = true;
 
-		foreach($borrows as $borrow)
+		foreach(Borrow::onlyTrashed()->where($id[0].'_id','=',$id[1])->get() as $borrow)
 		{
 			if((empty($borrow->book->id) || empty($borrow->member->id)))
 			{
-				$restore=false;
+				$restore = false;
 				break;
 			}
 		}
@@ -133,10 +135,13 @@ class TrashController extends Controller {
 			if(count(BookAuthor::where('author_id','=',$auth)->get()) == 0)
 				Author::where('id','=',$auth)->forceDelete();
 			if(!empty($file))
-				if(\File::exists(public_path('files/').$file->filename.'.'.$file->mime))
-					\File::delete(public_path('files/').$file->filename.'.'.$file->mime);
+			{
+				if(\File::exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$file->mime)))
+					\File::delete(public_path('files/'.$book->id.' - '.$book->judul.'.'.$file->mime));
+				$file->forceDelete();
+			}
 		}elseif($id[0] == 'member'){
-			$result = Member::onlyTrashed()->where('id','=',$id[1])->forceDelete();
+			Member::onlyTrashed()->where('id','=',$id[1])->forceDelete();
 		}
 
 		return Redirect::back()->with('message', $id[1].' berhasil dihapus.');

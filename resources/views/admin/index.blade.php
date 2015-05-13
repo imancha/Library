@@ -93,7 +93,7 @@
 					<div class="panel-heading">
 						<h2 class="panel-title w-100">
 							Slider Control
-							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="tambah">
+							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Tambah">
 								<a href="#slider" class="c-green md-trigger" data-modal="slider">
 									<i class="glyph-icon flaticon-plus16 f-32"></i>
 								</a>
@@ -112,7 +112,7 @@
 													<img src="{{ asset('/img/slide-'.(empty($slider->mime) ? '.jpg' : $slider->id.'.'.$slider->mime)) }}" alt="" width="50" height="40" class="pull-left">
 													<div class="media-body">
 														<small class="pull-right">
-															<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="ubah">
+															<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
 																<a href="#ubah-{{ $slider->id }}" class="md-trigger" data-modal="ubah-{{ $slider->id }}"><i class="fa fa-edit"></i></a>
 															</span>
 															<span data-placement="left" title="" rel="tooltip" data-original-title="hapus">
@@ -226,7 +226,7 @@
 										<div class="chat-body clearfix">
 											<div class="header">
 												<strong class="primary-font">{{ $guest->nama }} </strong>
-												<small class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="hapus">
+												<small class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Hapus">
 													<a href="#remove-{{ $guest->id }}" class="c-red md-trigger" data-modal="remove-{{ $guest->id }}">
 														<i class="fa fa-times"></i>
 													</a>
@@ -266,7 +266,7 @@
 					<div class="panel-heading">
 						<h2 class="panel-title w-100">
 							Beranda Control
-							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="ubah">
+							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
 								<a href="#beranda" class="c-green md-trigger" data-modal="beranda">
 									<i class="fa fa-edit"></i>
 								</a>
@@ -314,8 +314,8 @@
 					<div class="panel-heading">
 						<h2 class="panel-title w-100">
 							Layanan Keanggotaan
-							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="ubah">
-								<a href="#member" class="c-green md-trigger" data-modal="member">
+							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
+								<a href="#anggota" class="c-green md-trigger" data-modal="anggota">
 									<i class="fa fa-edit"></i>
 								</a>
 							</span>
@@ -324,7 +324,7 @@
 					<div class="panel-body text-justify p-t-0 withScroll" data-height="400">
 						{!! $member !!}
 					</div>
-					<div class="md-modal md-effect-14" id="member">
+					<div class="md-modal md-effect-14" id="anggota">
 						<div class="md-content md-content-white">
 							<h3>Layanan Keanggotaan<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-10">
@@ -350,8 +350,8 @@
 					<div class="panel-heading">
 						<h2 class="panel-title w-100">
 							Layanan Peminjaman
-							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="ubah">
-								<a href="#borrow" class="c-green md-trigger" data-modal="borrow">
+							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
+								<a href="#pinjam" class="c-green md-trigger" data-modal="pinjam">
 									<i class="fa fa-edit"></i>
 								</a>
 							</span>
@@ -360,7 +360,7 @@
 					<div class="panel-body text-justify p-t-0 withScroll" data-height="400">
 						{!! $borrow !!}
 					</div>
-					<div class="md-modal md-effect-14" id="borrow">
+					<div class="md-modal md-effect-14" id="pinjam">
 						<div class="md-content md-content-white">
 							<h3>Layanan Peminjaman <span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-10">

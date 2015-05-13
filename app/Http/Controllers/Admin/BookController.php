@@ -212,10 +212,7 @@ class BookController extends Controller {
 
 			if($request->file('file')->move($path,$name.'.'.$mime))
 			{
-				$files = File::find($id);
-
-				if(empty($files)) $files = new File;
-
+				$files = File::findOrNew($id);
 				$files->book_id = $book->id;
 				$files->mime = strtolower($mime);
 				$files->size = humanFileSize($size);

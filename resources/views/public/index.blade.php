@@ -126,7 +126,7 @@
 																		<div class="modal-body table-responsive">
 																			<table class="table table-striped">
 																				<thead>
-																					<tr><th colspan="2" class="text-center">{{ $book->judul }}</th></tr>
+																					<tr><th colspan="2" class="text-center"></th></tr>
 																				</thead>
 																				<tbody>
 																					<tr><td><strong>Kode</strong></td><td> {{ $book->id }}</td></tr>
@@ -137,7 +137,7 @@
 																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
 																				</tbody>
 																			</table>
-																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/').$book->file->filename.'.'.$book->file->mime))
+																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 																				<button type="button" class="btn btn-success pull-left" data-dismiss="modal">Download</button>
 																			@endif
 																			<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
@@ -171,7 +171,7 @@
 																		<div class="modal-body table-responsive">
 																			<table class="table table-striped">
 																				<thead>
-																					<tr><th colspan="2" class="text-center">{{ $book->judul }}</th></tr>
+																					<tr><th colspan="2" class="text-center"></th></tr>
 																				</thead>
 																				<tbody>
 																					<tr><td><strong>Kode</strong></td><td> {{ $book->id }}</td></tr>
@@ -182,7 +182,7 @@
 																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
 																				</tbody>
 																			</table>
-																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/').$book->file->filename.'.'.$book->file->mime))
+																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 																				<button type="button" class="btn btn-success pull-left" data-dismiss="modal">Download</button>
 																			@endif
 																			<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>

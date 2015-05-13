@@ -16,7 +16,7 @@ class CreateGuestBooksTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('nama',50);
-			$table->string('email')->nullable();
+			$table->string('email',50)->nullable();
 			$table->text('komentar');
 			$table->timestamps();
 		});
