@@ -107,9 +107,10 @@ class BorrowController extends Controller {
 
 	public function patch()
 	{
-		$borrows = Borrow::where('status','like','%pinjam%')->distinct()->get(['borrows.member_id']);
+		$members = Borrow::where('status','like','%pinjam%')->distinct()->get(['borrows.member_id']);
+		$books = Borrow::where('status','like','%pinjam%')->distinct()->get(['borrows.book_id']);
 
-		return view('admin.borrow.patch',compact('borrows'));
+		return view('admin.borrow.patch',compact('members','books'));
 	}
 
 	/**
@@ -131,9 +132,9 @@ class BorrowController extends Controller {
 	 */
 	public function update(Request $request)
 	{
-		$book = [];
 		if(!empty($request->input('kode')))
 		{
+			$book = [];
 			foreach($request->input('kode') as $kode)
 			{
 				$kode = explode('/',$kode);
@@ -141,9 +142,8 @@ class BorrowController extends Controller {
 				$book[] = $kode[1];
 				$kode = [];
 			}
+			return Redirect::back()->with('message', implode(', ',$book).' berhasil disimpan.');
 		}
-
-		return Redirect::back()->with('message', implode(', ',$book).' berhasil disimpan.');
 	}
 
 	/**
@@ -165,12 +165,12 @@ class BorrowController extends Controller {
 
 		$borrows = Borrow::orderBy('created_at','asc')->get();
 
-		if($type == 'xlsx'){
-			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman Buku Perpustakaan PT. INTI', function($excel) use($borrows){
+		if($type == 'xls'){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman Buku Perpustakaan INTI', function($excel) use($borrows){
 				$excel->setTitle('Data Peminjaman');
-				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
-				$excel->setDescription('Data Peminjaman Buku Perpustakaan PT. INTI');
-				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
+				$excel->setCreator('Perpustakaan INTI')->setCompany('PT. INTI');
+				$excel->setDescription('Data Peminjaman Buku Perpustakaan INTI');
+				$excel->setlastModifiedBy('Perpustakaan INTI');
 				$excel->sheet('PEMINJAMAN', function($sheet) use($borrows){
 					$row = 1;
 					$sheet->freezeFirstRow();

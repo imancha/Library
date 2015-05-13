@@ -54,14 +54,14 @@
 										<label class="col-sm-3 control-label">NIP/NIM/NIS</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Nama</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="nama" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div id="added"></div>
@@ -105,7 +105,7 @@
 	<script>
 		$(document).ready(function(){
 			var i = 0;
-			$('#id').autocomplete({
+			$('input:text[name="id"]').autocomplete({
 				source:[{
 					data:{!! $members !!}
 				}],
@@ -126,21 +126,22 @@
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
 			});
-			$('#id').keypress(function(){
+			$('input:text[name="id"]').on('keypress, change',function(){
 				$.ajax({
 					url:'{!! route('admin.member.borrow') !!}',
 					dataType:'json',
 					type:'POST',
-					data:{'id':$('#id').val()},
+					data:{
+						'id':1,
+						'id1':$('input:text[name="id"]').val(),
+					},
 					cache:false,
 					success:function(data){
-						$('#nama').val('');
-						for(row in data)
-							$('#nama').val(data[row].nama);
+						$('input:text[name="nama"]').val('').val(data[0].nama);
 					},
 				});
 			});
-			$('#kode').keypress(function(){
+			$('#kode').on('keypress, change', function(){
 				$.ajax({
 					url:'{!! route('admin.book.borrow') !!}',
 					dataType:'json',
@@ -184,8 +185,6 @@
 				i = 0;
 			});
 		});
-		function remover(x){
-			$("#"+x).remove();
-		}
+		function remover(x){$("#"+x).remove();}
 	</script>
 @endsection

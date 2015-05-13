@@ -38,7 +38,7 @@
 					<i class="fa fa-outdent"></i>
 				</a>
 				<a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-					<img src="" alt="Admin" width="79" height="26">
+					<img src="{{ asset('/assets/img/logo.png') }}" alt="Admin" width="70" height="26">
 				</a>
 			</div>
 			<div class="navbar-center"><strong>PERPUSTAKAAN INTI</strong></div>
@@ -118,6 +118,7 @@
 	<script src="{{ asset('/assets/plugins/modal-effects/js/css-filters-polyfill.js') }}"></script>
 	<!-- END MANDATORY SCRIPTS -->
 	@yield('script')
+	<script src="{{ asset('/assets/js/jquery.nicescroll.js') }}"></script>
 	<script src="{{ asset('/assets/js/application.js') }}"></script>
 </body>
 </html>

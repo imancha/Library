@@ -12,15 +12,7 @@
 	<div id="main-content" class="dashboard">
 		<div class="row">
 			<div class="col-md-12">
-				@if(Session::has('message'))
-					<div class="alert alert-success w-100 m-t-0 m-b-10" role="alert">
-						<i class='fa fa-check-square-o' style='padding-right:6px'></i>
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
-						<span class="sr-only">Success:</span>
-						{{ Session::get('message') }}
-					</div>
-				@endif
+				@if(Session::has('message')) @include('admin.master.message') @endif
 				<div class="panel panel-default">
 					<div class="panel-heading bg-red">
 						<h3 class="panel-title"><strong>Tambah</strong> Pengembalian</h3>
@@ -45,21 +37,31 @@
 									<input name="_method" type="hidden" value="PATCH">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
-										<label class="col-sm-3 control-label">NIP/NIM/NIS</label>
+										<div class="col-sm-2 col-md-offset-1">
+											<select class="form-control show-menu-arrow" name="tipe">
+												<option value="1" selected>NIP/NIM/NIS</option>
+												<option value="2">Kode Buku</option>
+											</select>
+										</div>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<span id="id1">
+												<input type="text" name="id1" class="form-control" value="" autocomplete="off" autofocus />
+											</span>
+											<span id="id2">
+												<input type="text" name="id2" class="form-control" value="" autocomplete="off" autofocus />
+											</span>
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Nama</label>
+										<label class="col-sm-3 control-label" id="select"></label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="nama" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />
+											<input type="text" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" readonly />
 										</div>
 									</div>
 									<hr>
-									<div id="table" class="form-group">
+									<div id="table1" class="form-group sr-only">
 										<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
 											<table class="table table-bordered">
 												<thead>
@@ -71,7 +73,23 @@
 														<th class="text-center">Dikembalikan</th>
 													</tr>
 												</thead>
-												<tbody id="tbody"></tbody>
+												<tbody id="tbody1"></tbody>
+											</table>
+										</div>
+									</div>
+									<div id="table2" class="form-group sr-only">
+										<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
+											<table class="table table-bordered">
+												<thead>
+													<tr>
+														<th class="text-center">ID</th>
+														<th class="text-center">NIP/NIM/NIS</th>
+														<th class="text-center">Nama</th>
+														<th class="text-center">Tanggal Pinjam</th>
+														<th class="text-center">Dikembalikan</th>
+													</tr>
+												</thead>
+												<tbody id="tbody2"></tbody>
 											</table>
 										</div>
 									</div>
@@ -96,64 +114,110 @@
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 	<script>
 		$(document).ready(function(){
-			$('#id').autocomplete({
+			var option = ['Nama','Judul Buku'];
+			var select = $('select[name="tipe"]').val();
+			$('input:text[name="id1"]').autocomplete({
 				source:[{
-					data:{!! $borrows !!}
+					data:{!! $members !!}
 				}],
 				valueKey:'member_id',
 				limit:'10',
 				openOnFocus:false,
+			});
+			$('input:text[name="id2"]').autocomplete({
+				source:[{
+					data:{!! $books !!}
+				}],
+				valueKey:'book_id',
+				limit:'10',
+				openOnFocus:false,
+			});
+			$('label#select').empty().append(option[select-1]);
+			if(select==1) $('#id2').toggle();
+			else $('#id1').toggle();
+			$('select[name="tipe"]').change(function(){
+				select = $('select[name="tipe"]').val();
+				$('label#select').empty().append(option[select-1]);
+				$('#id1,#id2').toggle();
+				$('.xdsoft_autocomplete_dropdown').css('top','37px');
 			});
 			$.ajaxSetup({
         headers: {
 					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
 			});
-			$('#table').hide();
-			$('#id').keypress(function(){
+			$('input:text[name="id1"],input:text[name="id2"]').on('keypress, change', function(){
 				$.ajax({
 					url:'{!! route('admin.member.borrow') !!}',
 					dataType:'json',
 					type:'POST',
-					data:{'id':$('#id').val()},
+					data:{
+						'id' :$('select[name="tipe"]').val(),
+						'id1':$('input:text[name="id1"]').val(),
+						'id2':$('input:text[name="id2"]').val(),
+					},
 					cache:false,
 					success:function(data){
-						$('#nama').val('');
-						for(row in data)
-							$('#nama').val(data[row].nama);
+						if((data != null) && (data != undefined) && (data.length != 0)){
+							if(select==1)
+								$('input:text[name="nama"]').val(data[0].nama);
+							else
+								$('input:text[name="nama"]').val(data[0].judul);
+						}
 					},
 				});
 			});
-			$('#id').change(function(){
+			$('input:text[name="id1"],input:text[name="id2"]').change(function(){
 				$.ajax({
 					url:'{!! route('admin.book.return') !!}',
 					dataType:'',
 					type:'POST',
-					data:{'id':$('#id').val()},
+					data:{
+						'id' :$('select[name="tipe"]').val(),
+						'id1':$('input:text[name="id1"]').val(),
+						'id2':$('input:text[name="id2"]').val(),
+					},
 					cache:false,
 					success:function(data){
-						$('#tbody').empty();
+						if(!$('#table1').hasClass('sr-only')) $('#table1').addClass('sr-only');
+						if(!$('#table2').hasClass('sr-only')) $('#table2').addClass('sr-only');
+						$('#tbody1,#tbody2').empty();
 						if((data != null) && (data != undefined) && (data.length != 0)){
-							$('#table').show();
-							for(row in data){
-								var html = '<tr>';
-								html += '	<td class="text-center">'+data[row].id+'</td>';
-								html += '	<td>'+data[row].book_id+'</td>';
-								html += '	<td>'+data[row].judul+'</td>';
-								html += '	<td class="text-center">'+data[row].tanggal_pinjam+'</td>';
-								html += '	<td class="text-center"><input type="checkbox" name="kode[]" value="'+data[row].id+'/'+data[row].book_id+'"></td>';
-								html += '</tr>';
-								$('#tbody').append(html);
+							if(select==1){
+								$('#table1').removeClass('sr-only');
+								for(row in data){
+									$('#tbody1').append(
+										'<tr>'+
+											'<td class="text-center">'+data[row].id+'</td>'+
+											'<td>'+data[row].book_id+'</td>'+
+											'<td>'+data[row].judul+'</td>'+
+											'<td class="text-center">'+data[row].tanggal_pinjam+'</td>'+
+											'<td class="text-center"><input type="checkbox" name="kode[]" value="'+data[row].id+'/'+data[row].book_id+'"></td>'+
+										'</tr>'
+									);
+								}
+							}else{
+								$('#table2').removeClass('sr-only');
+								for(row in data){
+									$('#tbody2').append(
+										'<tr>'+
+											'<td class="text-center">'+data[row].id+'</td>'+
+											'<td>'+data[row].member_id+'</td>'+
+											'<td>'+data[row].nama+'</td>'+
+											'<td class="text-center">'+data[row].tanggal_pinjam+'</td>'+
+											'<td class="text-center"><input type="checkbox" name="kode[]" value="'+data[row].id+'/'+data[row].book_id+'"></td>'+
+										'</tr>'
+									);
+								}
 							}
-						}else{
-							$('#table').hide();
 						}
 					},
 				});
 			});
 			$('#cancel').click(function(){
-				$('#table').hide();
-				$('#tbody').empty();
+				if(!$('#table1').hasClass('sr-only')) $('#table1').addClass('sr-only');
+				if(!$('#table2').hasClass('sr-only')) $('#table2').addClass('sr-only');
+				$('#tbody1,#tbody2').empty();
 			});
 		});
 	</script>

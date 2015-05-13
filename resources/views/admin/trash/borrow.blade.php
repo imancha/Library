@@ -9,15 +9,7 @@
 		@if(count($result) > 0)
 			<div class="row">
 				<div class="col-md-12">
-					@if(Session::has('message'))
-						<div class="alert alert-success w-100 m-t-0 m-b-10" role="alert">
-							<i class='fa fa-check-square-o' style='padding-right:6px'></i>
-							<button type="button" class="close" data-dismiss="alert">×</button>
-							<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
-							<span class="sr-only">Success:</span>
-							{{ Session::get('message') }}
-						</div>
-					@endif
+					@if(Session::has('message')) @include('admin.master.message') @endif
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red">
 							<h3 class="panel-title"><strong>Trash </strong> Data Peminjaman</h3>

@@ -74,7 +74,6 @@ perspective effects (not including the modals and the overlay).
 	border-radius: 3px;
 	margin: 0 auto;
 }
-
 .md-content-red {
 	background: #CE5959;
 }
@@ -88,7 +87,12 @@ perspective effects (not including the modals and the overlay).
 .md-content-orange {
 	background: #f27835;
 }
-
+.md-content-green {
+	background: #18A689;
+}
+.md-content-aqua {
+	background: #5DADE2;
+}
 .md-content h3 {
 	margin: 0;
 	padding: 0.4em;

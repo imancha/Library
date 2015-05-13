@@ -9,15 +9,7 @@
 		@if(count($result) > 0)
 			<div class="row">
 				<div class="col-md-12">
-				@if(Session::has('message'))
-					<div class="alert alert-success w-100 m-t-0 m-b-10" role="alert">
-						<i class='fa fa-check-square-o' style='padding-right:6px'></i>
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
-						<span class="sr-only">Success:</span>
-						{{ Session::get('message') }}
-					</div>
-				@endif
+				@if(Session::has('message')) @include('admin.master.message') @endif
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red">
 							<h3 class="panel-title"><strong>Trash </strong> Data Buku</h3>
@@ -66,7 +58,7 @@
 												</tr>
 												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
 													<div class="md-content">
-														<h3 class="c-white">View Buku<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">View Buku<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 														<div class="p-b-0 text-left">
 															<ul>
 																<li><strong>Kode:</strong> {{ $book->id }}</li>
@@ -84,7 +76,7 @@
 												</div>
 												<div class="md-modal md-effect-9" id="restore-{{ $book->id }}">
 													<div class="md-content md-content-orange">
-														<h3 class="c-white">Restore Buku . . . ?<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Restore Buku . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ route('admin.trash.update','book-'.$book->id) }}">
 																<input name="_method" type="hidden" value="PATCH">
@@ -102,7 +94,7 @@
 												</div>
 												<div class="md-modal md-effect-1" id="delete-{{ $book->id }}">
 													<div class="md-content md-content-red">
-														<h3 class="c-white">Delete Buku . . . ?<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Delete Buku . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ route('admin.trash.destroy','book-'.$book->id) }}">
 																<input name="_method" type="hidden" value="DELETE">

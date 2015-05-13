@@ -9,17 +9,9 @@
 		@if(count($books) > 0)
 			<div class="row">
 				<div class="col-md-12">
-				@if(Session::has('message'))
-					<div class="alert alert-success w-100 m-t-0 m-b-10" role="alert">
-						<i class='fa fa-check-square-o' style='padding-right:6px'></i>
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
-						<span class="sr-only">Success:</span>
-						{{ Session::get('message') }}
-					</div>
-				@endif
+				@if(Session::has('message')) @include('admin.master.message') @endif
 					<div class="panel-default">
-						<div class="panel-heading bg-red">
+						<div class="panel-heading bg-red hidden-print">
 							<h3 class="panel-title"><strong>Data </strong> Buku</h3>
 							<ul class="pull-right header-menu">
 								<li class="dropdown" id="user-header">
@@ -28,14 +20,18 @@
 									</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{{ route('admin.book.export','xlsx') }}">
-													<i class="glyphicon glyphicon-file"></i> Export to Excel
+												<a href="{{ route('admin.book.export','print') }}" class="event">
+													<i class="fa fa-print fa-fw"></i> Print this page
+												</a>
+												<a href="{{ route('admin.book.export','xls') }}">
+													<i class="fa fa-table fa-fw"></i> Export to Excel
 												</a>
 											</li>
 										</ul>
 								</li>
 							</ul>
 						</div>
+						<h3 class="text-center visible-print p-t-0 m-t-0 p-b-10">DATA BUKU PERPUSTAKAAN INTI</h3>
 						<div class="panel-body p-5">
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
@@ -43,14 +39,15 @@
 										<thead>
 											<tr>
 												<th class="text-center">Kode</th>
-												<th class="text-center">Judul Buku<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th class="text-center">Pengarang<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th class="text-center">Penerbit<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th width="66px">Edisi<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th width="83px">Subyek<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th width="60px">Rak<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th width="85px">Status<span class="pull-right"><a href="#" class="c-dark"><i class="fa fa-angle-down"></i></a></span></th>
-												<th class="text-center" colspan="3">Actions</th>
+												<th class="text-center">Judul Buku</th>
+												<th class="text-center">Pengarang</th>
+												<th class="text-center">Penerbit</th>
+												<th class="text-center">Edisi</th>
+												<th class="text-center">Subyek</th>
+												<th class="text-center">Rak</th>
+												<th class="text-center">Jenis</th>
+												<th class="text-center hidden-print" colspan="4">Actions</th>
+												<th class="text-center visible-print">Entry</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -72,18 +69,22 @@
 													<td>{{ $book->edisi }}</td>
 													<td>{{ $book->subject->nama }}</td>
 													<td>{{ $book->rack->nama }}</td>
-													@if($borrowed)
-														<td class="c-red">Dipinjam</td>
-													@else
-														<td>Tersedia</td>
-													@endif
-													<td><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
-													<td><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.book.edit',$book->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $book->id }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td>{{ strtoupper($book->jenis) }}</td>
+													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
+													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.book.edit',$book->id) }}"><i class="fa fa-edit"></i></a></td>
+													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $book->id }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td class="no-print">
+														@if(!empty($book->file->book_id) AND file_exists(public_path('files/').$book->file->filename.'.'.$book->file->mime))
+															<a class="c-green" href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>
+														@else
+															<i class="fa fa-download c-gray ch-disabled"></i>
+														@endif
+													</td>
+													<td class="visible-print">{{ date_reverse($book->tanggal_masuk,'-','/') }}</td>
 												</tr>
 												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
 													<div class="md-content">
-														<h3 class="c-white">Lihat Buku<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Lihat Buku<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 														<div class="p-b-0 text-left">
 															<ul>
 																<li><strong>Kode:</strong> {{ $book->id }}</li>
@@ -103,7 +104,7 @@
 												</div>
 												<div class="md-modal md-effect-1" id="remove-{{ $book->id }}">
 													<div class="md-content md-content-red">
-														<h3 class="c-white">Hapus Buku . . . ?<span class="pull-right"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Hapus Buku . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ action('Admin\BookController@destroy',$book->id) }}">
 																<input name="_method" type="hidden" value="DELETE">
@@ -123,8 +124,9 @@
 										</tbody>
 									</table>
 									<div class="md-overlay"></div><!-- the overlay element -->
+									<small class="pull-right" style="font-size:smaller;color:gray !important;"><i id="timestamp"></i></small>
 								</div>
-								<div class="col-md-12 col-sm-12 col-xs-12 table-red">
+								<div class="col-md-12 col-sm-12 col-xs-12 table-red no-print">
 									<span class="pull-left">
 										<small class="c-red">
 											Showing {!! count($books) > 0 ? $books->perPage()*$books->currentPage()-$books->perPage()+1 : 0 !!}
@@ -163,6 +165,12 @@
 				$(this).html(function (i, str) {
 					return str.replace(new RegExp("("+search+")",'gi'), "<strong>$1</strong>");
 				});
+			});
+			$('a.event').click(function(){
+				var currentdate = new Date();
+				$('#timestamp').append("Waktu cetak: "+currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds());
+				window.print();
+				$('#timestamp').empty();
 			});
 		});
 	</script>

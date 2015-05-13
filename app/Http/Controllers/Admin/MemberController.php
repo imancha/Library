@@ -73,10 +73,13 @@ class MemberController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show(Request $request,$id)
 	{
 		$member = Member::find($id);
-		$borrows = Borrow::where('member_id','=',$member->id)->orderBy('created_at','asc')->get();
+		if($request->has('from') && $request->has('to'))
+			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('updated_at',[date_reverse($request->input('from'),'-','-').' 00:00:00',date_reverse($request->input('to'),'-','-').' 23:59:59'])->orderBy('created_at','asc')->get();
+		else
+			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('created_at','asc')->get();
 
 		return view('admin.member.show', compact('member','borrows'));
 	}
@@ -138,12 +141,12 @@ class MemberController extends Controller {
 
 		$members = Member::orderBy('created_at','asc')->get();
 
-		if($type == 'xlsx'){
-			Excel::create('['.date('Y.m.d H.m.s').'] Data Anggota Perpustakaan PT. INTI', function($excel) use($members){
+		if($type == 'xls'){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Anggota Perpustakaan INTI', function($excel) use($members){
 				$excel->setTitle('Data Anggota');
-				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
-				$excel->setDescription('Data Anggota Perpustakaan PT. INTI');
-				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
+				$excel->setCreator('Perpustakaan INTI')->setCompany('PT. INTI');
+				$excel->setDescription('Data Anggota Perpustakaan INTI');
+				$excel->setlastModifiedBy('Perpustakaan INTI');
 				$excel->sheet('ANGGOTA', function($sheet) use($members){
 					$row = 1;
 					$sheet->freezeFirstRow();

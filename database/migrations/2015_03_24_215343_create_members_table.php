@@ -15,10 +15,10 @@ class CreateMembersTable extends Migration {
 		Schema::create('members', function(Blueprint $table)
 		{
 			$table->char('id',15);
-			$table->string('nama');
-			$table->string('tanggal_lahir')->default('');
-			$table->enum('jenis_kelamin', ['laki-laki','perempuan']);
-			$table->enum('jenis_anggota', ['karyawan','non-karyawan']);
+			$table->string('nama',50);
+			$table->string('tanggal_lahir',50)->default('');
+			$table->enum('jenis_kelamin', ['laki-laki','perempuan'])->default('laki-laki');
+			$table->enum('jenis_anggota', ['karyawan','non-karyawan'])->default('non-karyawan');
 			$table->char('phone',12)->default('');
 			$table->text('alamat')->default('');
 			$table->text('keterangan')->default('');

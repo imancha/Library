@@ -1,10 +1,14 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Redirect;
 use Response;
 use Request;
+use Validator;
 use App\Model\Book;
 use App\Model\Borrow;
+use App\Model\GuestBook;
 use App\Model\Member;
+use App\Model\Slider;
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller {
@@ -16,22 +20,40 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$books = Book::count();
-		$asli = Book::where('jenis','=','asli')->count();
-		$pkl = Book::where('jenis','=','pkl')->count();
-		$members = Member::count();
-		$karyawan = Member::where('jenis_anggota','=','karyawan')->count();
-		$nonkaryawan = Member::where('jenis_anggota','=','non-karyawan')->count();
-		$borrows = Borrow::count();
-		$pinjam = Borrow::where('status','like','%pinjam%')->count();
-		$kembali = Borrow::where('status','like','%kembali%')->count();
+		$guests = GuestBook::orderBy('created_at','desc')->get();
+		$sliders = Slider::all();
+		$beranda = welcome();
+		$member = service('member');
+		$borrow = service('borrow');
 
-		return view('admin.index', compact('books','asli','pkl','members','karyawan','nonkaryawan','borrows','pinjam','kembali'));
+		return view('admin.index', compact('guests','sliders','beranda','member','borrow'));
 	}
 
 	public function lockscreen()
 	{
 		return view('auth.lockscreen');
+	}
+
+	public function getData($data = '')
+	{
+		if(Request::has('start') && Request::has('end'))
+		{
+			foreach(Book::whereBetween('tanggal_masuk',[Request::input('start'),Request::input('end')])->groupBy('tanggal_masuk')->orderBy('tanggal_masuk','asc')->get(['books.tanggal_masuk']) as $key => $book)
+			{
+				$data[$key]['label'] = str_replace('-','/',$book['tanggal_masuk']);
+				$data[$key]['value'] = Book::where('tanggal_masuk','=',$book['tanggal_masuk'])->count();
+			}
+		}
+
+		echo json_encode($data);
+	}
+
+	public function postAddress()
+	{
+		$result = \File::put(public_path('/inc/').(Request::input('id') == 1 ? 'location' : 'address'), Request::input('txt'));
+		if($result === false) die("Error writing to file");
+
+		return Response::json($result);
 	}
 
 	public function postBook()
@@ -45,18 +67,80 @@ class HomeController extends Controller {
 
 	public function postMember()
 	{
-		$member = Member::where('id','=',Request::input('id'))->get(['members.nama']);
+		if(Request::input('id') == 1)
+			$result = Member::where('id','=',Request::input('id1'))->get(['members.nama']);
+		else
+			$result = Book::where('id','=',Request::input('id2'))->get(['books.judul']);
 
-		return Response::json($member);
+		return Response::json($result);
 	}
 
 	public function postReturn()
 	{
-		$borrows = Book::join('borrows', function($join){
-			$join->on('borrows.book_id','=','books.id')->where('borrows.status','like','%pinjam%')->where('borrows.member_id','=',Request::input('id'));
-		})->get(['borrows.id','borrows.book_id','books.judul','borrows.tanggal_pinjam']);
+		if(Request::input('id') == 1)
+		{
+			$result = Book::join('borrows', function($join){
+				$join->on('borrows.book_id','=','books.id')->where('borrows.status','like','%pinjam%')->where('borrows.member_id','=',Request::input('id1'));
+			})->get(['borrows.id','borrows.book_id','books.judul','borrows.tanggal_pinjam']);
+		}else{
+			$result = Member::join('borrows', function($join){
+				$join->on('borrows.member_id','=','members.id')->where('borrows.status','like','%pinjam%')->where('borrows.book_id','=',Request::input('id2'));
+			})->get(['borrows.id','borrows.book_id','borrows.member_id','members.nama','borrows.tanggal_pinjam']);
+		}
 
-		return Response::json($borrows);
+		return Response::json($result);
+	}
+
+	public function postDashboard()
+	{
+		if(Request::hasFile('img'))
+		{
+			$path = public_path('/');
+			$file = Request::file('img');
+
+			$validator = Validator::make(
+				['image' => $file], ['image' => 'mimes:jpg,jpeg,png,gif']
+			);
+
+			if($validator->fails())
+			{
+				return Redirect::back()->withErrors($validator->messages());
+			}else{
+				$name = $file->getClientOriginalName();
+				$mime = $file->getClientOriginalExtension();
+				$fiel = $path.$name;
+
+				if(\File::exists($path.Request::input('_file'))) \File::delete($path.Request::input('_file'));
+				if(\File::exists($fiel)) \File::delete($fiel);
+
+				if($file->move($path,$name))
+					$img = '<img id="img" src="./'.$name.'" class="img img-responsive" alt="'.$name.'" width="200px" height="200px" style="float:right;display:inline;margin:10px 0 10px 10px;">';
+			}
+		}else{
+			$img = '<img id="img" src="./'.Request::input('_file').'" class="img img-responsive" alt="'.Request::input('_file').'" width="200px" height="200px" style="float:right;display:inline;margin:15px 0 10px 10px;">';
+		}
+
+		$result = \File::put(public_path('/inc/welcome'),'<h3 id="title" style="margin-top:5px;">'.Request::input('title').'</h3>'.$img.'<div id="post" style="margin-top:20px">'.Request::input('post').'</div>');
+
+		if($result === false) die("Error writing to file");
+
+		return Redirect::back()->with('message','Beranda Control berhasil disimpan.');
+	}
+
+	public function postService($id)
+	{
+		$result = \File::put(public_path('/inc/'.$id), Request::input($id));
+
+		if($result === false) die("Error writing to file");
+
+		return Redirect::back()->with('message',Request::input('_id').' berhasil disimpan.');
+	}
+
+	public function guestBook()
+	{
+		GuestBook::where('id','=',Request::input('id'))->delete();
+
+		return Redirect::back()->with('message','Komentar dari '.Request::input('nama').' berhasil dihapus');
 	}
 
 }

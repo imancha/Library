@@ -33,6 +33,7 @@ Modernizr.load([{
     yep: 'assets/plugins/retina.js'
 }]);
 
+$("html").niceScroll({styler:"fb",cursorcolor:"#00A2D9", cursorwidth: '6', cursorborderradius: '10px', background: '#404040', spacebarenabled:false,  cursorborder: '', zindex: '10'});
 
 //******************************** MAIN SIDEBAR ******************************//
 
@@ -387,6 +388,11 @@ $('.favs').on('click', function () {
     ($(this).hasClass('fa-star-o')) ? $(this).removeClass('fa-star-o').addClass('fa-star c-orange') : $(this).removeClass('fa-star c-orange').addClass('fa-star-o');
 });
 
+/****  Prevent default link  ****/
+$('a.event').on('click', function(e){
+	e.preventDefault();
+});
+
 /****  Custom Checkbox  ****/
 if ($('input:checkbox').length && $.fn.iCheck) {
     $('input:checkbox').each(function () {
@@ -489,7 +495,7 @@ if ($('.datepicker').length && $.fn.datepicker) {
         $(this).datepicker({
             inline: datepicker_inline,
             showInputs : false,
-						format : 'dd/mm/yyyy',
+						format : 'dd-mm-yyyy',
 						autoclose : true
         });
     });

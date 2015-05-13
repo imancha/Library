@@ -37,7 +37,7 @@ function is_alay($string)
 {
 	for($i=0;$i<strlen($string);$i++)
 	{
-		if(!ctype_alpha($string[$i]) && $string[$i] != '.' && $string[$i] != ',' && $string[$i] != ' ')
+		if(!ctype_alpha($string[$i]) && $string[$i] != '.' && $string[$i] != ',' && $string[$i] != ' ' && $string[$i] != ':' && $string[$i] != '-')
 		{
 			return true;
 			break;
@@ -45,7 +45,12 @@ function is_alay($string)
 	}
 	return false;
 }
-function humanFileSize($size,$unit="") {
+function date_reverse($date,$delimiter,$glue)
+{
+	return implode($glue,array_reverse(explode($delimiter,$date)));
+}
+function humanFileSize($size,$unit="")
+{
   if( (!$unit && $size >= 1<<30) || $unit == "GB")
     return number_format($size/(1<<30),2)." GB";
   if( (!$unit && $size >= 1<<20) || $unit == "MB")
@@ -53,4 +58,56 @@ function humanFileSize($size,$unit="") {
   if( (!$unit && $size >= 1<<10) || $unit == "KB")
     return number_format($size/(1<<10),2)." KB";
   return number_format($size)." B";
+}
+function remove_alpha($string,$digit='')
+{
+	for($i=0;$i<strlen($string);$i++)
+		if(is_numeric($string[$i]))
+			$digit .= $string[$i];
+	return $digit;
+}
+function bulan($bulan)
+{
+	$bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agt","Sep","Okt","Nov","Des"];
+
+	return $bulan[(int)$bulan-1];
+}
+function address($id)
+{
+	try
+	{
+		$result = \File::get(public_path('/inc/').($id == 1 ? 'location' : 'address'));
+	}
+	catch (Illuminate\Filesystem\FileNotFoundException $exception)
+	{
+		die("The file doesn't exist");
+	}
+
+	return $result;
+}
+function welcome()
+{
+	try
+	{
+		$result = \File::get(public_path('/inc/welcome'));
+	}
+	catch (Illuminate\Filesystem\FileNotFoundException $exception)
+	{
+		die("The file doesn't exist");
+	}
+
+	return $result;
+}
+function service($id)
+{
+	try
+	{
+		$result = \File::get(public_path('/inc/'.$id));
+	}
+	catch (Illuminate\Filesystem\FileNotFoundException $exception)
+	{
+		die("The file doesn't exist");
+	}
+
+	return $result;
 }

@@ -52,8 +52,8 @@ class BookController extends Controller {
 		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
 		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
 		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = $this->asli();
-		$pkl = $this->pkl();
+		$asli = $this->original();
+		$pkl = $this->research();
 
 		return view('admin.book.create', compact('publishers','subjects','racks','asli','pkl'));
 	}
@@ -115,7 +115,6 @@ class BookController extends Controller {
 			{
 				File::create([
 					'book_id'		=>	trim(strip_tags($request->input('id'))),
-					'filename'	=>	$name,
 					'mime'			=>	strtolower($mime),
 					'size'			=>	humanFileSize($size),
 					'sha1sum'		=>	sha1_file($file),
@@ -149,8 +148,8 @@ class BookController extends Controller {
 		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
 		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
 		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = $this->asli();
-		$pkl = $this->pkl();
+		$asli = $this->original();
+		$pkl = $this->research();
 
 		return view('admin.book.edit', compact('book','publishers','subjects','racks','asli','pkl'));
 	}
@@ -218,7 +217,6 @@ class BookController extends Controller {
 				if(empty($files)) $files = new File;
 
 				$files->book_id = $book->id;
-				$files->filename = $name;
 				$files->mime = strtolower($mime);
 				$files->size = humanFileSize($size);
 				$files->sha1sum = sha1_file($file);
@@ -253,12 +251,12 @@ class BookController extends Controller {
 		$asli = Book::where('jenis','=','asli')->orderBy('created_at','asc')->get();
 		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','asc')->get();
 
-		if($type == 'xlsx'){
-			Excel::create('['.date('Y.m.d H.m.s').'] Data Buku Perpustakaan PT. INTI', function($excel) use($asli,$pkl){
-				$excel->setTitle('Data Buku Perpustakaan PT. INTI');
-				$excel->setCreator('Perpustakaan PT. INTI')->setCompany('PT. INTI');
-				$excel->setDescription('Data Buku Perpustakaan PT. INTI');
-				$excel->setlastModifiedBy('Perpustakaan PT. INTI');
+		if($type == 'xls'){
+			Excel::create('['.date('Y.m.d H.m.s').'] Data Buku Perpustakaan INTI', function($excel) use($asli,$pkl){
+				$excel->setTitle('Data Buku Perpustakaan INTI');
+				$excel->setCreator('Perpustakaan INTI')->setCompany('PT. INTI');
+				$excel->setDescription('Data Buku Perpustakaan INTI');
+				$excel->setlastModifiedBy('Perpustakaan INTI');
 				$excel->sheet('ASLI', function($sheet) use($asli){
 					$row = 1;
 					$sheet->freezeFirstRow();
@@ -305,13 +303,13 @@ class BookController extends Controller {
 		}
 	}
 
-	public function asli()
+	public function original()
 	{
 		$asli = Book::where('jenis','=','asli')->orderBy('created_at','desc')->first();
 
 		if(count($asli) > 0)
 		{
-			$asli = $asli->id;
+			$asli = remove_alpha($asli->id);
 			do
 				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
 			while($next);
@@ -322,13 +320,13 @@ class BookController extends Controller {
 		return $asli;
 	}
 
-	public function pkl()
+	public function research()
 	{
 		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','desc')->first();
 
 		if(count($pkl) > 0)
 		{
-			$pkl = substr($pkl->id,0,strlen($pkl->id)-1);
+			$pkl = remove_alpha($pkl->id);
 			do
 				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
 			while($next);

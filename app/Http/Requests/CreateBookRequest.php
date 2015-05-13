@@ -37,13 +37,13 @@ class CreateBookRequest extends Request {
 			'jenis'				=>	'required',
 			'id'					=>	is_numeric(Request::input('jenis')) ? 'required|numeric|min:1|unique:books,id' : 'required|alpha_num|min:1|unique:books,id',
 			'judul'				=>	'required|min:3|max:255',
-			'pengarang'		=>	'required|min:3|max:255|alay',
+			'pengarang'		=>	'required|min:3|max:255',
 			'penerbit'		=>	'required|min:3|max:255',
 			'edisi'				=>	'required|digits:4',
 			'subyek'			=>	'required|min:3',
 			'rak'					=>	'required|min:3',
 			'keterangan'	=>	Request::has('keterangan') ? 'min:3|max:255' : '',
-			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx',
+			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
 		];
 	}
 
