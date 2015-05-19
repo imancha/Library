@@ -9,7 +9,6 @@
 		@if(count($books) > 0)
 			<div class="row">
 				<div class="col-md-12">
-				@if(Session::has('message')) @include('admin.master.message') @endif
 					<div class="panel-default">
 						<div class="panel-heading bg-red hidden-print">
 							<h3 class="panel-title"><strong>Data </strong> Buku</h3>
@@ -70,9 +69,9 @@
 													<td>{{ $book->subject->nama }}</td>
 													<td>{{ $book->rack->nama }}</td>
 													<td>{{ strtoupper($book->jenis) }}</td>
-													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
+													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
 													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.book.edit',$book->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $book->id }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
 													<td class="no-print">
 														@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 															<a class="c-green" href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>
@@ -84,7 +83,7 @@
 												</tr>
 												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
 													<div class="md-content">
-														<h3 class="c-white">Lihat Buku<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Lihat Buku<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="p-b-0 text-left">
 															<ul>
 																<li><strong>Kode:</strong> {{ $book->id }}</li>
@@ -104,7 +103,7 @@
 												</div>
 												<div class="md-modal md-effect-1" id="remove-{{ $book->id }}">
 													<div class="md-content md-content-red">
-														<h3 class="c-white">Hapus Buku . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Hapus Buku . . . ?<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ action('Admin\BookController@destroy',$book->id) }}">
 																<input name="_method" type="hidden" value="DELETE">

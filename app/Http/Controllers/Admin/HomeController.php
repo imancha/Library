@@ -29,11 +29,6 @@ class HomeController extends Controller {
 		return view('admin.index', compact('guests','sliders','beranda','member','borrow'));
 	}
 
-	public function lockscreen()
-	{
-		return view('auth.lockscreen');
-	}
-
 	public function getData($data = '')
 	{
 		if(Request::has('start') && Request::has('end'))

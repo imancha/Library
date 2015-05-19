@@ -15,7 +15,7 @@
 						<a href="{{ route('admin.book.index') }}"><span class="sidebar-text">Data Buku</span></a>
 					</li>
 					<li class="{{ setCurrenq('admin/book') }}">
-						<a class="md-trigger" href="#search" data-modal="book"><span class="sidebar-text">Cari Buku</span></a>
+						<a class="md-trigger" href="" data-modal="book"><span class="sidebar-text">Cari Buku</span></a>
 					</li>
 				</ul>
 			</li>
@@ -29,7 +29,7 @@
 						<a href="{{ action('Admin\MemberController@index') }}"><span class="sidebar-text">Data Anggota</span></a>
 					</li>
 					<li class="{{ setCurrenq('admin/member') }}">
-						<a class="md-trigger" href="#search" data-modal="member"><span class="sidebar-text">Cari Anggota</span></a>
+						<a class="md-trigger" href="" data-modal="member"><span class="sidebar-text">Cari Anggota</span></a>
 					</li>
 				</ul>
 			</li>
@@ -46,7 +46,7 @@
 						<a href="{{ action('Admin\BorrowController@index') }}"><span class="sidebar-text">Data Peminjaman</span></a>
 					</li>
 					<li class="{{ setCurrenq('admin/borrow') }}">
-						<a class="md-trigger" href="#search" data-modal="borrow"><span class="sidebar-text">Cari Peminjaman</span></a>
+						<a class="md-trigger" href="" data-modal="borrow"><span class="sidebar-text">Cari Peminjaman</span></a>
 					</li>
 				</ul>
 			</li>
@@ -69,9 +69,8 @@
 	<div class="footer-widget">
 		<img src="{{ asset('/assets/img/gradient.png') }}" alt="gradient effet" class="sidebar-gradient-img" />
 		<div class="sidebar-footer clearfix">
-			<a class="pull-left" href="#" rel="tooltip" data-placement="top" data-original-title="Settings"><i class="glyph-icon flaticon-settings21"></i></a>
-			<a class="pull-left toggle_fullscreen" href="#" rel="tooltip" data-placement="top" data-original-title="Fullscreen"><i class="glyph-icon flaticon-fullscreen3"></i></a>
-			<a class="pull-left" href="{{ route('admin.lockscreen') }}" rel="tooltip" data-placement="top" data-original-title="Lockscreen"><i class="glyph-icon flaticon-padlock23"></i></a>
+			<a class="pull-left md-trigger" href="" data-modal="account" rel="tooltip" data-placement="top" data-original-title="Account"><i class="glyph-icon flaticon-account"></i></a>
+			<a class="pull-left toggle_fullscreen" href="" rel="tooltip" data-placement="top" data-original-title="Fullscreen"><i class="glyph-icon flaticon-fullscreen3"></i></a>
 			<a class="pull-left" href="{{ url('/auth/logout') }}" rel="tooltip" data-placement="top" data-original-title="Logout"><i class="fa fa-power-off"></i></a>
 		</div>
 	</div>

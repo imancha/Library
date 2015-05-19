@@ -9,7 +9,6 @@
 		@if(count($members) > 0)
 			<div class="row">
 				<div class="col-md-12">
-					@if(Session::has('message')) @include('admin.master.message') @endif
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red no-print">
 							<h3 class="panel-title"><strong>Data </strong> Anggota</h3>
@@ -57,11 +56,11 @@
 													<td>{{ $member->alamat }}</td>
 													<td class="no-print"><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ route('admin.member.show',$member->id) }}"><i class="fa fa-eye"></i></a></td>
 													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.member.edit',$member->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="#remove-{{ $member->id }}" data-modal="remove-{{ $member->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="" data-modal="remove-{{ $member->id }}"><i class="fa fa-trash-o"></i></a></td>
 												</tr>
 												<div class="md-modal md-effect-1" id="remove-{{ $member->id }}">
 													<div class="md-content md-content-red">
-														<h3 class="c-white">Hapus Anggota . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Hapus Anggota . . . ?<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ route('admin.member.destroy',$member->id) }}">
 																<input name="_method" type="hidden" value="DELETE">

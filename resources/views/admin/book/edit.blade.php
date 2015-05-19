@@ -13,15 +13,6 @@
 	<div id="main-content">
 		<div class="row">
 			<div class="col-md-12">
-				@if(Session::has('message'))
-					<div class="alert alert-success w-100 m-t-0 m-b-10" role="alert">
-						<i class='fa fa-check-square-o' style='padding-right:6px'></i>
-						<button type="button" class="close" data-dismiss="alert">×</button>
-						<span class="glyphicon glyphicon-exclamation-ok-sign" aria-hidden="true"></span>
-						<span class="sr-only">Success:</span>
-						{{ Session::get('message') }}
-					</div>
-				@endif
 				<div class="panel panel-default">
 					<div class="panel-heading bg-red">
 						<h3 class="panel-title"><strong>Edit</strong> Buku</h3>
@@ -29,19 +20,6 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								@if(count($errors) > 0)
-									<!-- BEGIN ERROR BOX -->
-									<div class="alert alert-danger">
-										<button type="button" class="close" data-dismiss="alert">×</button>
-										<h4><i class='fa fa-ban' style='padding-right:6px'></i> Error!</h4>
-										<ul>
-										@foreach($errors->all() as $error)
-											<li>{{ $error }}</li>
-										@endforeach
-										</ul>
-									</div>
-									<!-- END ERROR BOX -->
-								@endif
 								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('Admin\BookController@update',$book->id) }}" parsley-validate>
 									<input name="_method" type="hidden" value="PATCH">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">

@@ -38,7 +38,7 @@
 					<i class="fa fa-outdent"></i>
 				</a>
 				<a class="navbar-brand" href="{{ route('admin.dashboard') }}">
-					<img src="{{ asset('/assets/img/logo.png') }}" alt="Admin" width="70" height="26">
+					<img src="{{ asset('/assets/img/logo.png') }}" alt="INTI" width="70" height="26">
 				</a>
 			</div>
 			<div class="navbar-center"><strong>PERPUSTAKAAN INTI</strong></div>
@@ -47,30 +47,24 @@
 				<ul class="nav navbar-nav pull-right header-menu">
 					<!-- BEGIN USER DROPDOWN -->
 					<li class="dropdown" id="user-header">
-						<a href="#" class="dropdown-toggle c-white" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<a href="" class="dropdown-toggle c-white" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 							<span class="username">{{ Auth::user()->name }}</span>
 							<i class="fa fa-angle-down p-r-10"></i>
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<a href="">
-									<i class="glyph-icon flaticon-account"></i> My Profile
+								<a href="" class="md-trigger" data-modal="account" title="Account">
+									<i class="glyph-icon flaticon-account"></i>Account
 								</a>
 							</li>
 							<li>
-								<a href="">
-									<i class="glyph-icon flaticon-settings21"></i> Account Settings
+								<a href="" class="toggle_fullscreen" title="Fullscreen">
+									<i class="glyph-icon flaticon-fullscreen3 fa-fw"></i> Fullscreen
 								</a>
 							</li>
-							<li class="dropdown-footer clearfix">
-								<a href="javascript:;" class="toggle_fullscreen" title="Fullscreen">
-									<i class="glyph-icon flaticon-fullscreen3"></i>
-								</a>
-								<a href="{{ route('admin.lockscreen') }}" title="Lock Screen">
-									<i class="glyph-icon flaticon-padlock23"></i>
-								</a>
+							<li>
 								<a href="{{ url('/auth/logout') }}" title="Logout">
-									<i class="fa fa-power-off"></i>
+									<i class="fa fa-power-off fa-fw"></i> Logout
 								</a>
 							</li>
 						</ul>
@@ -85,6 +79,7 @@
 	<!-- BEGIN WRAPPER -->
 	<div id="wrapper">
 		@include('admin.master.sidebar')
+		@include('admin.master.message')
 		<!-- BEGIN MAIN CONTENT -->
 		@yield('content')
 		<!-- END MAIN CONTENT -->
@@ -120,5 +115,30 @@
 	@yield('script')
 	<script src="{{ asset('/assets/js/jquery.nicescroll.js') }}"></script>
 	<script src="{{ asset('/assets/js/application.js') }}"></script>
+	<script>
+		$(document).ready(function(){
+			$('a.md-trigger, a.md-close, a.dropdown-toggle, a.toggle_fullscreen').on('click', function(e){
+				e.preventDefault();
+				e.stopPropagation();
+			});
+			$('#account #ubah').on('click', function(e){
+				e.preventDefault();
+				$('#account input[name="nama"]').prop('disabled', false).focus();
+				$('#account input[name="email"]').prop('disabled', false);
+				$('#account input[name="password"]').parent().removeClass('sr-only');
+				$('#account input[name="new"]').parent().removeClass('sr-only');
+				$('#account #ubah').addClass('sr-only');
+				$('#account #submit').removeClass('sr-only');
+			});
+			$('#account .md-close').on('click', function(e){
+				$('#account input[name="nama"]').prop('disabled', true);
+				$('#account input[name="email"]').prop('disabled', true);
+				$('#account input[name="password"]').parent().addClass('sr-only');
+				$('#account input[name="new"]').parent().addClass('sr-only');
+				$('#account #ubah').removeClass('sr-only');
+				$('#account #submit').addClass('sr-only');
+			});
+		});
+	</script>
 </body>
 </html>

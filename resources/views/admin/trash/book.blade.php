@@ -9,7 +9,6 @@
 		@if(count($result) > 0)
 			<div class="row">
 				<div class="col-md-12">
-				@if(Session::has('message')) @include('admin.master.message') @endif
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red">
 							<h3 class="panel-title"><strong>Trash </strong> Data Buku</h3>

@@ -23,7 +23,6 @@ Route::controllers([
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/', ['as' => 'admin.dashboard', 'uses' => 'Admin\HomeController@index']);
 	Route::get('/dashboard/data', ['as' => 'admin.dashboard.data', 'uses' => 'Admin\HomeController@getData']);
-	Route::get('/lockscreen', ['as' => 'admin.lockscreen', 'uses' => 'Admin\HomeController@lockscreen']);
 	Route::get('/borrow/return', ['as' => 'admin.borrow.return', 'uses' => 'Admin\BorrowController@patch']);
 	Route::get('/book/export/{type}', ['as' => 'admin.book.export', 'uses' => 'Admin\BookController@export']);
 	Route::get('/borrow/export/{type}', ['as' => 'admin.borrow.export', 'uses' => 'Admin\BorrowController@export']);
@@ -35,6 +34,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::post('/welcome', ['as' => 'admin.welcome','uses' => 'Admin\HomeController@postDashboard']);
 	Route::post('/service/{id}', ['as' => 'admin.service','uses' => 'Admin\HomeController@postService']);
 	Route::post('/guest', ['as' => 'admin.guest','uses' => 'Admin\HomeController@guestBook']);
+	Route::post('/user/update', ['as' => 'admin.user.update', 'uses' => 'Admin\UserController@update']);
 	Route::resource('book', 'Admin\BookController');
 	Route::resource('member', 'Admin\MemberController');
 	Route::resource('borrow', 'Admin\BorrowController');

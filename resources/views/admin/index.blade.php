@@ -11,20 +11,6 @@
 
 @section('content')
 	<div id="main-content" class="dashboard">
-		@if(Session::has('message')) @include('admin.master.message') @endif
-		@if(count($errors) > 0)
-			<!-- BEGIN ERROR BOX -->
-			<div class="alert alert-danger">
-				<button type="button" class="close" data-dismiss="alert">×</button>
-				<h4><i class='fa fa-ban' style='padding-right:6px'></i> Error!</h4>
-				<ul>
-					@foreach($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-			<!-- END ERROR BOX -->
-		@endif
 		<div class="row">
 			<div class="col-md-6 m-b-10">
 				<div class="input-group transparent">
@@ -94,7 +80,7 @@
 						<h2 class="panel-title w-100">
 							Slider Control
 							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Tambah">
-								<a href="#slider" class="c-green md-trigger" data-modal="slider">
+								<a href="" class="c-green md-trigger" data-modal="slider">
 									<i class="glyph-icon flaticon-plus16 f-32"></i>
 								</a>
 							</span>
@@ -113,10 +99,10 @@
 													<div class="media-body">
 														<small class="pull-right">
 															<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-																<a href="#ubah-{{ $slider->id }}" class="md-trigger" data-modal="ubah-{{ $slider->id }}"><i class="fa fa-edit"></i></a>
+																<a href="" class="md-trigger" data-modal="ubah-{{ $slider->id }}"><i class="fa fa-edit"></i></a>
 															</span>
 															<span data-placement="left" title="" rel="tooltip" data-original-title="hapus">
-																<a href="#hapus-{{ $slider->id }}" class="c-red md-trigger" data-modal="hapus-{{ $slider->id }}"><i class="fa fa-times"></i></a>
+																<a href="" class="c-red md-trigger" data-modal="hapus-{{ $slider->id }}"><i class="fa fa-times"></i></a>
 															</span>
 														</small>
 														<h5 class="c-dark"><strong>Slide-{{ ++$i }}</strong></h5>
@@ -127,7 +113,7 @@
 											</div>
 											<div class="md-modal md-effect-8" id="ubah-{{ $slider->id }}">
 												<div class="md-content md-content-white">
-													<h3>Ubah Slider <span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+													<h3>Ubah Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 													<div class="p-b-10 m-t-10">
 														<form method="post" action="{{ action('Admin\SliderController@update',$slider->id) }}" enctype="multipart/form-data">
 														<input name="_method" type="hidden" value="PATCH">
@@ -155,7 +141,7 @@
 											</div>
 											<div class="md-modal md-effect-1" id="hapus-{{ $slider->id }}">
 												<div class="md-content md-content-red">
-													<h3 class="c-white">Hapus<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+													<h3 class="c-white">Hapus<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 													<div class="text-left">
 														<form role="form" method="POST" action="{{ action('Admin\SliderController@destroy',$slider->id) }}">
 														<input name="_method" type="hidden" value="DELETE">
@@ -178,7 +164,7 @@
 					</div>
 					<div class="md-modal md-effect-10" id="slider">
 						<div class="md-content md-content-white">
-							<h3>Tambah Slider <span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+							<h3>Tambah Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-b-10 m-t-10">
 								<form method="post" action="{{ action('Admin\SliderController@store') }}" enctype="multipart/form-data">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -227,7 +213,7 @@
 											<div class="header">
 												<strong class="primary-font">{{ $guest->nama }} </strong>
 												<small class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Hapus">
-													<a href="#remove-{{ $guest->id }}" class="c-red md-trigger" data-modal="remove-{{ $guest->id }}">
+													<a href="" class="c-red md-trigger" data-modal="remove-{{ $guest->id }}">
 														<i class="fa fa-times"></i>
 													</a>
 												</small>
@@ -238,7 +224,7 @@
 									</li>
 									<div class="md-modal md-effect-1" id="remove-{{ $guest->id }}">
 										<div class="md-content md-content-red">
-											<h3 class="c-white">Hapus<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+											<h3 class="c-white">Hapus<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 											<div class="text-left">
 												<form role="form" method="POST" action="{{ action('Admin\HomeController@guestBook') }}">
 													<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -267,7 +253,7 @@
 						<h2 class="panel-title w-100">
 							Beranda Control
 							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-								<a href="#beranda" class="c-green md-trigger" data-modal="beranda">
+								<a href="" class="c-green md-trigger" data-modal="beranda">
 									<i class="fa fa-edit"></i>
 								</a>
 							</span>
@@ -278,7 +264,7 @@
 					</div>
 					<div class="md-modal md-effect-7" id="beranda">
 						<div class="md-content md-content-white">
-							<h3>Beranda Control <span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+							<h3>Beranda Control <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-b-10 m-t-10">
 								<form method="post" action="{{ action('Admin\HomeController@postDashboard') }}" enctype="multipart/form-data">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -315,7 +301,7 @@
 						<h2 class="panel-title w-100">
 							Layanan Keanggotaan
 							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-								<a href="#anggota" class="c-green md-trigger" data-modal="anggota">
+								<a href="" class="c-green md-trigger" data-modal="anggota">
 									<i class="fa fa-edit"></i>
 								</a>
 							</span>
@@ -326,7 +312,7 @@
 					</div>
 					<div class="md-modal md-effect-14" id="anggota">
 						<div class="md-content md-content-white">
-							<h3>Layanan Keanggotaan<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+							<h3>Layanan Keanggotaan<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-10">
 								<form method="post" action="{{ action('Admin\HomeController@postService','member') }}">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -351,7 +337,7 @@
 						<h2 class="panel-title w-100">
 							Layanan Peminjaman
 							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-								<a href="#pinjam" class="c-green md-trigger" data-modal="pinjam">
+								<a href="" class="c-green md-trigger" data-modal="pinjam">
 									<i class="fa fa-edit"></i>
 								</a>
 							</span>
@@ -362,7 +348,7 @@
 					</div>
 					<div class="md-modal md-effect-14" id="pinjam">
 						<div class="md-content md-content-white">
-							<h3>Layanan Peminjaman <span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+							<h3>Layanan Peminjaman <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-10">
 								<form method="post" action="{{ action('Admin\HomeController@postService','borrow') }}">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">

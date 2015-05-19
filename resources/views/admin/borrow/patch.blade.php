@@ -12,7 +12,6 @@
 	<div id="main-content" class="dashboard">
 		<div class="row">
 			<div class="col-md-12">
-				@if(Session::has('message')) @include('admin.master.message') @endif
 				<div class="panel panel-default">
 					<div class="panel-heading bg-red">
 						<h3 class="panel-title"><strong>Tambah</strong> Pengembalian</h3>
@@ -20,19 +19,6 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								@if(count($errors) > 0)
-									<!-- BEGIN ERROR BOX -->
-									<div class="alert alert-danger">
-										<button type="button" class="close" data-dismiss="alert">×</button>
-										<h4><i class='fa fa-ban' style='padding-right:6px'></i> Error!</h4>
-										<ul>
-										@foreach($errors->all() as $error)
-											<li>{{ $error }}</li>
-										@endforeach
-										</ul>
-									</div>
-									<!-- END ERROR BOX -->
-								@endif
 								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@update','return') }}" parsley-validate>
 									<input name="_method" type="hidden" value="PATCH">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
