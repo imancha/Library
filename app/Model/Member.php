@@ -14,6 +14,8 @@ class Member extends Model {
 	 */
 	protected $table = 'members';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -26,9 +28,7 @@ class Member extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
-
-	protected $guarded = [];
+	protected $hidden = ['deleted_at'];
 
 	public function borrow()
 	{

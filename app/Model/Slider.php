@@ -11,6 +11,8 @@ class Slider extends Model {
 	 */
 	protected $table = 'sliders';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -23,7 +25,7 @@ class Slider extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
+	protected $hidden = ['deleted_at'];
 
 	protected $guarded = ['id'];
 

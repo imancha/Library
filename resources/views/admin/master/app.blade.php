@@ -47,7 +47,7 @@
 				<ul class="nav navbar-nav pull-right header-menu">
 					<!-- BEGIN USER DROPDOWN -->
 					<li class="dropdown" id="user-header">
-						<a href="" class="dropdown-toggle c-white" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+						<a href="#" class="dropdown-toggle c-white" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
 							<span class="username">{{ Auth::user()->name }}</span>
 							<i class="fa fa-angle-down p-r-10"></i>
 						</a>
@@ -117,7 +117,7 @@
 	<script src="{{ asset('/assets/js/application.js') }}"></script>
 	<script>
 		$(document).ready(function(){
-			$('a.md-trigger, a.md-close, a.dropdown-toggle, a.toggle_fullscreen').on('click', function(e){
+			$('a.md-trigger, a.md-close, a.toggle_fullscreen').on('click', function(e){
 				e.preventDefault();
 				e.stopPropagation();
 			});

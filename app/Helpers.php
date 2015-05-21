@@ -111,3 +111,18 @@ function service($id)
 
 	return $result;
 }
+function prefix()
+{
+	try
+	{
+		$user = new App\Http\Controllers\Admin\UserController;
+
+		$result = \File::get(public_path('/inc/'.$user->getId()));
+	}
+	catch (Illuminate\Filesystem\FileNotFoundException $exception)
+	{
+		die("The file doesn't exist");
+	}
+
+	return trim($result);
+}

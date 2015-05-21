@@ -1,19 +1,19 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Excel;
-use Redirect;
+
 use App\Model\Book;
 use App\Model\Borrow;
 use App\Model\Member;
+
 use App\Http\Requests;
 use App\Http\Requests\CreateBorrowRequest;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
 class BorrowController extends Controller {
-
-	private $perpage = 10;
 
 	/**
 	 * Display a listing of the resource.
@@ -24,11 +24,11 @@ class BorrowController extends Controller {
 	{
 		if($request->has('q'))
 		{
-			$q = $request->input('q');
-			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('tanggal_pinjam','like','%'.$q.'%')->orWhere('tanggal_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->orderBy('created_at','desc')->paginate($this->perpage);
+			$q = trim(strip_tags($request->input('q')));
+			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('tanggal_pinjam','like','%'.$q.'%')->orWhere('tanggal_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->orderBy('tanggal_pinjam','desc')->paginate(10);
 			$borrows->setPath('../admin/borrow^q='.$q);
 		}else{
-			$borrows = Borrow::orderBy('created_at','desc')->paginate($this->perpage);
+			$borrows = Borrow::orderBy('tanggal_pinjam','desc')->paginate(10);
 			$borrows->setPath('../admin/borrow');
 		}
 
@@ -46,7 +46,7 @@ class BorrowController extends Controller {
 		$books = Book::whereNotIn('id', function($query){
 			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','like','%pinjam%');
 		})->get(['books.id']);
-		$borrow = Borrow::orderBy('created_at','desc')->first();
+		$borrow = Borrow::orderBy('tanggal_pinjam','desc')->first();
 
 		if(count($borrow) > 0)
 		{
@@ -89,9 +89,9 @@ class BorrowController extends Controller {
 		}
 
 		if($empty)
-			return Redirect::route('admin.member.edit',trim(strip_tags($request->input('id'))))->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
+			return redirect()->route('admin.member.edit',trim(strip_tags($request->input('id'))))->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 
-		return Redirect::route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
+		return redirect()->route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -142,7 +142,7 @@ class BorrowController extends Controller {
 				$book[] = $kode[1];
 				$kode = [];
 			}
-			return Redirect::back()->with('message', implode(', ',$book).' berhasil disimpan.');
+			return redirect()->back()->with('message', implode(', ',$book).' berhasil disimpan.');
 		}
 	}
 
@@ -163,7 +163,7 @@ class BorrowController extends Controller {
 		ini_set('memory_limit', '500M');
 		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
 
-		$borrows = Borrow::orderBy('created_at','asc')->get();
+		$borrows = Borrow::orderBy('tanggal_pinjam','asc')->get();
 
 		if($type == 'xls'){
 			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman Buku Perpustakaan INTI', function($excel) use($borrows){

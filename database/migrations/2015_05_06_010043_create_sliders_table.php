@@ -18,7 +18,6 @@ class CreateSlidersTable extends Migration {
 			$table->string('judul');
 			$table->string('keterangan')->nullable();
 			$table->char('mime',4)->nullable();
-			$table->timestamps();
 		});
 	}
 

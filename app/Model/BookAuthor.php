@@ -14,6 +14,8 @@ class BookAuthor extends Model {
 	 */
 	protected $table = 'book_authors';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -26,8 +28,6 @@ class BookAuthor extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
-
-	protected $guarded = [];
+	protected $hidden = ['deleted_at'];
 
 }

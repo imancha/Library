@@ -1,6 +1,5 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use Redirect;
 use App\Model\Author;
 use App\Model\Book;
 use App\Model\BookAuthor;
@@ -106,7 +105,7 @@ class TrashController extends Controller {
 
 		if($restore) Borrow::onlyTrashed()->where($id[0].'_id','=',$id[1])->restore();
 
-		return Redirect::back()->with('message', $id[1].' berhasil disimpan.');
+		return redirect()->back()->with('message', $id[1].' berhasil disimpan.');
 	}
 
 	/**
@@ -144,7 +143,7 @@ class TrashController extends Controller {
 			Member::onlyTrashed()->where('id','=',$id[1])->forceDelete();
 		}
 
-		return Redirect::back()->with('message', $id[1].' berhasil dihapus.');
+		return redirect()->back()->with('message', $id[1].' berhasil dihapus.');
 	}
 
 }

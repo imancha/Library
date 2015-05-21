@@ -19,7 +19,7 @@
 									</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{{ route('admin.book.export','print') }}" class="event">
+												<a href="" class="event">
 													<i class="fa fa-print fa-fw"></i> Print this page
 												</a>
 												<a href="{{ route('admin.book.export','xls') }}">
@@ -41,7 +41,7 @@
 												<th class="text-center">Judul Buku</th>
 												<th class="text-center">Pengarang</th>
 												<th class="text-center">Penerbit</th>
-												<th class="text-center">Edisi</th>
+												<th class="text-center">Tahun</th>
 												<th class="text-center">Subyek</th>
 												<th class="text-center">Rak</th>
 												<th class="text-center">Jenis</th>
@@ -65,7 +65,7 @@
 													<td>{{ $book->judul }}</td>
 													<td>{{ implode(', ',$authors) }}</td>
 													<td>{{ $book->publisher->nama }}</td>
-													<td>{{ $book->edisi }}</td>
+													<td>{{ $book->tahun }}</td>
 													<td>{{ $book->subject->nama }}</td>
 													<td>{{ $book->rack->nama }}</td>
 													<td>{{ strtoupper($book->jenis) }}</td>
@@ -79,23 +79,23 @@
 															<i class="fa fa-download c-gray ch-disabled"></i>
 														@endif
 													</td>
-													<td class="visible-print">{{ date_reverse($book->tanggal_masuk,'-','/') }}</td>
+													<td class="visible-print">{{ tanggal($book->tanggal_masuk) }}</td>
 												</tr>
 												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
 													<div class="md-content">
-														<h3 class="c-white">Lihat Buku<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Detail Buku<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="p-b-0 text-left">
 															<ul>
 																<li><strong>Kode:</strong> {{ $book->id }}</li>
 																<li><strong>Judul:</strong> {{ $book->judul }}</li>
-																<li><strong>Edisi:</strong> {{$book->edisi }}</li>
+																<li><strong>Tahun:</strong> {{$book->tahun }}</li>
 																<li><strong>Pengarang:</strong> {{ implode(', ',$authors) }}</li>
 																<li><strong>Penerbit:</strong> {{ $book->publisher->nama }}</li>
 																<li><strong>Jenis:</strong> {{ strtoupper($book->jenis) }}</li>
 																<li><strong>Subyek:</strong> {{ $book->subject->nama }}</li>
 																<li><strong>Rak:</strong> {{ $book->rack->nama }}</li>
 																<li><strong>Tanggal Masuk:</strong> {{ tanggal($book->tanggal_masuk) }}</li>
-																<li><strong>Keterangan:</strong> {{ $book->keterangan }}</li>
+																@if(!empty($book->keterangan)) <li><strong>Keterangan:</strong> {{ $book->keterangan }}</li> @endif
 																<li><strong>Status:</strong> {{ $borrowed ? 'Dipinjam' : 'Tersedia' }}</li>
 															</ul>
 														</div>
@@ -165,7 +165,9 @@
 					return str.replace(new RegExp("("+search+")",'gi'), "<strong>$1</strong>");
 				});
 			});
-			$('a.event').click(function(){
+			$('a.event').click(function(e){
+				e.preventDefault();
+				e.stopPropagation();
 				var currentdate = new Date();
 				$('#timestamp').append("Waktu cetak: "+currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds());
 				window.print();

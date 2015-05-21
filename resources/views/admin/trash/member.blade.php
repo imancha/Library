@@ -35,7 +35,6 @@
 											<tr>
 												<th class="text-center">NIP/NIM/NIS</th>
 												<th class="text-center">Nama</th>
-												<th class="text-center">Tanggal Daftar</th>
 												<th class="text-center">Waktu Hapus</th>
 												<th class="text-center" colspan="3">Actions</th>
 											</tr>
@@ -45,7 +44,6 @@
 												<tr>
 													<td>{{ $member->id }}</td>
 													<td>{{ $member->nama }}</td>
-													<td>{{ tanggal($member->created_at) }}</td>
 													<td>{{ $member->deleted_at }}</td>
 													<td><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="View" href="#view-{{ $member->id }}" data-modal="view-{{ $member->id }}"><i class="fa fa-eye"></i></a></td>
 													<td><a class="c-orange md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Restore" href="#restore-{{ $member->id }}" data-modal="restore-{{ $member->id }}"><i class="fa fa-undo"></i></a></td>

@@ -9,10 +9,10 @@
 				<a href="#"> <i class="fa fa-book"></i> <span class="sidebar-text">Buku</span><span class="fa arrow"></span></a>
 				<ul class="submenu collapse">
 					<li class="{{ setCurrent('admin.book.create') }}">
-						<a href="{{ route('admin.book.create') }}"><span class="sidebar-text">Tambah Buku</span></a>
+						<a href="{{ action('Admin\BookController@create') }}"><span class="sidebar-text">Tambah Buku</span></a>
 					</li>
 					<li class="{{ setCurrent('admin.book.index') }}{{ setCurrent('admin.book.edit') }}">
-						<a href="{{ route('admin.book.index') }}"><span class="sidebar-text">Data Buku</span></a>
+						<a href="{{ action('Admin\BookController@index') }}"><span class="sidebar-text">Data Buku</span></a>
 					</li>
 					<li class="{{ setCurrenq('admin/book') }}">
 						<a class="md-trigger" href="" data-modal="book"><span class="sidebar-text">Cari Buku</span></a>
@@ -54,13 +54,13 @@
 				<a href="#"> <i class="fa fa-trash-o"></i> <span class="sidebar-text">Trash</span><span class="fa arrow"></span></a>
 				<ul class="submenu collapse">
 					<li class="{{ setCurren('admin/trash/book') }}">
-						<a href="{{ route('admin.trash.show','book') }}"><span class="sidebar-text">Data Buku</span></a>
+						<a href="{{ action('Admin\TrashController@show','book') }}"><span class="sidebar-text">Data Buku</span></a>
 					</li>
 					<li class="{{ setCurren('admin/trash/member') }}">
-						<a href="{{ route('admin.trash.show','member') }}"><span class="sidebar-text">Data Anggota</span></a>
+						<a href="{{ action('Admin\TrashController@show','member') }}"><span class="sidebar-text">Data Anggota</span></a>
 					</li>
 					<li class="{{ setCurren('admin/trash/borrow') }}">
-						<a href="{{ route('admin.trash.show','borrow') }}"><span class="sidebar-text">Data Peminjaman</span></a>
+						<a href="{{ action('Admin\TrashController@show','borrow') }}"><span class="sidebar-text">Data Peminjaman</span></a>
 					</li>
 				</ul>
 			</li>

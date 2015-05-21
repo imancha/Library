@@ -11,19 +11,20 @@ class GuestBook extends Model {
 	 */
 	protected $table = 'guest_books';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['nama','email','komentar'];
+	protected $fillable = ['nama','email','komentar','waktu'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
 
 	protected $guarded = ['id'];
 

@@ -203,11 +203,11 @@
 								@foreach($guests as $guest)
 									<li class="left clearfix">
 										<div class="chat-img pull-left text-center">
-											<span>{{ substr($guest->created_at,8,2) }}</span>
+											<span>{{ substr($guest->waktu,8,2) }}</span>
 											<br>
-											<span>{{ bulan(substr($guest->created_at,5,2)) }}</span>
+											<span>{{ bulan(substr($guest->waktu,5,2)) }}</span>
 											<br>
-											<span>{{ substr($guest->created_at,0,4) }}</span>
+											<span>{{ substr($guest->waktu,0,4) }}</span>
 										</div>
 										<div class="chat-body clearfix">
 											<div class="header">
@@ -428,6 +428,7 @@
 		// Load chart
 		ajaxLoadChart(startDate,endDate);
 		range.daterangepicker({
+			opens: 'left',
 			startDate: startDate,
 			endDate: endDate,
 			ranges: {

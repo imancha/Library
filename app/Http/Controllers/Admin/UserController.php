@@ -1,9 +1,13 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Auth;
+
 use Validator;
+
 use App\User;
+
 use App\Http\Requests;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -42,7 +46,8 @@ class UserController extends Controller {
 					$user = User::find($request->user()->id);
 					$user->name = trim(strip_tags($request->input('nama')));
 					$user->email = trim(strip_tags($request->input('email')));
-					if($request->has('new')) $user->password = bcrypt(trim(strip_tags($request->input('new'))));
+					if($request->has('new'))
+						$user->password = bcrypt(trim(strip_tags($request->input('new'))));
 					$user->save();
 
 					return redirect()->back()->with('message', 'Account berhasil disimpan.');

@@ -40,7 +40,7 @@
 										<th>Judul Buku</th>
 										<th>Pengarang</th>
 										<th>Penerbit</th>
-										<th>Edisi</th>
+										<th>Tahun</th>
 										<th>Subyek</th>
 										<th><i class="fa fa-download"></i></th>
 									</tr>
@@ -56,7 +56,7 @@
 										<td>{{ $book->judul }}</td>
 										<td>{{ implode(', ',$authors) }}</td>
 										<td>{{ $book->publisher->nama }}</td>
-										<td>{{ $book->edisi }}</td>
+										<td>{{ $book->tahun }}</td>
 										<td>{{ $book->subject->nama }}</td>
 										<td>
 											@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
@@ -95,7 +95,7 @@
 			<div class="alert alert-warning flat" role="alert">
 				<i class='fa fa-exclamation-circle' style='padding-right:6px'></i>
 				<span class="sr-only">Error:</span>
-				Data tidak ditemukan.
+				Data buku tidak ditemukan.
 			</div>
 		</div>
 	@endif

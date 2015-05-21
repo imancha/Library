@@ -14,6 +14,8 @@ class Rack extends Model {
 	 */
 	protected $table = 'racks';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -26,7 +28,7 @@ class Rack extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
+	protected $hidden = ['deleted_at'];
 
 	protected $guarded = ['id'];
 

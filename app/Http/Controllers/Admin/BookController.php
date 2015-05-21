@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Excel;
-use Redirect;
+
 use App\Model\Author;
 use App\Model\Book;
 use App\Model\BookAuthor;
@@ -10,16 +10,16 @@ use App\Model\File;
 use App\Model\Publisher;
 use App\Model\Rack;
 use App\Model\Subject;
+
 use App\Http\Requests;
 use App\Http\Requests\CreateBookRequest;
 use App\Http\Requests\EditBookRequest;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
 class BookController extends Controller {
-
-	private $perpage = 10;
 
 	/**
 	 * Display a listing of the resource.
@@ -31,11 +31,11 @@ class BookController extends Controller {
 		$borrows = Borrow::where('status','like','%pinjam%')->get();
 		if($request->has('q'))
 		{
-			$q = $request->input('q');
-			$books = Book::where('id','like','%'.$q.'%')->orWhere('judul','like','%'.$q.'%')->orWhere('edisi','like','%'.$q.'%')->orWhere('jenis','like','%'.$q.'%')->orWhereIn('id',BookAuthor::whereIn('author_id',Author::where('nama','like','%'.$q.'%')->get(['authors.id'])->toArray())->get(['book_id'])->toArray())->orWhereIn('publisher_id',Publisher::where('nama','like','%'.$q.'%')->get(['publishers.id'])->toArray())->orWhereIn('subject_id',Subject::where('nama','like','%'.$q.'%')->get(['subjects.id'])->toArray())->orWhereIn('rack_id',Rack::where('nama','like','%'.$q.'%')->get(['racks.id'])->toArray())->orWhereIn('id',Borrow::where('status','like','%'.$q.'%')->get(['borrows.book_id'])->toArray())->orderBy('created_at','desc')->paginate($this->perpage);
+			$q = trim(strip_tags($request->input('q')));
+			$books = Book::where('id','like','%'.$q.'%')->orWhere('judul','like','%'.$q.'%')->orWhere('tahun','like','%'.$q.'%')->orWhere('jenis','like','%'.$q.'%')->orWhereIn('id',BookAuthor::whereIn('author_id',Author::where('nama','like','%'.$q.'%')->get(['authors.id'])->toArray())->get(['book_id'])->toArray())->orWhereIn('publisher_id',Publisher::where('nama','like','%'.$q.'%')->get(['publishers.id'])->toArray())->orWhereIn('subject_id',Subject::where('nama','like','%'.$q.'%')->get(['subjects.id'])->toArray())->orWhereIn('rack_id',Rack::where('nama','like','%'.$q.'%')->get(['racks.id'])->toArray())->orWhereIn('id',Borrow::where('status','like','%'.$q.'%')->get(['borrows.book_id'])->toArray())->orderBy('tanggal_masuk','desc')->paginate(10);
 			$books->setPath('../admin/book^q='.$q);
 		}else{
-			$books = Book::orderBy('created_at','desc')->paginate($this->perpage);
+			$books = Book::orderBy('tanggal_masuk','desc')->paginate(10);
 			$books->setPath('../admin/book');
 		}
 
@@ -49,11 +49,31 @@ class BookController extends Controller {
 	 */
 	public function create()
 	{
-		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
-		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
-		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = $this->original();
-		$pkl = $this->research();
+		$publishers = Publisher::orderBy('nama', 'asc')->get(['publishers.nama']);
+		$subjects = Subject::orderBy('nama', 'asc')->get(['subjects.nama']);
+		$racks = Rack::orderBy('nama', 'asc')->get(['racks.nama']);
+		$asli = Book::where('jenis','=','asli')->orderBy('tanggal_masuk','desc')->first();
+		$pkl = Book::where('jenis','=','pkl')->orderBy('tanggal_masuk','desc')->first();
+
+		if(count($asli) > 0)
+		{
+			$asli = remove_alpha($asli->id);
+			do
+				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
+			while($next);
+		}else{
+			$asli = 1;
+		}
+
+		if(count($pkl) > 0)
+		{
+			$pkl = remove_alpha($pkl->id);
+			do
+				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
+			while($next);
+		}else{
+			$pkl = 1;
+		}
 
 		return view('admin.book.create', compact('publishers','subjects','racks','asli','pkl'));
 	}
@@ -80,7 +100,7 @@ class BookController extends Controller {
 		$book = Book::create([
 			'id'						=>	trim(strip_tags($request->input('id'))),
 			'judul'					=>	trim(strip_tags($request->input('judul'))),
-			'edisi'					=>	trim(strip_tags($request->input('edisi'))),
+			'tahun'					=>	trim(strip_tags($request->input('tahun'))),
 			'jenis'					=>	trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl')),
 			'tanggal_masuk'	=>	new \DateTime,
 			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
@@ -119,10 +139,12 @@ class BookController extends Controller {
 					'size'			=>	humanFileSize($size),
 					'sha1sum'		=>	sha1_file($file),
 				]);
+			}else{
+				return redirect()->back()->withInput()->withErrors('Error uploading file.');
 			}
 		}
 
-		return Redirect::route('admin.book.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
+		return redirect()->route('admin.book.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -131,7 +153,7 @@ class BookController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($jenis)
+	public function show($id)
 	{
 		//
 	}
@@ -145,11 +167,31 @@ class BookController extends Controller {
 	public function edit($id)
 	{
 		$book = Book::find($id);
-		$publishers = Publisher::orderBy('created_at', 'desc')->get(['publishers.nama']);
-		$subjects = Subject::orderBy('created_at', 'desc')->get(['subjects.nama']);
-		$racks = Rack::orderBy('created_at', 'desc')->get(['racks.nama']);
-		$asli = $this->original();
-		$pkl = $this->research();
+		$publishers = Publisher::orderBy('nama', 'asc')->get(['publishers.nama']);
+		$subjects = Subject::orderBy('nama', 'asc')->get(['subjects.nama']);
+		$racks = Rack::orderBy('nama', 'asc')->get(['racks.nama']);
+		$asli = Book::where('jenis','=','asli')->orderBy('tanggal_masuk','desc')->first();
+		$pkl = Book::where('jenis','=','pkl')->orderBy('tanggal_masuk','desc')->first();
+
+		if(count($asli) > 0)
+		{
+			$asli = remove_alpha($asli->id);
+			do
+				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
+			while($next);
+		}else{
+			$asli = 1;
+		}
+
+		if(count($pkl) > 0)
+		{
+			$pkl = remove_alpha($pkl->id);
+			do
+				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
+			while($next);
+		}else{
+			$pkl = 1;
+		}
 
 		return view('admin.book.edit', compact('book','publishers','subjects','racks','asli','pkl'));
 	}
@@ -178,7 +220,7 @@ class BookController extends Controller {
 
 		$book->id = trim(strip_tags($request->input('id')));
 		$book->judul = trim(strip_tags($request->input('judul')));
-		$book->edisi = trim(strip_tags($request->input('edisi')));
+		$book->tahun = trim(strip_tags($request->input('tahun')));
 		$book->jenis = trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl'));
 		$book->keterangan = trim(strip_tags($request->input('keterangan')));
 		$book->publisher_id = $publisher->id;
@@ -218,10 +260,12 @@ class BookController extends Controller {
 				$files->size = humanFileSize($size);
 				$files->sha1sum = sha1_file($file);
 				$files->save();
+			}else{
+				return redirect()->back()->withInput()->withErrors('Error uploading file');
 			}
 		}
 
-		return Redirect::route('admin.book.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
+		return redirect()->route('admin.book.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -236,7 +280,7 @@ class BookController extends Controller {
 		Borrow::where('book_id','=',$id)->delete();
 		File::where('book_id','=',$id)->delete();
 
-		return Redirect::back()->with('message', $request->input('id').' - '.$request->input('judul').' berhasil dihapus.');
+		return redirect()->back()->with('message', $request->input('id').' - '.$request->input('judul').' berhasil dihapus.');
 	}
 
 	public function export($type)
@@ -245,8 +289,8 @@ class BookController extends Controller {
 		ini_set('memory_limit', '500M');
 		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
 
-		$asli = Book::where('jenis','=','asli')->orderBy('created_at','asc')->get();
-		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','asc')->get();
+		$asli = Book::where('jenis','=','asli')->orderBy('tanggal_masuk','asc')->get();
+		$pkl = Book::where('jenis','=','pkl')->orderBy('tanggal_masuk','asc')->get();
 
 		if($type == 'xls'){
 			Excel::create('['.date('Y.m.d H.m.s').'] Data Buku Perpustakaan INTI', function($excel) use($asli,$pkl){
@@ -267,7 +311,7 @@ class BookController extends Controller {
 							$book->judul,
 							implode(', ',$authors),
 							$book->publisher->nama,
-							$book->edisi,
+							$book->tahun,
 							$book->subject->nama,
 							$book->rack->nama,
 							implode('-',array_reverse(explode('-',$book->tanggal_masuk))),
@@ -288,7 +332,7 @@ class BookController extends Controller {
 							$book->judul,
 							implode(', ',$authors),
 							$book->publisher->nama,
-							$book->edisi,
+							$book->tahun,
 							$book->subject->nama,
 							$book->rack->nama,
 							implode('-',array_reverse(explode('-',$book->tanggal_masuk))),
@@ -298,40 +342,6 @@ class BookController extends Controller {
 				});
 			})->export($type);
 		}
-	}
-
-	public function original()
-	{
-		$asli = Book::where('jenis','=','asli')->orderBy('created_at','desc')->first();
-
-		if(count($asli) > 0)
-		{
-			$asli = remove_alpha($asli->id);
-			do
-				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
-			while($next);
-		}else{
-			$asli = 1;
-		}
-
-		return $asli;
-	}
-
-	public function research()
-	{
-		$pkl = Book::where('jenis','=','pkl')->orderBy('created_at','desc')->first();
-
-		if(count($pkl) > 0)
-		{
-			$pkl = remove_alpha($pkl->id);
-			do
-				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
-			while($next);
-		}else{
-			$pkl = 1;
-		}
-
-		return $pkl;
 	}
 
 }

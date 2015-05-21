@@ -14,21 +14,21 @@ class Book extends Model {
 	 */
 	protected $table = 'books';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['id','judul','edisi','jenis','tanggal_masuk','keterangan','publisher_id','subject_id','rack_id'];
+	protected $fillable = ['id','judul','tahun','jenis','tanggal_masuk','keterangan','publisher_id','subject_id','rack_id'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
-
-	protected $guarded = [];
+	protected $hidden = ['deleted_at'];
 
 	public function author()
 	{

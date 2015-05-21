@@ -49,7 +49,7 @@
 												<tr>
 													<td>{{ $book->id }}</td>
 													<td>{{ $book->judul }}</td>
-													<td>{{ tanggal($book->created_at) }}</td>
+													<td>{{ tanggal($book->tanggal_masuk) }}</td>
 													<td>{{ $book->deleted_at }}</td>
 													<td><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="View" href="#view-{{ $book->id }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
 													<td><a class="c-orange md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Restore" href="#restore-{{ $book->id }}" data-modal="restore-{{ $book->id }}"><i class="fa fa-undo"></i></a></td>
@@ -57,12 +57,12 @@
 												</tr>
 												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
 													<div class="md-content">
-														<h3 class="c-white">View Buku<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">View Buku<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="p-b-0 text-left">
 															<ul>
 																<li><strong>Kode:</strong> {{ $book->id }}</li>
 																<li><strong>Judul:</strong> {{ $book->judul }}</li>
-																<li><strong>Edisi:</strong> {{$book->edisi }}</li>
+																<li><strong>Tahun:</strong> {{$book->tahun }}</li>
 																<li><strong>Pengarang:</strong> {{ implode(', ',$authors) }}</li>
 																<li><strong>Penerbit:</strong> {{ $book->publisher->nama }}</li>
 																<li><strong>Jenis:</strong> {{ strtoupper($book->jenis) }}</li>
@@ -75,7 +75,7 @@
 												</div>
 												<div class="md-modal md-effect-9" id="restore-{{ $book->id }}">
 													<div class="md-content md-content-orange">
-														<h3 class="c-white">Restore Buku . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Restore Buku . . . ?<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ route('admin.trash.update','book-'.$book->id) }}">
 																<input name="_method" type="hidden" value="PATCH">
@@ -93,7 +93,7 @@
 												</div>
 												<div class="md-modal md-effect-1" id="delete-{{ $book->id }}">
 													<div class="md-content md-content-red">
-														<h3 class="c-white">Delete Buku . . . ?<span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+														<h3 class="c-white">Delete Buku . . . ?<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
 															<form role="form" method="POST" action="{{ route('admin.trash.destroy','book-'.$book->id) }}">
 																<input name="_method" type="hidden" value="DELETE">

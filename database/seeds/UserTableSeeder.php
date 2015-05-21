@@ -17,6 +17,7 @@ class UserTableSeeder extends Seeder {
 			'name'			=>	'Mohammad Abdul Iman Syah',
 			'email'			=>	'imancha_266@ymail.com',
 			'password'	=>	bcrypt('imancha'),
+			'status'			=>	'kabag',
 		]);
 	}
 

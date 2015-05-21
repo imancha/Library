@@ -71,10 +71,10 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Edisi</label>
+										<label class="col-sm-3 control-label">Tahun</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="year" name="edisi" class="form-control" maxlength="4" size="4" value="{{ empty(old('edisi')) ? $book->edisi : old('edisi') }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
+											<input type="year" name="tahun" class="form-control" maxlength="4" size="4" value="{{ empty(old('tahun')) ? $book->tahun : old('tahun') }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
@@ -107,7 +107,7 @@
 									</div>
 									<div class="form-group text-center">
 										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
-										<button type="reset" class="btn btn-default" onclick="history.go(-1)">Cancel</button>
+										<button type="reset" class="btn btn-default">Cancel</button>
 									</div>
 								</form>
 							</div>

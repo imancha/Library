@@ -41,3 +41,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::resource('trash', 'Admin\TrashController');
 	Route::resource('slider', 'Admin\SliderController');
 });
+Route::group(['prefix' => 'administrator', 'middleware' => 'auth'], function(){
+	Route::get('/', 'PublicController@getIndex');
+});

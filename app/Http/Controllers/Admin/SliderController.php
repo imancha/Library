@@ -1,12 +1,14 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use Redirect;
 use App\Model\Slider;
+
 use App\Http\Requests;
 use App\Http\Requests\CreateSliderRequest;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\DB;
 
 class SliderController extends Controller {
@@ -63,7 +65,7 @@ class SliderController extends Controller {
 			DB::commit();
 		}
 
-		return Redirect::back()->with('message','Slider berhasil disimpan.');
+		return redirect()->back()->with('message','Slider berhasil disimpan.');
 	}
 
 	/**
@@ -114,7 +116,7 @@ class SliderController extends Controller {
 		$slider->keterangan = trim(strip_tags($request->input('keterangan')));
 		$slider->save();
 
-		return Redirect::back()->with('message','Slider berhasil disimpan.');
+		return redirect()->back()->with('message','Slider berhasil disimpan.');
 	}
 
 	/**
@@ -132,7 +134,7 @@ class SliderController extends Controller {
 
 		$slider->delete();
 
-		return Redirect::back()->with('message','Slider berhasil dihapus.');
+		return redirect()->back()->with('message','Slider berhasil dihapus.');
 	}
 
 }

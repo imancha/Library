@@ -1,19 +1,19 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Excel;
-use Redirect;
+
 use App\Model\Borrow;
 use App\Model\Member;
+
 use App\Http\Requests;
 use App\Http\Requests\CreateMemberRequest;
 use App\Http\Requests\EditMemberRequest;
+
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
 class MemberController extends Controller {
-
-	private $perpage = 10;
 
 	/**
 	 * Display a listing of the resource.
@@ -25,11 +25,11 @@ class MemberController extends Controller {
 		$borrows = Borrow::groupBy('id')->get();
 		if($request->has('q'))
 		{
-			$q = $request->input('q');
-			$members = Member::where('id','like','%'.$q.'%')->orWhere('nama','like','%'.$q.'%')->orWhere('jenis_kelamin','like','%'.$q.'%')->orWhere('jenis_anggota','like','%'.$q.'%')->orWhere('alamat','like','%'.$q.'%')->orderBy('created_at','asc')->paginate($this->perpage);
+			$q = trim(strip_tags($request->input('q')));
+			$members = Member::where('id','like','%'.$q.'%')->orWhere('nama','like','%'.$q.'%')->orWhere('jenis_kelamin','like','%'.$q.'%')->orWhere('jenis_anggota','like','%'.$q.'%')->orWhere('alamat','like','%'.$q.'%')->orderBy('nama','asc')->paginate(10);
 			$members->setPath('../admin/member^q='.$q);
 		}else{
-			$members = Member::orderBy('created_at','asc')->paginate($this->perpage);
+			$members = Member::orderBy('nama','asc')->paginate(10);
 			$members->setPath('../admin/member');
 		}
 
@@ -64,7 +64,7 @@ class MemberController extends Controller {
 			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
 		]);
 
-		return Redirect::route('admin.member.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
+		return redirect()->route('admin.member.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -77,9 +77,9 @@ class MemberController extends Controller {
 	{
 		$member = Member::find($id);
 		if($request->has('from') && $request->has('to'))
-			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('updated_at',[date_reverse($request->input('from'),'-','-').' 00:00:00',date_reverse($request->input('to'),'-','-').' 23:59:59'])->orderBy('created_at','asc')->get();
+			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('tanggal_pinjam',[date_reverse($request->input('from'),'-','-').' 00:00:00',date_reverse($request->input('to'),'-','-').' 23:59:59'])->orderBy('tanggal_pinjam','asc')->get();
 		else
-			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('created_at','asc')->get();
+			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('tanggal_pinjam','asc')->get();
 
 		return view('admin.member.show', compact('member','borrows'));
 	}
@@ -116,7 +116,7 @@ class MemberController extends Controller {
 		$member->keterangan = trim(strip_tags($request->input('keterangan')));
 		$member->save();
 
-		return Redirect::route('admin.member.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
+		return redirect()->route('admin.member.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -139,7 +139,7 @@ class MemberController extends Controller {
 		ini_set('memory_limit', '500M');
 		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
 
-		$members = Member::orderBy('created_at','asc')->get();
+		$members = Member::orderBy('nama','asc')->get();
 
 		if($type == 'xls'){
 			Excel::create('['.date('Y.m.d H.m.s').'] Data Anggota Perpustakaan INTI', function($excel) use($members){

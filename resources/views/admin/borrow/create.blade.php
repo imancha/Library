@@ -19,7 +19,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ route('admin.borrow.store') }}" parsley-validate>
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@store') }}" parsley-validate>
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
 										<label class="col-sm-3 control-label">ID Peminjaman</label>
@@ -39,7 +39,7 @@
 										<label class="col-sm-3 control-label">Nama</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="nama" class="form-control" value="" parsley-minlength="3" parsley-required="true" autocomplete="off" />
+											<input type="text" name="nama" class="form-control" value="{{ old('nama') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div id="added"></div>
@@ -54,7 +54,7 @@
 										<label class="col-sm-3 control-label">Judul</label>
 										<div class="col-sm-7">
 											<div class="input-group">
-												<input type="text" id="judul" name="judul" class="form-control" value="" autocomplete="off" readonly />
+												<input type="text" id="judul" name="judul" class="form-control" value="" autocomplete="off" required readonly />
 												<span id="plus" class="input-group-addon btn btn-sm" data-placement="right" data-toggle="tooltip" rel="tooltip" data-original-title="Tambah Buku">
 													<i class="fa fa-plus"></i>
 												</span>

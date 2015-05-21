@@ -74,7 +74,7 @@
 										</div>
 									@endforeach
 								@endif
-								<div data-iview:image="{{ asset('/img/slide-.jpg') }}">
+								<div data-iview:image="{{ asset('/img/slide.jpg') }}">
 									<div class="iview-caption caption3 btm-bar" data-height="107px" data-transition="expandRight" data-width="867px" data-x="0" data-y="300">
 										<h1><b>Perpustakaan INTI</b></h1>
 										{{ address(1) }}<br>{{ address(2) }}
@@ -131,7 +131,7 @@
 																				<tbody>
 																					<tr><td><strong>Kode</strong></td><td> {{ $book->id }}</td></tr>
 																					<tr><td><strong>Judul</strong></td><td> {{ $book->judul }}</td></tr>
-																					<tr><td><strong>Edisi</strong></td><td> {{$book->edisi }}</td></tr>
+																					<tr><td><strong>Tahun</strong></td><td> {{$book->tahun }}</td></tr>
 																					<tr><td><strong>Pengarang</strong></td><td> {{ implode(', ',$authors) }}</td></tr>
 																					<tr><td><strong>Penerbit</strong></td><td> {{ $book->publisher->nama }}</td></tr>
 																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
@@ -176,7 +176,7 @@
 																				<tbody>
 																					<tr><td><strong>Kode</strong></td><td> {{ $book->id }}</td></tr>
 																					<tr><td><strong>Judul</strong></td><td> {{ $book->judul }}</td></tr>
-																					<tr><td><strong>Edisi</strong></td><td> {{$book->edisi }}</td></tr>
+																					<tr><td><strong>Tahun</strong></td><td> {{$book->tahun }}</td></tr>
 																					<tr><td><strong>Pengarang</strong></td><td> {{ implode(', ',$authors) }}</td></tr>
 																					<tr><td><strong>Penerbit</strong></td><td> {{ $book->publisher->nama }}</td></tr>
 																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>

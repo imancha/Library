@@ -1,12 +1,13 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Model\Author;
 use App\Model\Book;
 use App\Model\BookAuthor;
 use App\Model\Publisher;
 use App\Model\Rack;
 use App\Model\Subject;
+
+use Illuminate\Database\Seeder;
 
 class BookTableSeeder extends Seeder {
 
@@ -49,7 +50,7 @@ class BookTableSeeder extends Seeder {
 				$book = Book::create([
 					'id'		=>	$result->kode_buku,
 					'judul'	=>	$result->judul_buku,
-					'edisi'	=>	$result->edisi,
+					'tahun'	=>	$result->edisi,
 					'jenis'	=>	strtolower($result->jenis),
 					'tanggal_masuk'	=>	$result->tanggal_masuk,
 					'keterangan'		=>	(empty($result->keterangan) ? '' : $result->keterangan),
@@ -63,8 +64,6 @@ class BookTableSeeder extends Seeder {
 					'book_id'		=>	$result->kode_buku,
 					'author_id'	=>	$author->id,
 				]);
-
-				sleep(1);
 			}
 
 		});

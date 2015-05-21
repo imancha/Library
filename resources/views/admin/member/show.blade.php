@@ -24,7 +24,7 @@
 												<tr><td>JENIS KELAMIN</td><td>:</td><td>{{ $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki' }}</td></tr>
 												<tr><td>JENIS ANGGOTA</td><td>:</td><td>{{ $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan' }}</td></tr>
 												<tr><td>ALAMAT / DIVISI</td><td>:</td><td>{{ $member->alamat }}</td></tr>
-												<tr><td>KETERANGAN</td><td>:</td><td>{{ $member->keterangan }}</td></tr>
+												@if(!empty($member->keterangan)) <tr><td>KETERANGAN</td><td>:</td><td>{{ $member->keterangan }}</td></tr> @endif
 											</tbody>
 										</table>
 									</div>
@@ -57,8 +57,8 @@
 														<td>{{ ++$i }}</td>
 														<td>{{ $borrow->book_id }}</td>
 														<td>{{ $borrow->book->judul }}</td>
-														<td>{{ date_reverse($borrow->tanggal_pinjam,'-','/') }}</td>
-														<td>{{ empty($borrow->tanggal_kembali) ? '' : date_reverse($borrow->tanggal_pinjam,'-','/') }}</td>
+														<td>{{ $borrow->tanggal_pinjam }}</td>
+														<td>{{ empty($borrow->tanggal_kembali) ? '' : $borrow->tanggal_kembali }}</td>
 														<td>{{ empty($borrow->tanggal_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
 													</tr>
 												@endforeach

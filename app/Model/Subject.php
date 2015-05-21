@@ -14,6 +14,8 @@ class Subject extends Model {
 	 */
 	protected $table = 'subjects';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
@@ -26,7 +28,7 @@ class Subject extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
+	protected $hidden = ['deleted_at'];
 
 	protected $guarded = ['id'];
 

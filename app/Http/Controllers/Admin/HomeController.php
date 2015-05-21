@@ -1,14 +1,14 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use Redirect;
-use Response;
 use Request;
 use Validator;
+
 use App\Model\Book;
 use App\Model\Borrow;
 use App\Model\GuestBook;
 use App\Model\Member;
 use App\Model\Slider;
+
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller {
@@ -20,7 +20,7 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$guests = GuestBook::orderBy('created_at','desc')->get();
+		$guests = GuestBook::orderBy('waktu','desc')->get();
 		$sliders = Slider::all();
 		$beranda = welcome();
 		$member = service('member');
@@ -48,7 +48,7 @@ class HomeController extends Controller {
 		$result = \File::put(public_path('/inc/').(Request::input('id') == 1 ? 'location' : 'address'), Request::input('txt'));
 		if($result === false) die("Error writing to file");
 
-		return Response::json($result);
+		return response()->json($result);
 	}
 
 	public function postBook()
@@ -57,7 +57,7 @@ class HomeController extends Controller {
 			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','like','%pinjam%');
 		})->where('id','=',Request::input('kode'))->get(['books.judul']);
 
-		return Response::json($book);
+		return response()->json($book);
 	}
 
 	public function postMember()
@@ -67,7 +67,7 @@ class HomeController extends Controller {
 		else
 			$result = Book::where('id','=',Request::input('id2'))->get(['books.judul']);
 
-		return Response::json($result);
+		return response()->json($result);
 	}
 
 	public function postReturn()
@@ -83,7 +83,7 @@ class HomeController extends Controller {
 			})->get(['borrows.id','borrows.book_id','borrows.member_id','members.nama','borrows.tanggal_pinjam']);
 		}
 
-		return Response::json($result);
+		return response()->json($result);
 	}
 
 	public function postDashboard()
@@ -99,7 +99,7 @@ class HomeController extends Controller {
 
 			if($validator->fails())
 			{
-				return Redirect::back()->withErrors($validator->messages());
+				return redirect()->back()->withErrors($validator->messages());
 			}else{
 				$name = $file->getClientOriginalName();
 				$mime = $file->getClientOriginalExtension();
@@ -119,7 +119,7 @@ class HomeController extends Controller {
 
 		if($result === false) die("Error writing to file");
 
-		return Redirect::back()->with('message','Beranda Control berhasil disimpan.');
+		return redirect()->back()->with('message','Beranda Control berhasil disimpan.');
 	}
 
 	public function postService($id)
@@ -128,14 +128,14 @@ class HomeController extends Controller {
 
 		if($result === false) die("Error writing to file");
 
-		return Redirect::back()->with('message',Request::input('_id').' berhasil disimpan.');
+		return redirect()->back()->with('message',Request::input('_id').' berhasil disimpan.');
 	}
 
 	public function guestBook()
 	{
 		GuestBook::where('id','=',Request::input('id'))->delete();
 
-		return Redirect::back()->with('message','Komentar dari '.Request::input('nama').' berhasil dihapus');
+		return redirect()->back()->with('message','Komentar dari '.Request::input('nama').' berhasil dihapus');
 	}
 
 }

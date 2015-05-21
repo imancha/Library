@@ -14,21 +14,21 @@ class File extends Model {
 	 */
 	protected $table = 'files';
 
+	public $timestamps = false;
+
 	/**
 	 * The attributes that are mass assignable.
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['book_id','filename','mime','size','sha1sum'];
+	protected $fillable = ['book_id','mime','size','sha1sum'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at','updated_at'];
-
-	protected $guarded = [];
+	protected $hidden = ['deleted_at'];
 
 	protected $primaryKey = 'book_id';
 

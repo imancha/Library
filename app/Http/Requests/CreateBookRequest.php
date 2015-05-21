@@ -39,7 +39,7 @@ class CreateBookRequest extends Request {
 			'judul'				=>	'required|min:3|max:255',
 			'pengarang'		=>	'required|min:3|max:255',
 			'penerbit'		=>	'required|min:3|max:255',
-			'edisi'				=>	'required|digits:4',
+			'tahun'				=>	'required|digits:4',
 			'subyek'			=>	'required|min:3',
 			'rak'					=>	'required|min:3',
 			'keterangan'	=>	Request::has('keterangan') ? 'min:3|max:255' : '',

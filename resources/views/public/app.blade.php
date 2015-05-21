@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="{{ asset('/favicon.ico.png') }}">
 
     <title>@yield('title') - Perpustakaan INTI</title>
 
@@ -26,7 +26,6 @@
 
   <body>
 		<header>
-			<div class="hidden-xs s-10"></div>
 			<div class="container">
 				<nav class="navbar navbar-primary">
 					<div class="container-fluid">
@@ -142,6 +141,10 @@
 						$(this).toggleClass('open');
 					}
 				);
+				$('button[type="submit"]').on('click', function(e){
+					if($('input[name="q"]').val() != '')
+						$('input[name="q"]').val($('input[name="q"]').val().replace(/(<([^>]+)>)/ig,""));
+				});
 			});
     </script>
   </body>

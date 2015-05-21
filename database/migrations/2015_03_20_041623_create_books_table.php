@@ -16,9 +16,9 @@ class CreateBooksTable extends Migration {
 		{
 			$table->char('id', 10);
 			$table->string('judul');
-			$table->char('edisi', 4);
+			$table->char('tahun', 4);
 			$table->enum('jenis', ['asli','pkl']);
-			$table->date('tanggal_masuk');
+			$table->timestamp('tanggal_masuk');
 			$table->text('keterangan')->default('');
 			$table->integer('publisher_id')->unsigned();
 			$table->integer('subject_id')->unsigned();
@@ -27,7 +27,6 @@ class CreateBooksTable extends Migration {
 			$table->foreign('publisher_id')->references('id')->on('publishers')->onUpdate('cascade')->onDelete('cascade');
 			$table->foreign('subject_id')->references('id')->on('subjects')->onUpdate('cascade')->onDelete('cascade');
 			$table->foreign('rack_id')->references('id')->on('racks')->onUpdate('cascade')->onDelete('cascade');
-			$table->timestamps();
 			$table->softDeletes();
 		});
 	}

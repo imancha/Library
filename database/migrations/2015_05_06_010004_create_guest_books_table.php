@@ -18,7 +18,7 @@ class CreateGuestBooksTable extends Migration {
 			$table->string('nama',50);
 			$table->string('email',50)->nullable();
 			$table->text('komentar');
-			$table->timestamps();
+			$table->timestamp('waktu');
 		});
 	}
 

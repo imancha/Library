@@ -89,7 +89,7 @@
 									</div>
 									<div class="form-group text-center">
 										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
-										<button type="reset" class="btn btn-default" onclick="history.go(-1)">Cancel</button>
+										<button type="reset" class="btn btn-default">Cancel</button>
 									</div>
 								</form>
 							</div>

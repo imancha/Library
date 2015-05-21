@@ -6,6 +6,7 @@ html,
 body{
 	background:#ffffff;
 	overflow-x:hidden;
+	margin-top:5px;
 }
 /* Background colors */
 .bg-red,
@@ -402,12 +403,6 @@ input[type="checkbox"]:active{
 	width:158%;
 	padding-right:35px;
 }
-.navbar .searchbar .searchbox input:focus{
-	background-color:#45BD91;
-	color:#444444;
-	width:158%;
-	padding-right:35px;
-}
 .navbar .searchbar .searchbox button{
 	background-color: rgba(0, 0, 0, 0);
 	border: medium none;
@@ -654,6 +649,10 @@ input[type="checkbox"]:active{
 	opacity:0.8;
 }
 @media (max-width: 767px){
+	html,
+	body{
+		margin-top:0;
+	}
 	.container{
 		padding:1px !important;
 	}
