@@ -42,6 +42,7 @@
 										<th>Penerbit</th>
 										<th>Tahun</th>
 										<th>Subyek</th>
+										<th>Rak</th>
 										<th><i class="fa fa-download"></i></th>
 									</tr>
 								</thead>
@@ -58,6 +59,7 @@
 										<td>{{ $book->publisher->nama }}</td>
 										<td>{{ $book->tahun }}</td>
 										<td>{{ $book->subject->nama }}</td>
+										<td>{{ $book->rack->nama }}</td>
 										<td>
 											@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 												<a href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="bottom" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}">

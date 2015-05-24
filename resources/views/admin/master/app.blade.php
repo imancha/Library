@@ -53,17 +53,17 @@
 						</a>
 						<ul class="dropdown-menu">
 							<li>
-								<a href="" class="md-trigger" data-modal="account" title="Account">
+								<a href="{{ url('admin/account') }}" class="md-trigger" data-modal="account" title="Account">
 									<i class="glyph-icon flaticon-account"></i>Account
 								</a>
 							</li>
 							<li>
-								<a href="" class="toggle_fullscreen" title="Fullscreen">
+								<a href="{{ url('admin/fullscreen') }}" class="toggle_fullscreen" title="Fullscreen">
 									<i class="glyph-icon flaticon-fullscreen3 fa-fw"></i> Fullscreen
 								</a>
 							</li>
 							<li>
-								<a href="{{ url('/auth/logout') }}" title="Logout">
+								<a href="{{ action('Admin\UserController@getLogout') }}" title="Logout">
 									<i class="fa fa-power-off fa-fw"></i> Logout
 								</a>
 							</li>
@@ -113,7 +113,6 @@
 	<script src="{{ asset('/assets/plugins/modal-effects/js/css-filters-polyfill.js') }}"></script>
 	<!-- END MANDATORY SCRIPTS -->
 	@yield('script')
-	<script src="{{ asset('/assets/js/jquery.nicescroll.js') }}"></script>
 	<script src="{{ asset('/assets/js/application.js') }}"></script>
 	<script>
 		$(document).ready(function(){
@@ -123,7 +122,7 @@
 			});
 			$('#account #ubah').on('click', function(e){
 				e.preventDefault();
-				$('#account input[name="nama"]').prop('disabled', false).focus();
+				$('#account input[name="name"]').prop('disabled', false).focus();
 				$('#account input[name="email"]').prop('disabled', false);
 				$('#account input[name="password"]').parent().removeClass('sr-only');
 				$('#account input[name="new"]').parent().removeClass('sr-only');
@@ -131,7 +130,7 @@
 				$('#account #submit').removeClass('sr-only');
 			});
 			$('#account .md-close').on('click', function(e){
-				$('#account input[name="nama"]').prop('disabled', true);
+				$('#account input[name="name"]').prop('disabled', true);
 				$('#account input[name="email"]').prop('disabled', true);
 				$('#account input[name="password"]').parent().addClass('sr-only');
 				$('#account input[name="new"]').parent().addClass('sr-only');

@@ -27,7 +27,6 @@ class CreateBooksTable extends Migration {
 			$table->foreign('publisher_id')->references('id')->on('publishers')->onUpdate('cascade')->onDelete('cascade');
 			$table->foreign('subject_id')->references('id')->on('subjects')->onUpdate('cascade')->onDelete('cascade');
 			$table->foreign('rack_id')->references('id')->on('racks')->onUpdate('cascade')->onDelete('cascade');
-			$table->softDeletes();
 		});
 	}
 

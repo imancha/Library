@@ -1,16 +1,12 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Excel;
-
+use Validator;
 use App\Model\Book;
 use App\Model\Borrow;
 use App\Model\Member;
-
 use App\Http\Requests;
-use App\Http\Requests\CreateBorrowRequest;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 class BorrowController extends Controller {
@@ -22,13 +18,12 @@ class BorrowController extends Controller {
 	 */
 	public function index(Request $request)
 	{
-		if($request->has('q'))
-		{
+		if($request->has('q')){
 			$q = trim(strip_tags($request->input('q')));
-			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('tanggal_pinjam','like','%'.$q.'%')->orWhere('tanggal_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->orderBy('tanggal_pinjam','desc')->paginate(10);
+			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('waktu_pinjam','like','%'.$q.'%')->orWhere('waktu_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->orderBy('waktu_pinjam','desc')->paginate(10);
 			$borrows->setPath('../admin/borrow^q='.$q);
 		}else{
-			$borrows = Borrow::orderBy('tanggal_pinjam','desc')->paginate(10);
+			$borrows = Borrow::orderBy('waktu_pinjam','desc')->paginate(10);
 			$borrows->setPath('../admin/borrow');
 		}
 
@@ -43,23 +38,23 @@ class BorrowController extends Controller {
 	public function create()
 	{
 		$members = Member::all(['members.id']);
+
 		$books = Book::whereNotIn('id', function($query){
 			$query->select('book_id')->from(with(new Borrow)->getTable())->where('status','like','%pinjam%');
 		})->get(['books.id']);
-		$borrow = Borrow::orderBy('tanggal_pinjam','desc')->first();
 
-		if(count($borrow) > 0)
-		{
-			$borrow = substr($borrow->id,1);
-			do
-			{
+		$borrow = Borrow::orderBy('waktu_pinjam','desc')->first();
+
+		if(count($borrow) > 0){
+			$borrow = remove_alpha($borrow->id);
+			do{
 				empty(Borrow::find('P'.++$borrow)) ? $next = false : $next = true;
 			}while($next);
 		}else{
 			$borrow = 1;
 		}
 
-		return view('admin.borrow.create',compact('members','books','borrow'));
+		return view('admin.borrow.create', compact('members','books','borrow'));
 	}
 
 	/**
@@ -67,31 +62,50 @@ class BorrowController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(CreateBorrowRequest $request)
+	public function store(Request $request)
 	{
-		empty(Member::find(trim(strip_tags($request->input('id'))))) ? $empty = true : $empty = false;
+		$rules = [
+			'idp'		=>	'required|min:2|',
+			'id'		=>	'required|min:3|numeric',
+			'nama'	=>	'required|min:3',
+			'kode'	=>	'required|min:1|exists:books,id',
+			'judul'	=>	'required|min:3',
+		];
 
-		$member = Member::firstOrCreate([
-			'id' => trim(strip_tags($request->input('id'))),
-			'nama' => trim(strip_tags($request->input('nama'))),
-		]);
+		$validator = Validator::make($request->all(), $rules);
 
-		foreach($request->input('kode') as $kode)
-		{
-			$book = Book::find(trim(strip_tags($kode)));
+		$validator->after(function($validator) use($request){
+			if(is_alay($request->input('nama'))){
+				$validator->errors()->add('nama', 'The nama must be alphabetic.');
+			}
+		});
 
-			Borrow::create([
-				'id'	=>	trim(strip_tags($request->input('idp'))),
-				'tanggal_pinjam'	=>	new \DateTime,
-				'member_id'	=>	trim(strip_tags($request->input('id'))),
-				'book_id'		=>	$book->id,
+		if($validator->fails()){
+			return redirect()->back()->withInput()->withErrors($validator->messages());
+		}else{
+			empty(Member::find(trim(strip_tags($request->input('id'))))) ? $empty = true : $empty = false;
+
+			$member = Member::firstOrCreate([
+				'id' => trim(strip_tags($request->input('id'))),
+				'nama' => trim(strip_tags($request->input('nama'))),
 			]);
+
+			foreach($request->input('kode') as $kode){
+				$book = Book::find(trim(strip_tags($kode)));
+
+				Borrow::create([
+					'id'	=>	trim(strip_tags($request->input('idp'))),
+					'waktu_pinjam'	=>	new \DateTime,
+					'member_id'	=>	trim(strip_tags($request->input('id'))),
+					'book_id'		=>	$book->id,
+				]);
+			}
+
+			if($empty)
+				return redirect()->action('Admin\MemberController@edit', [trim(strip_tags($request->input('id')))])->withMessage(trim(strip_tags($request->input('idp'))).' berhasil disimpan.');
+
+			return redirect()->action('Admin\BorrowController@create')->withMessage(trim(strip_tags($request->input('idp'))).' berhasil disimpan.');
 		}
-
-		if($empty)
-			return redirect()->route('admin.member.edit',trim(strip_tags($request->input('id'))))->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
-
-		return redirect()->route('admin.borrow.create')->with('message', (trim(strip_tags($request->input('idp')))).' berhasil disimpan.');
 	}
 
 	/**
@@ -132,17 +146,16 @@ class BorrowController extends Controller {
 	 */
 	public function update(Request $request)
 	{
-		if(!empty($request->input('kode')))
-		{
+		if(!empty($request->input('kode'))){
 			$book = [];
-			foreach($request->input('kode') as $kode)
-			{
+			foreach($request->input('kode') as $kode){
 				$kode = explode('/',$kode);
-				$borrow = Borrow::where('id','=',$kode[0])->where('book_id','=',$kode[1])->where('status','like','%pinjam%')->update(['tanggal_kembali' => new \DateTime,'status' => 'pengembalian/tersedia']);
+				$borrow = Borrow::where('id','=',$kode[0])->where('book_id','=',$kode[1])->where('status','like','%pinjam%')->update(['waktu_kembali' => new \DateTime,'status' => 'pengembalian/tersedia']);
 				$book[] = $kode[1];
 				$kode = [];
 			}
-			return redirect()->back()->with('message', implode(', ',$book).' berhasil disimpan.');
+
+			return redirect()->back()->withMessage(implode(', ',$book).' berhasil disimpan.');
 		}
 	}
 
@@ -163,7 +176,7 @@ class BorrowController extends Controller {
 		ini_set('memory_limit', '500M');
 		\PHPExcel_Settings::setCacheStorageMethod(\PHPExcel_CachedObjectStorageFactory::cache_to_phpTemp, ['memoryCacheSize' => '256M']);
 
-		$borrows = Borrow::orderBy('tanggal_pinjam','asc')->get();
+		$borrows = Borrow::orderBy('waktu_pinjam','asc')->get();
 
 		if($type == 'xls'){
 			Excel::create('['.date('Y.m.d H.m.s').'] Data Peminjaman Buku Perpustakaan INTI', function($excel) use($borrows){
@@ -175,7 +188,7 @@ class BorrowController extends Controller {
 					$row = 1;
 					$sheet->freezeFirstRow();
 					$sheet->setFontFamily('Sans Serif');
-					$sheet->row($row, ['ID','NIP/NIM/NIS','NAMA','KODE BUKU','JUDUL BUKU','TANGGAL PINJAM','TANGGAL KEMBALI','STATUS']);
+					$sheet->row($row, ['ID','NIP/NIM/NIS','NAMA','KODE BUKU','JUDUL BUKU','WAKTU PINJAM','WAKTU KEMBALI','STATUS']);
 					foreach($borrows as $borrow)
 					{
 						$sheet->row(++$row, [
@@ -184,8 +197,8 @@ class BorrowController extends Controller {
 							$borrow->member->nama,
 							$borrow->book_id,
 							$borrow->book->judul,
-							implode('-',array_reverse(explode('-',$borrow->tanggal_pinjam))),
-							implode('-',array_reverse(explode('-',$borrow->tanggal_kembali))),
+							$borrow->waktu_pinjam,
+							$borrow->waktu_kembali,
 							empty($borrow->status) ? '' : $borrow->status == 'peminjaman/dipinjam' ? 'Peminjaman' : 'Pengembalian',
 						]);
 					}

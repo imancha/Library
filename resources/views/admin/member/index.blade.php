@@ -19,10 +19,10 @@
 									</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{{ route('admin.member.export','print') }}" class="event">
+												<a href="{{ url('admin/member/print') }}" class="event">
 													<i class="fa fa-print fa-fw"></i> Print this page
 												</a>
-												<a href="{{ route('admin.member.export','xlsx') }}">
+												<a href="{{ action('Admin\MemberController@export', ['xls']) }}">
 													<i class="fa fa-table fa-fw"></i> Export to Excel
 												</a>
 											</li>
@@ -54,15 +54,15 @@
 													<td>{{ $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki' }}</td>
 													<td>{{ $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan' }}</td>
 													<td>{{ $member->alamat }}</td>
-													<td class="no-print"><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ route('admin.member.show',$member->id) }}"><i class="fa fa-eye"></i></a></td>
-													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.member.edit',$member->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="" data-modal="remove-{{ $member->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td class="no-print"><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ action('Admin\MemberController@show', [$member->id]) }}"><i class="fa fa-eye"></i></a></td>
+													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ action('Admin\MemberController@edit', [$member->id]) }}"><i class="fa fa-edit"></i></a></td>
+													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="{{ url('admin/member/'.$member->id.'/delete') }}" data-modal="remove-{{ $member->id }}"><i class="fa fa-trash-o"></i></a></td>
 												</tr>
 												<div class="md-modal md-effect-1" id="remove-{{ $member->id }}">
 													<div class="md-content md-content-red">
 														<h3 class="c-white">Hapus Anggota . . . ?<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 														<div class="text-left">
-															<form role="form" method="POST" action="{{ route('admin.member.destroy',$member->id) }}">
+															<form role="form" method="POST" action="{{ action('Admin\MemberController@destroy', [$member->id]) }}">
 																<input name="_method" type="hidden" value="DELETE">
 																<input type="hidden" name="_token" value="{{ csrf_token() }}">
 																<input type="hidden" name="id" value="{{ $member->id }}">
@@ -111,17 +111,19 @@
 @section('script')
 	<script>
 		$(document).ready(function(){
-			var search = "{{ isset($_REQUEST['q']) ? $_REQUEST['q'] : '`~`' }}";
-			$.extend($.expr[":"], {
-				"containsN": function(elem, i, match, array) {
-					return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-				}
-			});
-			$('td:containsN("'+search+'")').each(function(index, value){
-				$(this).html(function (i, str) {
-					return str.replace(new RegExp("("+search+")",'gi'), "<strong>$1</strong>");
+			@if(isset($_REQUEST['q']))
+				var search = "{{ $_REQUEST['q'] }}";
+				$.extend($.expr[":"], {
+					"containsN": function(elem, i, match, array) {
+						return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+					}
 				});
-			});
+				$('td:containsN("'+search+'")').each(function(index, value){
+					$(this).html(function (i, str) {
+						return str.replace(new RegExp("("+search+")",'gi'), "<span style='background:#E5E5E5;border-radius:10%;'>$1</span>");
+					});
+				});
+			@endif
 			$('a.event').click(function(){
 				var currentdate = new Date();
 				$('#timestamp').append("Waktu cetak: "+currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds());

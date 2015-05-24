@@ -124,8 +124,8 @@
 				$("html").niceScroll({
 					styler:"fb",
 					cursorcolor:"#3FAD85",
-					cursorwidth: '6',
-					cursorborderradius: '10px',
+					cursorwidth: '12',
+					cursorborderradius: '1px',
 					background: '#404040',
 					spacebarenabled:false,
 					cursorborder: '',

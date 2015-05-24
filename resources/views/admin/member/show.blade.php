@@ -35,7 +35,7 @@
 												<small style="font-size:15;color:gray !important;">
 													<i>{{ (!empty($_REQUEST['from']) && !empty($_REQUEST['to'])) ? str_replace('-','/',$_REQUEST['from']).' - '.str_replace('-','/',$_REQUEST['to']) : '' }}</i>
 												</small>
-												<a class="md-trigger no-print p-l-10" href="" data-modal="date"><i class="fa fa-calendar"></i></a>
+												<a class="md-trigger no-print p-l-10" href="{{ url('admin/member/'.$member->id.'/calendar') }}" data-modal="date"><i class="fa fa-calendar"></i></a>
 											</span>
 										</h4>
 									</div>
@@ -47,19 +47,19 @@
 													<th>#</th>
 													<th>KODE BUKU</th>
 													<th>JUDUL BUKU</th>
-													<th>TANGGAL PINJAM</th>
-													<th>TANGGAL KEMBALI</th>
+													<th>WAKTU PINJAM</th>
+													<th>WAKTU KEMBALI</th>
 													<th>KETERANGAN</th>
 												</thead>
 												<tbody>
 												@foreach($borrows as $borrow)
-													<tr {{ empty($borrow->tanggal_kembali) ? 'class=c-red' : '' }}>
+													<tr {{ empty($borrow->waktu_kembali) ? 'class=c-red' : '' }}>
 														<td>{{ ++$i }}</td>
 														<td>{{ $borrow->book_id }}</td>
 														<td>{{ $borrow->book->judul }}</td>
-														<td>{{ $borrow->tanggal_pinjam }}</td>
-														<td>{{ empty($borrow->tanggal_kembali) ? '' : $borrow->tanggal_kembali }}</td>
-														<td>{{ empty($borrow->tanggal_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
+														<td>{{ $borrow->waktu_pinjam }}</td>
+														<td>{{ empty($borrow->waktu_kembali) ? '' : $borrow->waktu_kembali }}</td>
+														<td>{{ empty($borrow->waktu_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
 													</tr>
 												@endforeach
 												</tbody>
@@ -79,9 +79,9 @@
 			</div>
 			<div class="md-modal md-effect-2 text-left" id="date">
 				<div class="md-content md-content-aqua">
-					<h3>Calendar <span class="pull-right" title="close"><a class="c-dark md-close" href="#"><i class="fa fa-times"></i></a></span></h3>
+					<h3>Calendar <span class="pull-right" title="close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 					<div class="p-b-10 m-t-10">
-						<form class="form-horizontal" method="get" action="{{ route('admin.member.show',$member->id) }}">
+						<form class="form-horizontal" method="get" action="{{ action('Admin\MemberController@show', [$member->id]) }}">
 							<div class="form-group">
 								<label class="col-sm-4 control-label">Tanggal Awal</label>
 								<div class="col-sm-6">
@@ -118,7 +118,7 @@
 	<script>
 		$(document).ready(function(){
 			$('.btn-print').click(function(){
-				$('.md-trigger,.btn-print').hide();
+				$('.md-trigger.no-print,.btn-print').hide();
 				var currentdate = new Date();
 				$('#timestamp').append("Waktu cetak: "+currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds());
 				window.print();

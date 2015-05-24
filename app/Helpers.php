@@ -2,7 +2,7 @@
 
 function setCurrent($route, $class = 'current')
 {
-	return (Route::currentRouteName() == $route  && !Request::has('q')) ? $class : '';
+	return (Request::path() == $route  && !Request::has('q')) ? $class : '';
 }
 function setCurren($route, $class = 'current')
 {

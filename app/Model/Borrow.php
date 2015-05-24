@@ -1,11 +1,8 @@
 <?php namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Borrow extends Model {
-
-	use SoftDeletes;
 
 	/**
 	 * The database table used by the model.
@@ -21,14 +18,14 @@ class Borrow extends Model {
 	 *
 	 * @var array
 	 */
-	protected $fillable = ['id','tanggal_pinjam','tanggal_kembali','status','member_id','book_id'];
+	protected $fillable = ['id','waktu_pinjam','waktu_kembali','status','member_id','book_id'];
 
 	/**
 	 * The attributes excluded from the model's JSON form.
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['deleted_at'];
+	protected $hidden = [];
 
 	public function member()
 	{

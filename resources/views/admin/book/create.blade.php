@@ -41,14 +41,14 @@
 										<label class="col-sm-3 control-label">Kode Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" />
+											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Judul Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="judul" class="form-control" value="{{ old('judul') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" name="judul" class="form-control" value="{{ old('judul') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">

@@ -1,14 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use App\Model\Slider;
-
 use App\Http\Requests;
 use App\Http\Requests\CreateSliderRequest;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\DB;
 
 class SliderController extends Controller {

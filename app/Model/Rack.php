@@ -1,11 +1,8 @@
 <?php namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Rack extends Model {
-
-	use SoftDeletes;
 
 	/**
 	 * The database table used by the model.
@@ -28,7 +25,7 @@ class Rack extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['deleted_at'];
+	protected $hidden = [];
 
 	protected $guarded = ['id'];
 

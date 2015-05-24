@@ -33,8 +33,6 @@ Modernizr.load([{
     yep: 'assets/plugins/retina.js'
 }]);
 
-$("html").niceScroll({styler:"fb",cursorcolor:"#00A2D9", cursorwidth: '6', cursorborderradius: '10px', background: '#404040', spacebarenabled:false,  cursorborder: '', zindex: '10'});
-
 //******************************** MAIN SIDEBAR ******************************//
 
 var $html = $('html');

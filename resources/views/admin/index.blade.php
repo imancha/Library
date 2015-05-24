@@ -36,7 +36,7 @@
 							<div class="col-md-3 col-sm-9 col-xs-12">
 								<div class="input-group transparent">
 									<input class="form-control" id="range" type="text">
-									<span class="input-group-addon bg-blue">
+									<span class="input-group-addon">
 										<i class="fa fa-calendar"></i>
 									</span>
 								</div>
@@ -78,7 +78,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h2 class="panel-title w-100">
-							Slider Control
+							Slider
 							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Tambah">
 								<a href="" class="c-green md-trigger" data-modal="slider">
 									<i class="glyph-icon flaticon-plus16 f-32"></i>
@@ -90,6 +90,39 @@
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
 								<div class="withScroll" data-height="388">
+									<div class="message-item media">
+										<div class="media">
+											<img src="{{ asset('/img/slide-.jpg') }}" alt="" width="50" height="40" class="pull-left">
+											<div class="media-body">
+												<small class="pull-right">
+													<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
+														<a href="" class="md-trigger" data-modal="ubah-slider-"><i class="fa fa-edit"></i></a>
+													</span>
+												</small>
+												<h5 class="c-dark"><strong>Slide-0</strong></h5>
+												<h4 class="c-dark">PERPUSTAKAAN INTI</h4>
+											</div>
+										</div>
+										<p class="f-14 c-gray">Memiliki sekitar koleksi buku yang terdiri dari buku referensi, pengetahuan umum, ensiklopedia dan laporan hasil penelitian yang dilakukan di PT. INTI (Persero)</p>
+									</div>
+									<div class="md-modal md-effect-8" id="ubah-slider-">
+										<div class="md-content md-content-white">
+											<h3>Ubah Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+											<div class="p-10">
+												<form method="post" action="">
+													<input type="hidden" name="_token" value="{{ csrf_token() }}">
+													<div class="form-group">
+														<label for="field-2" class="control-label sr-only">Keterangan</label>
+														<textarea class="form-control cke-editor" name="keterangan" value="" placeholder="" autocomplete="off"></textarea>
+													</div>
+													<div class="form-group">
+														<button class="btn btn-dark btn-transparent btn-rounded">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+									<div class="md-overlay"></div>
 									@if(count($sliders) > 0)
 										<?php $i=0 ?>
 										@foreach($sliders as $slider)
@@ -251,7 +284,7 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<h2 class="panel-title w-100">
-							Beranda Control
+							Beranda
 							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
 								<a href="" class="c-green md-trigger" data-modal="beranda">
 									<i class="fa fa-edit"></i>
@@ -264,7 +297,7 @@
 					</div>
 					<div class="md-modal md-effect-7" id="beranda">
 						<div class="md-content md-content-white">
-							<h3>Beranda Control <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+							<h3>Beranda <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 							<div class="p-b-10 m-t-10">
 								<form method="post" action="{{ action('Admin\HomeController@postDashboard') }}" enctype="multipart/form-data">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">

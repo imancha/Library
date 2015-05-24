@@ -8,7 +8,7 @@
 <head>
 	<!-- BEGIN META SECTION -->
 	<meta charset="utf-8">
-	<title>Login - Admin Perpustakaan INTI</title>
+	<title>Register - Admin Perpustakaan INTI</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta content="" name="description" />
 	<meta content="" name="author" />
@@ -52,18 +52,21 @@
 							</div>
 						<!-- END ERROR BOX -->
 						@endif
-<!--
-						<form role="form" method="POST" action="{{ url('/auth/login') }}">
--->
-						<form role="form" method="POST" action="{{  action('Admin\UserController@postLogin') }}">
+						@if(Session::has('message'))
+							<div class="alert alert-success" role="alert">
+								<button type="button" class="close" data-dismiss="alert">×</button>
+								<span class="sr-only">Success:</span>
+								{{ Session::get('message') }}
+							</div>
+						@endif
+						<form role="form" method="POST" action="{{ action('Admin\UserController@postRegister') }}">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<input type="email" name="email" placeholder="Email" class="input-field form-control user" value="{{ old('email') }}" />
-							<input type="password" name="password" placeholder="Password" class="input-field form-control password" />
-							<button type="submit" class="btn btn-login">Login</button>
+							<input type="text" name="name" placeholder="Nama" class="input-field form-control" value="{{ old('name') }}" autocomplete="off" autofocus />
+							<input type="email" name="email" placeholder="Email" class="input-field form-control" value="{{ old('email') }}" autocomplete="off" />
+							<input type="password" name="password" placeholder="Password" class="input-field form-control" autocomplete="off" />
+							<input type="password" name="password_confirmation" placeholder="Confirm Password" class="input-field form-control" autocomplete="off" />
+							<button type="submit" class="btn btn-login">Register</button>
 						</form>
-						<div class="login-links sr-only">
-							<a href="{{ url('/password/email') }}">Forgot password?</a>
-						</div>
 					</div>
 				</div>
 			</div>

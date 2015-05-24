@@ -55,7 +55,7 @@
 														<th class="text-center">ID</th>
 														<th class="text-center">Kode Buku</th>
 														<th class="text-center">Judul Buku</th>
-														<th class="text-center">Tanggal Pinjam</th>
+														<th class="text-center">Waktu Pinjam</th>
 														<th class="text-center">Dikembalikan</th>
 													</tr>
 												</thead>
@@ -71,7 +71,7 @@
 														<th class="text-center">ID</th>
 														<th class="text-center">NIP/NIM/NIS</th>
 														<th class="text-center">Nama</th>
-														<th class="text-center">Tanggal Pinjam</th>
+														<th class="text-center">Waktu Pinjam</th>
 														<th class="text-center">Dikembalikan</th>
 													</tr>
 												</thead>
@@ -126,6 +126,12 @@
 				$('label#select').empty().append(option[select-1]);
 				$('#id1,#id2').toggle();
 				$('.xdsoft_autocomplete_dropdown').css('top','37px');
+				$('input:text[name="id1"]').val(''),
+				$('input:text[name="id2"]').val(''),
+				$('input:text[name="nama"]').val('');
+				if(!$('#table1').hasClass('sr-only')) $('#table1').addClass('sr-only');
+				if(!$('#table2').hasClass('sr-only')) $('#table2').addClass('sr-only');
+				$('#tbody1,#tbody2').empty();
 			});
 			$.ajaxSetup({
         headers: {
@@ -134,7 +140,7 @@
 			});
 			$('input:text[name="id1"],input:text[name="id2"]').on('keypress, change', function(){
 				$.ajax({
-					url:'{!! route('admin.member.borrow') !!}',
+					url:"{!! action('Admin\HomeController@postMember') !!}",
 					dataType:'json',
 					type:'POST',
 					data:{
@@ -144,18 +150,18 @@
 					},
 					cache:false,
 					success:function(data){
-						if((data != null) && (data != undefined) && (data.length != 0)){
+						if(!jQuery.isEmptyObject(data)){
 							if(select==1)
-								$('input:text[name="nama"]').val(data[0].nama);
+								$('input:text[name="nama"]').val('').val(data[0].nama);
 							else
-								$('input:text[name="nama"]').val(data[0].judul);
+								$('input:text[name="nama"]').val('').val(data[0].judul);
 						}
 					},
 				});
 			});
 			$('input:text[name="id1"],input:text[name="id2"]').change(function(){
 				$.ajax({
-					url:'{!! route('admin.book.return') !!}',
+					url:"{!! action('Admin\HomeController@postReturn') !!}",
 					dataType:'',
 					type:'POST',
 					data:{
@@ -168,7 +174,7 @@
 						if(!$('#table1').hasClass('sr-only')) $('#table1').addClass('sr-only');
 						if(!$('#table2').hasClass('sr-only')) $('#table2').addClass('sr-only');
 						$('#tbody1,#tbody2').empty();
-						if((data != null) && (data != undefined) && (data.length != 0)){
+						if(!jQuery.isEmptyObject(data)){
 							if(select==1){
 								$('#table1').removeClass('sr-only');
 								for(row in data){
@@ -177,7 +183,7 @@
 											'<td class="text-center">'+data[row].id+'</td>'+
 											'<td>'+data[row].book_id+'</td>'+
 											'<td>'+data[row].judul+'</td>'+
-											'<td class="text-center">'+data[row].tanggal_pinjam+'</td>'+
+											'<td class="text-center">'+data[row].waktu_pinjam+'</td>'+
 											'<td class="text-center"><input type="checkbox" name="kode[]" value="'+data[row].id+'/'+data[row].book_id+'"></td>'+
 										'</tr>'
 									);
@@ -190,7 +196,7 @@
 											'<td class="text-center">'+data[row].id+'</td>'+
 											'<td>'+data[row].member_id+'</td>'+
 											'<td>'+data[row].nama+'</td>'+
-											'<td class="text-center">'+data[row].tanggal_pinjam+'</td>'+
+											'<td class="text-center">'+data[row].waktu_pinjam+'</td>'+
 											'<td class="text-center"><input type="checkbox" name="kode[]" value="'+data[row].id+'/'+data[row].book_id+'"></td>'+
 										'</tr>'
 									);

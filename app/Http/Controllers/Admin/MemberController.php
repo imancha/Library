@@ -1,16 +1,14 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use DB;
 use Excel;
-
+use Validator;
 use App\Model\Borrow;
 use App\Model\Member;
-
 use App\Http\Requests;
 use App\Http\Requests\CreateMemberRequest;
 use App\Http\Requests\EditMemberRequest;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 class MemberController extends Controller {
@@ -23,10 +21,9 @@ class MemberController extends Controller {
 	public function index(Request $request)
 	{
 		$borrows = Borrow::groupBy('id')->get();
-		if($request->has('q'))
-		{
+		if($request->has('q')){
 			$q = trim(strip_tags($request->input('q')));
-			$members = Member::where('id','like','%'.$q.'%')->orWhere('nama','like','%'.$q.'%')->orWhere('jenis_kelamin','like','%'.$q.'%')->orWhere('jenis_anggota','like','%'.$q.'%')->orWhere('alamat','like','%'.$q.'%')->orderBy('nama','asc')->paginate(10);
+			$members = Member::where('id','like','%'.$q.'%')->orWhere('nama','like','%'.$q.'%')->orWhere('jenis_kelamin','like','%'.$q.'%')->orWhere('jenis_anggota','like','%'.$q.'%')->orWhere('alamat','like','%'.$q.'%')->orWhere('keterangan','like','%'.$q.'%')->orderBy('nama','asc')->paginate(10);
 			$members->setPath('../admin/member^q='.$q);
 		}else{
 			$members = Member::orderBy('nama','asc')->paginate(10);
@@ -51,20 +48,43 @@ class MemberController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(CreateMemberRequest $request)
+	public function store(Request $request)
 	{
-		Member::firstOrCreate([
-			'id'		=>	trim(strip_tags($request->input('id'))),
-			'nama'	=>	trim(strip_tags($request->input('nama'))),
-			'tanggal_lahir'	=>	trim(strip_tags($request->input('lahir'))),
-			'jenis_kelamin'	=>	trim(strip_tags($request->input('jk'))),
-			'jenis_anggota'	=>	trim(strip_tags($request->input('ja'))),
-			'phone'		=>	trim(strip_tags($request->input('phone'))),
-			'alamat'	=>	trim(strip_tags($request->input('alamat'))),
-			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
-		]);
+		$rules = [
+			'id'					=>	'required|numeric|min:3|unique:members,id',
+			'nama'				=>	'required|min:3',
+			'lahir'				=>	'min:3',
+			'jk'					=>	'required',
+			'ja'					=>	'required',
+			'phone'				=>	is_numeric($request->input('phone')) ? 'string|min:8|max:12' : 'numeric',
+			'alamat'			=>	'min:3|max:255',
+			'keterangan'	=>	'min:3|max:255',
+		];
 
-		return redirect()->route('admin.member.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
+		$validator = Validator::make($request->all(), $rules);
+
+		$validator->after(function($validator) use($request){
+			if(is_alay($request->input('nama'))){
+				$validator->errors()->add('nama', 'The nama must be alphabetic.');
+			}
+		});
+
+		if($validator->fails()){
+			return redirect()->back()->withInput()->withErrors($validator->messages());
+		}else{
+			Member::firstOrCreate([
+				'id'		=>	trim(strip_tags($request->input('id'))),
+				'nama'	=>	trim(strip_tags($request->input('nama'))),
+				'tanggal_lahir'	=>	trim(strip_tags($request->input('lahir'))),
+				'jenis_kelamin'	=>	trim(strip_tags($request->input('jk'))),
+				'jenis_anggota'	=>	trim(strip_tags($request->input('ja'))),
+				'phone'		=>	trim(strip_tags($request->input('phone'))),
+				'alamat'	=>	trim(strip_tags($request->input('alamat'))),
+				'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
+			]);
+
+			return redirect()->action('Admin\MemberController@create')->withMessage(trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('nama'))).' berhasil disimpan.');
+		}
 	}
 
 	/**
@@ -76,10 +96,11 @@ class MemberController extends Controller {
 	public function show(Request $request,$id)
 	{
 		$member = Member::find($id);
+
 		if($request->has('from') && $request->has('to'))
-			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('tanggal_pinjam',[date_reverse($request->input('from'),'-','-').' 00:00:00',date_reverse($request->input('to'),'-','-').' 23:59:59'])->orderBy('tanggal_pinjam','asc')->get();
+			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('waktu_pinjam',[$request->input('from').' 00:00:00',$request->input('to').' 23:59:59'])->orderBy('waktu_pinjam','asc')->get();
 		else
-			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('tanggal_pinjam','asc')->get();
+			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('waktu_pinjam','asc')->get();
 
 		return view('admin.member.show', compact('member','borrows'));
 	}
@@ -103,20 +124,43 @@ class MemberController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(EditMemberRequest $request, $id)
+	public function update(Request $request, $id)
 	{
-		$member = Member::find($id);
-		$member->id = trim(strip_tags($request->input('id')));
-		$member->nama = trim(strip_tags($request->input('nama')));
-		$member->tanggal_lahir = trim(strip_tags($request->input('lahir')));
-		$member->jenis_kelamin = trim(strip_tags($request->input('jk')));
-		$member->jenis_anggota = trim(strip_tags($request->input('ja')));
-		$member->phone = trim(strip_tags($request->input('phone')));
-		$member->alamat = trim(strip_tags($request->input('alamat')));
-		$member->keterangan = trim(strip_tags($request->input('keterangan')));
-		$member->save();
+		$rules = [
+			'id'					=>	'required|numeric|min:3|exists:members,id',
+			'nama'				=>	'required|min:3',
+			'lahir'				=>	'min:3|max:255',
+			'jk'					=>	'required',
+			'ja'					=>	'required',
+			'phone'				=>	is_numeric($request->input('phone')) ? 'string|min:8|max:12' : 'numeric',
+			'alamat'			=>	'min:3|max:255',
+			'keterangan'	=>	'min:3|max:255',
+		];
 
-		return redirect()->route('admin.member.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('nama')))).' berhasil disimpan.');
+		$validator = Validator::make($request->all(), $rules);
+
+		$validator->after(function($validator) use($request){
+			if(is_alay($request->input('nama'))){
+				$validator->errors()->add('nama', 'The nama must be alphabetic.');
+			}
+		});
+
+		if($validator->fails()){
+			return redirect()->back()->withInput()->withErrors($validator->messages());
+		}else{
+			$member = Member::find($id);
+			$member->id = trim(strip_tags($request->input('id')));
+			$member->nama = trim(strip_tags($request->input('nama')));
+			$member->tanggal_lahir = trim(strip_tags($request->input('lahir')));
+			$member->jenis_kelamin = trim(strip_tags($request->input('jk')));
+			$member->jenis_anggota = trim(strip_tags($request->input('ja')));
+			$member->phone = trim(strip_tags($request->input('phone')));
+			$member->alamat = trim(strip_tags($request->input('alamat')));
+			$member->keterangan = trim(strip_tags($request->input('keterangan')));
+			$member->save();
+
+			return redirect()->action('Admin\MemberController@index')->withMessage(trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('nama'))).' berhasil disimpan.');
+		}
 	}
 
 	/**
@@ -130,7 +174,7 @@ class MemberController extends Controller {
 		Member::where('id','=',$id)->delete();
 		Borrow::where('member_id','=',$id)->delete();
 
-		return redirect()->back()->with('message', $request->input('id').' - '.$request->input('nama').' berhasil dihapus.');
+		return redirect()->back()->withMessage($request->input('id').' - '.$request->input('nama').' berhasil dihapus.');
 	}
 
 	public function export($type)
@@ -157,7 +201,7 @@ class MemberController extends Controller {
 						$sheet->row(++$row, [
 							$member->id,
 							$member->nama,
-							implode('-',array_reverse(explode('-',$member->tanggal_lahir))),
+							$member->tanggal_lahir,
 							strtoupper($member->jenis_kelamin),
 							strtoupper($member->jenis_anggota),
 							$member->phone,

@@ -23,7 +23,6 @@ class CreateMembersTable extends Migration {
 			$table->text('alamat')->default('');
 			$table->text('keterangan')->default('');
 			$table->primary('id');
-			$table->softDeletes();
 		});
 	}
 

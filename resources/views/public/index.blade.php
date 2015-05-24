@@ -32,7 +32,7 @@
 											<span>Buku PKL</span>
 										</a>
 									</div>
-									<div class="iview-caption metro-box2" data-transition="expandLeft" data-x="438" data-y="209">
+									<div class="iview-caption metro-box2" data-transition="expandLeft" data-x="438" data-y="37">
 										<div class="monthlydeals">
 											<div class="monthly-deals slide" id="monthly-deals">
 												<div class="carousel-inner">
@@ -43,14 +43,14 @@
 											</div>
 										</div>
 									</div>
-									<div class="iview-caption metro-box1 purple" data-transition="wipeDown" data-x="438" data-y="37">
+									<div class="iview-caption metro-box1 purple" data-transition="wipeDown" data-x="438" data-y="209">
 										<a href="{{ route('book') }}">
 											<div class="box-hover"></div>
 											<i class="fa fa-book fa-fw"></i>
 											<span>Koleksi Buku</span>
 										</a>
 									</div>
-									<div class="iview-caption metro-box1 dark-blue" data-transition="wipeDown" data-x="610" data-y="37">
+									<div class="iview-caption metro-box1 dark-blue" data-transition="wipeDown" data-x="610" data-y="209">
 										<a href="{{ route('book','download') }}">
 											<div class="box-hover"></div>
 											<i class="fa fa-file-pdf-o fa-fw"></i>
@@ -135,6 +135,7 @@
 																					<tr><td><strong>Pengarang</strong></td><td> {{ implode(', ',$authors) }}</td></tr>
 																					<tr><td><strong>Penerbit</strong></td><td> {{ $book->publisher->nama }}</td></tr>
 																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
+																					<tr><td><strong>Rak</strong></td><td> {{ $book->rack->nama }}</td></tr>
 																				</tbody>
 																			</table>
 																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
@@ -180,10 +181,11 @@
 																					<tr><td><strong>Pengarang</strong></td><td> {{ implode(', ',$authors) }}</td></tr>
 																					<tr><td><strong>Penerbit</strong></td><td> {{ $book->publisher->nama }}</td></tr>
 																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
+																					<tr><td><strong>Subyek</strong></td><td> {{ $book->rack->nama }}</td></tr>
 																				</tbody>
 																			</table>
 																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
-																				<button type="button" class="btn btn-success pull-left" data-dismiss="modal">Download</button>
+																				<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="window.location='{{ route('book.download',$book->file->sha1sum) }}'">Download</button>
 																			@endif
 																			<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
 																		</div>

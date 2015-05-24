@@ -1,11 +1,8 @@
 <?php namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Member extends Model {
-
-	use SoftDeletes;
 
 	/**
 	 * The database table used by the model.
@@ -28,7 +25,7 @@ class Member extends Model {
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['deleted_at'];
+	protected $hidden = [];
 
 	public function borrow()
 	{

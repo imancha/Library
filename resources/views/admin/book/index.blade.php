@@ -19,10 +19,10 @@
 									</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="" class="event">
+												<a href="{{ url('admin/book/print') }}" class="event">
 													<i class="fa fa-print fa-fw"></i> Print this page
 												</a>
-												<a href="{{ route('admin.book.export','xls') }}">
+												<a href="{{ action('Admin\BookController@export', ['xls']) }}">
 													<i class="fa fa-table fa-fw"></i> Export to Excel
 												</a>
 											</li>
@@ -69,12 +69,12 @@
 													<td>{{ $book->subject->nama }}</td>
 													<td>{{ $book->rack->nama }}</td>
 													<td>{{ strtoupper($book->jenis) }}</td>
-													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
-													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ route('admin.book.edit',$book->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ url('admin/book/'.$book->id) }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
+													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ action('Admin\BookController@edit', $book->id) }}"><i class="fa fa-edit"></i></a></td>
+													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="{{ url('admin/book/'.$book->id.'/delete/') }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
 													<td class="no-print">
 														@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
-															<a class="c-green" href="{{ route('book.download',$book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>
+															<a class="c-green" href="{{ action('PublicController@getDownload', $book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>
 														@else
 															<i class="fa fa-download c-gray ch-disabled"></i>
 														@endif
@@ -154,17 +154,19 @@
 @section('script')
 	<script>
 		$(document).ready(function(){
-			var search = "{{ isset($_REQUEST['q']) ? $_REQUEST['q'] : '`~`' }}";
-			$.extend($.expr[":"], {
-				"containsN": function(elem, i, match, array) {
-					return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-				}
-			});
-			$('td:containsN("'+search+'")').each(function(index, value){
-				$(this).html(function (i, str) {
-					return str.replace(new RegExp("("+search+")",'gi'), "<strong>$1</strong>");
+			@if(isset($_REQUEST['q']))
+				var search = "{{ $_REQUEST['q'] }}";
+				$.extend($.expr[":"], {
+					"containsN": function(elem, i, match, array) {
+						return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+					}
 				});
-			});
+				$('td:containsN("'+search+'")').each(function(index, value){
+					$(this).html(function (i, str) {
+						return str.replace(new RegExp("("+search+")",'gi'), "<span style='background:#E5E5E5;border-radius:10%;'>$1</span>");
+					});
+				});
+			@endif
 			$('a.event').click(function(e){
 				e.preventDefault();
 				e.stopPropagation();

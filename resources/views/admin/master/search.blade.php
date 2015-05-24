@@ -6,7 +6,7 @@
 				<form class="form-horizontal" method="get" action="{{ action('Admin\BookController@index') }}">
 					<div class="form-group">
 						<label class="control-label sr-only">Search:</label>
-						<input class="form-control" type="text" name="q" placeholder="Type something . . ." autofocus required>
+						<input class="form-control q-book" type="text" name="q" placeholder="Type something . . .">
 					</div>
 					<div class="form-group">
 						<button class="btn btn-dark btn-transparent btn-rounded">Cari</button>
@@ -22,7 +22,7 @@
 				<form class="form-horizontal" method="get" action="{{ action('Admin\MemberController@index') }}">
 					<div class="form-group">
 						<label class="control-label sr-only">Search:</label>
-						<input class="form-control" type="text" name="q" placeholder="Type something . . ." autofocus required>
+						<input class="form-control" type="text" name="q" placeholder="Type something . . .">
 					</div>
 					<div class="form-group">
 						<button class="btn btn-dark btn-transparent btn-rounded">Cari</button>
@@ -38,7 +38,7 @@
 				<form class="form-horizontal" method="get" action="{{ action('Admin\BorrowController@index') }}">
 					<div class="form-group">
 						<label class="control-label sr-only">Search:</label>
-						<input class="form-control" type="text" name="q" placeholder="Type something . . ." autofocus required>
+						<input class="form-control" type="text" name="q" placeholder="Type something . . .">
 					</div>
 					<div class="form-group">
 						<button class="btn btn-dark btn-transparent btn-rounded">Cari</button>
@@ -55,7 +55,7 @@
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<div class="form-group m-b-0">
 						<label class="control-label" style="text-align:left !important">Nama:</label>
-						<input class="form-control" type="text" name="nama" placeholder="Nama" value="{{ Auth::user()->name }}" autocomplete="off" required disabled>
+						<input class="form-control" type="text" name="name" placeholder="Nama" value="{{ Auth::user()->name }}" autocomplete="off" required disabled>
 					</div>
 					<div class="form-group m-b-0">
 						<label class="control-label" style="text-align:left !important">Email:</label>
@@ -66,7 +66,7 @@
 						<input class="form-control" type="password" name="password" placeholder="Password" value="" autocomplete="off" required>
 					</div>
 					<div class="form-group m-b-0 sr-only">
-						<label class="control-label" style="text-align:left !important">New Password: <span class="pull-right text-muted">&nbsp;<small><sup>*</sup>kosongkan jika tidak ingin diubah</small></span></label>
+						<label class="control-label" style="text-align:left !important">New Password: <small class="text-muted" style="font-size:12px;"><sup>*</sup>kosongkan jika tidak ingin diubah</small></label>
 						<input class="form-control" type="password" name="new" placeholder="New Password" value="" autocomplete="off">
 					</div>
 					<div class="form-group m-t-20">

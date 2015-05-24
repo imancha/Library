@@ -16,10 +16,16 @@ Route::get('/book/{jenis?}', ['as' => 'book','uses' => 'PublicController@getBook
 Route::get('/book/download/{file}', ['as' => 'book.download','uses' => 'PublicController@getDownload']);
 Route::get('/service/{id?}', ['as' => 'service','uses' => 'PublicController@getService']);
 Route::any('/guest', ['as' => 'guest','uses' => 'PublicController@guestBook']);
+Route::get('/register', 'Admin\UserController@getRegister');
+Route::post('/register', 'Admin\UserController@postRegister');
+Route::get('/login', 'Admin\UserController@getLogin');
+Route::post('/login', 'Admin\UserController@postLogin');
+/*
 Route::controllers([
 	'auth' => 'Auth\AuthController',
 	'password' => 'Auth\PasswordController',
 ]);
+*/
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/', ['as' => 'admin.dashboard', 'uses' => 'Admin\HomeController@index']);
 	Route::get('/dashboard/data', ['as' => 'admin.dashboard.data', 'uses' => 'Admin\HomeController@getData']);
@@ -35,6 +41,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::post('/service/{id}', ['as' => 'admin.service','uses' => 'Admin\HomeController@postService']);
 	Route::post('/guest', ['as' => 'admin.guest','uses' => 'Admin\HomeController@guestBook']);
 	Route::post('/user/update', ['as' => 'admin.user.update', 'uses' => 'Admin\UserController@update']);
+	Route::get('/logout', 'Admin\UserController@getLogout');
 	Route::resource('book', 'Admin\BookController');
 	Route::resource('member', 'Admin\MemberController');
 	Route::resource('borrow', 'Admin\BorrowController');

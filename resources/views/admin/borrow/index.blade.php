@@ -19,10 +19,10 @@
 									</a>
 										<ul class="dropdown-menu">
 											<li>
-												<a href="{{ route('admin.borrow.export','print') }}" class="event">
+												<a href="{{ url('admin/borrow/print') }}" class="event">
 													<i class="fa fa-print fa-fw"></i> Print this page
 												</a>
-												<a href="{{ route('admin.borrow.export','xls') }}">
+												<a href="{{ action('Admin\BorrowController@export', ['xls']) }}">
 													<i class="fa fa-table fa-fw"></i> Export to Excel
 												</a>
 											</li>
@@ -42,22 +42,22 @@
 												<th class="text-center">Nama</th>
 												<th class="text-center">Kode Buku</th>
 												<th class="text-center">Judul Buku</th>
-												<th class="text-center">Tanggal Pinjam</th>
-												<th class="text-center">Tanggal Kembali</th>
+												<th class="text-center">Waktu Pinjam</th>
+												<th class="text-center">Waktu Kembali</th>
 												<th class="text-center">Keterangan</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($borrows as $borrow)
-												<tr {{ empty($borrow->tanggal_kembali) ? 'class=c-red' : '' }}>
+												<tr {{ empty($borrow->waktu_kembali) ? 'class=c-red' : '' }}>
 													<td>{{ $borrow->id }}</td>
 													<td>{{ $borrow->member->id }}</td>
 													<td>{{ $borrow->member->nama }}</td>
 													<td>{{ $borrow->book->id }}</td>
 													<td>{{ $borrow->book->judul }}</td>
-													<td>{{ tanggal($borrow->tanggal_pinjam) }}</td>
-													<td>{{ empty($borrow->tanggal_kembali) ? '' : tanggal($borrow->tanggal_kembali) }}</td>
-													<td>{{ empty($borrow->tanggal_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
+													<td>{{ tanggal($borrow->waktu_pinjam) }}</td>
+													<td>{{ empty($borrow->waktu_kembali) ? '' : tanggal($borrow->waktu_kembali) }}</td>
+													<td>{{ empty($borrow->waktu_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
 												</tr>
 											@endforeach
 										</tbody>
@@ -93,17 +93,19 @@
 @section('script')
 	<script>
 		$(document).ready(function(){
-			var search = "{{ isset($_REQUEST['q']) ? $_REQUEST['q'] : '`~`' }}";
-			$.extend($.expr[":"], {
-				"containsN": function(elem, i, match, array) {
-					return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-				}
-			});
-			$('td:containsN("'+search+'")').each(function(index, value){
-				$(this).html(function (i, str) {
-					return str.replace(new RegExp("("+search+")",'gi'), "<strong>$1</strong>");
+			@if(isset($_REQUEST['q']))
+				var search = "{{ $_REQUEST['q'] }}";
+				$.extend($.expr[":"], {
+					"containsN": function(elem, i, match, array) {
+						return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+					}
 				});
-			});
+				$('td:containsN("'+search+'")').each(function(index, value){
+					$(this).html(function (i, str) {
+						return str.replace(new RegExp("("+search+")",'gi'), "<span style='background:#E5E5E5;border-radius:10%;'>$1</span>");
+					});
+				});
+			@endif
 			$('a.event').click(function(){
 				var currentdate = new Date();
 				$('#timestamp').append("Waktu cetak: "+currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds());

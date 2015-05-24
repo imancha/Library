@@ -1,7 +1,7 @@
 <?php namespace App\Http\Controllers\Admin;
 
 use Excel;
-
+use Validator;
 use App\Model\Author;
 use App\Model\Book;
 use App\Model\BookAuthor;
@@ -10,13 +10,8 @@ use App\Model\File;
 use App\Model\Publisher;
 use App\Model\Rack;
 use App\Model\Subject;
-
 use App\Http\Requests;
-use App\Http\Requests\CreateBookRequest;
-use App\Http\Requests\EditBookRequest;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 class BookController extends Controller {
@@ -29,10 +24,10 @@ class BookController extends Controller {
 	public function index(Request $request)
 	{
 		$borrows = Borrow::where('status','like','%pinjam%')->get();
-		if($request->has('q'))
-		{
+
+		if($request->has('q')){
 			$q = trim(strip_tags($request->input('q')));
-			$books = Book::where('id','like','%'.$q.'%')->orWhere('judul','like','%'.$q.'%')->orWhere('tahun','like','%'.$q.'%')->orWhere('jenis','like','%'.$q.'%')->orWhereIn('id',BookAuthor::whereIn('author_id',Author::where('nama','like','%'.$q.'%')->get(['authors.id'])->toArray())->get(['book_id'])->toArray())->orWhereIn('publisher_id',Publisher::where('nama','like','%'.$q.'%')->get(['publishers.id'])->toArray())->orWhereIn('subject_id',Subject::where('nama','like','%'.$q.'%')->get(['subjects.id'])->toArray())->orWhereIn('rack_id',Rack::where('nama','like','%'.$q.'%')->get(['racks.id'])->toArray())->orWhereIn('id',Borrow::where('status','like','%'.$q.'%')->get(['borrows.book_id'])->toArray())->orderBy('tanggal_masuk','desc')->paginate(10);
+			$books = Book::where('id','like','%'.$q.'%')->orWhere('judul','like','%'.$q.'%')->orWhere('tahun','like','%'.$q.'%')->orWhere('jenis','like','%'.$q.'%')->orWhere('tanggal_masuk','like','%'.$q.'%')->orWhere('keterangan','like','%'.$q.'%')->orWhereIn('id',BookAuthor::whereIn('author_id',Author::where('nama','like','%'.$q.'%')->get(['authors.id'])->toArray())->get(['book_id'])->toArray())->orWhereIn('publisher_id',Publisher::where('nama','like','%'.$q.'%')->get(['publishers.id'])->toArray())->orWhereIn('subject_id',Subject::where('nama','like','%'.$q.'%')->get(['subjects.id'])->toArray())->orWhereIn('rack_id',Rack::where('nama','like','%'.$q.'%')->get(['racks.id'])->toArray())->orWhereIn('id',Borrow::where('status','like','%'.$q.'%')->get(['borrows.book_id'])->toArray())->orderBy('tanggal_masuk','desc')->paginate(10);
 			$books->setPath('../admin/book^q='.$q);
 		}else{
 			$books = Book::orderBy('tanggal_masuk','desc')->paginate(10);
@@ -55,22 +50,20 @@ class BookController extends Controller {
 		$asli = Book::where('jenis','=','asli')->orderBy('tanggal_masuk','desc')->first();
 		$pkl = Book::where('jenis','=','pkl')->orderBy('tanggal_masuk','desc')->first();
 
-		if(count($asli) > 0)
-		{
+		if(count($asli) > 0){
 			$asli = remove_alpha($asli->id);
-			do
-				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
-			while($next);
+			do{
+				empty(Book::find(++$asli)) ? $next = false : $next = true;
+			}while($next);
 		}else{
 			$asli = 1;
 		}
 
-		if(count($pkl) > 0)
-		{
+		if(count($pkl) > 0){
 			$pkl = remove_alpha($pkl->id);
-			do
-				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
-			while($next);
+			do{
+				empty(Book::find(++$pkl.'P')) ? $next = false : $next = true;
+			}while($next);
 		}else{
 			$pkl = 1;
 		}
@@ -83,68 +76,92 @@ class BookController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(CreateBookRequest $request)
+	public function store(Request $request)
 	{
-		$publisher = Publisher::firstOrCreate([
-			'nama'	=>	trim(strip_tags($request->input('penerbit'))),
-		]);
+		$rules = [
+			'jenis'				=>	'required',
+			'id'					=>	'required|alpha_num|unique:books,id',
+			'judul'				=>	'required|min:3|max:255',
+			'pengarang'		=>	'required|min:3|max:255',
+			'penerbit'		=>	'required|min:3|max:255',
+			'tahun'				=>	'required|digits:4',
+			'subyek'			=>	'required|min:3',
+			'rak'					=>	'required|min:3',
+			'keterangan'	=>	$request->has('keterangan') ? 'min:3|max:255' : '',
+			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
+		];
 
-		$subject = Subject::firstOrCreate([
-			'nama'	=>	trim(strip_tags($request->input('subyek'))),
-		]);
+		$validator = Validator::make($request->all(), $rules);
 
-		$rack = Rack::firstOrCreate([
-			'nama'	=>	trim(strip_tags($request->input('rak'))),
-		]);
-
-		$book = Book::create([
-			'id'						=>	trim(strip_tags($request->input('id'))),
-			'judul'					=>	trim(strip_tags($request->input('judul'))),
-			'tahun'					=>	trim(strip_tags($request->input('tahun'))),
-			'jenis'					=>	trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl')),
-			'tanggal_masuk'	=>	new \DateTime,
-			'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
-			'publisher_id'	=>	$publisher->id,
-			'subject_id'		=>	$subject->id,
-			'rack_id'				=>	$rack->id,
-		]);
-
-		foreach(explode(',',$request->input('pengarang')) as $value)
-		{
-			$author = Author::firstOrCreate([
-				'nama'	=>	trim(strip_tags($value)),
-			]);
-
-			BookAuthor::firstOrCreate([
-				'book_id'		=>	trim(strip_tags($request->input('id'))),
-				'author_id'	=>	$author->id,
-			]);
-		}
-
-		if($request->hasFile('file'))
-		{
-			$path = public_path('files/');
-			$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
-			$mime = $request->file('file')->getClientOriginalExtension();
-			$size = $request->file('file')->getSize();
-			$file = $path.$name.'.'.$mime;
-
-			if(\File::exists($file)) \File::delete($file);
-
-			if($request->file('file')->move($path,$name.'.'.$mime))
-			{
-				File::create([
-					'book_id'		=>	trim(strip_tags($request->input('id'))),
-					'mime'			=>	strtolower($mime),
-					'size'			=>	humanFileSize($size),
-					'sha1sum'		=>	sha1_file($file),
-				]);
-			}else{
-				return redirect()->back()->withInput()->withErrors('Error uploading file.');
+		$validator->after(function($validator) use($request){
+			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id'))){
+				$validator->errors()->add('id', 'The kode buku must be a number.');
+			}elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P'))){
+				$validator->errors()->add('id', 'The kode buku is invalid.');
 			}
-		}
+		});
 
-		return redirect()->route('admin.book.create')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
+		if($validator->fails()){
+			return redirect()->back()->withInput()->withErrors($validator->messages());
+		}else{
+			$publisher = Publisher::firstOrCreate([
+				'nama'	=>	trim(strip_tags($request->input('penerbit'))),
+			]);
+
+			$subject = Subject::firstOrCreate([
+				'nama'	=>	trim(strip_tags($request->input('subyek'))),
+			]);
+
+			$rack = Rack::firstOrCreate([
+				'nama'	=>	trim(strip_tags($request->input('rak'))),
+			]);
+
+			$book = Book::create([
+				'id'						=>	trim(strip_tags($request->input('id'))),
+				'judul'					=>	trim(strip_tags($request->input('judul'))),
+				'tahun'					=>	trim(strip_tags($request->input('tahun'))),
+				'jenis'					=>	trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl')),
+				'tanggal_masuk'	=>	new \DateTime,
+				'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
+				'publisher_id'	=>	$publisher->id,
+				'subject_id'		=>	$subject->id,
+				'rack_id'				=>	$rack->id,
+			]);
+
+			foreach(explode(',',$request->input('pengarang')) as $value){
+				$author = Author::firstOrCreate([
+					'nama'	=>	trim(strip_tags($value)),
+				]);
+
+				BookAuthor::firstOrCreate([
+					'book_id'		=>	trim(strip_tags($request->input('id'))),
+					'author_id'	=>	$author->id,
+				]);
+			}
+
+			if($request->hasFile('file')){
+				$path = public_path('files/');
+				$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
+				$mime = trim(strip_tags($request->file('file')->getClientOriginalExtension()));
+				$size = $request->file('file')->getSize();
+				$file = $path.$name.'.'.$mime;
+
+				if(\File::exists($file)) \File::delete($file);
+
+				if($request->file('file')->move($path,$name.'.'.$mime)){
+					File::create([
+						'book_id'		=>	trim(strip_tags($request->input('id'))),
+						'mime'			=>	strtolower($mime),
+						'size'			=>	humanFileSize($size),
+						'sha1sum'		=>	sha1_file($file),
+					]);
+				}else{
+					return redirect()->back()->withInput()->withErrors('Error uploading file.');
+				}
+			}
+
+			return redirect()->action('Admin\BookController@create')->withMessage(trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul'))).' berhasil disimpan.');
+		}
 	}
 
 	/**
@@ -173,22 +190,20 @@ class BookController extends Controller {
 		$asli = Book::where('jenis','=','asli')->orderBy('tanggal_masuk','desc')->first();
 		$pkl = Book::where('jenis','=','pkl')->orderBy('tanggal_masuk','desc')->first();
 
-		if(count($asli) > 0)
-		{
+		if(count($asli) > 0){
 			$asli = remove_alpha($asli->id);
-			do
-				empty(Book::withTrashed()->find(++$asli)) ? $next = false : $next = true;
-			while($next);
+			do{
+				empty(Book::find(++$asli)) ? $next = false : $next = true;
+			}while($next);
 		}else{
 			$asli = 1;
 		}
 
-		if(count($pkl) > 0)
-		{
+		if(count($pkl) > 0){
 			$pkl = remove_alpha($pkl->id);
-			do
-				empty(Book::withTrashed()->find(++$pkl.'P')) ? $next = false : $next = true;
-			while($next);
+			do{
+				empty(Book::find(++$pkl.'P')) ? $next = false : $next = true;
+			}while($next);
 		}else{
 			$pkl = 1;
 		}
@@ -202,70 +217,94 @@ class BookController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(EditBookRequest $request, $id)
+	public function update(Request $request, $id)
 	{
-		$book = Book::find($id);
+		$rules = [
+			'jenis'				=>	'required',
+			'id'					=>	'required|alpha_num',
+			'judul'				=>	'required|min:3|max:255',
+			'pengarang'		=>	'required|min:3|max:255',
+			'penerbit'		=>	'required|min:3|max:255',
+			'tahun'				=>	'required|digits:4',
+			'subyek'			=>	'required|min:3',
+			'rak'					=>	'required|min:3',
+			'keterangan'	=>	$request->has('keterangan') ? 'min:3|max:255' : '',
+			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
+		];
 
-		$publisher = Publisher::firstOrCreate([
-			'nama'	=>	trim(strip_tags($request->input('penerbit'))),
-		]);
+		$validator = Validator::make($request->all(), $rules);
 
-		$subject = Subject::firstOrCreate([
-			'nama'	=>	trim(strip_tags($request->input('subyek'))),
-		]);
-
-		$rack = Rack::firstOrCreate([
-			'nama'	=>	trim(strip_tags($request->input('rak'))),
-		]);
-
-		$book->id = trim(strip_tags($request->input('id')));
-		$book->judul = trim(strip_tags($request->input('judul')));
-		$book->tahun = trim(strip_tags($request->input('tahun')));
-		$book->jenis = trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl'));
-		$book->keterangan = trim(strip_tags($request->input('keterangan')));
-		$book->publisher_id = $publisher->id;
-		$book->subject_id = $subject->id;
-		$book->rack_id = $rack->id;
-		$book->save();
-
-		BookAuthor::where('book_id','=',$id)->forceDelete();
-
-		foreach(explode(',',$request->input('pengarang')) as $value)
-		{
-			$author = Author::firstOrCreate([
-				'nama'	=>	trim(strip_tags($value)),
-			]);
-
-			BookAuthor::create([
-				'book_id'		=>	$book->id,
-				'author_id'	=>	$author->id,
-			]);
-		}
-
-		if($request->hasFile('file'))
-		{
-			$path = public_path('files/');
-			$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
-			$mime = $request->file('file')->getClientOriginalExtension();
-			$size = $request->file('file')->getSize();
-			$file = $path.$name.'.'.$mime;
-
-			if(\File::exists($file)) \File::delete($file);
-
-			if($request->file('file')->move($path,$name.'.'.$mime))
-			{
-				$files = File::findOrNew($id);
-				$files->book_id = $book->id;
-				$files->mime = strtolower($mime);
-				$files->size = humanFileSize($size);
-				$files->sha1sum = sha1_file($file);
-				$files->save();
-			}else{
-				return redirect()->back()->withInput()->withErrors('Error uploading file');
+		$validator->after(function($validator) use($request){
+			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id'))){
+				$validator->errors()->add('id', 'The kode buku field must be numeric.');
+			}elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P'))){
+				$validator->errors()->add('id', 'The kode buku field is invalid.');
 			}
-		}
+		});
 
-		return redirect()->route('admin.book.index')->with('message', (trim(strip_tags($request->input('id')))).' - '.(trim(strip_tags($request->input('judul')))).' berhasil disimpan.');
+		if($validator->fails()){
+			return redirect()->back()->withInput()->withErrors($validator->messages());
+		}else{
+			$book = Book::find($id);
+
+			$publisher = Publisher::firstOrCreate([
+				'nama'	=>	trim(strip_tags($request->input('penerbit'))),
+			]);
+
+			$subject = Subject::firstOrCreate([
+				'nama'	=>	trim(strip_tags($request->input('subyek'))),
+			]);
+
+			$rack = Rack::firstOrCreate([
+				'nama'	=>	trim(strip_tags($request->input('rak'))),
+			]);
+
+			$book->id = trim(strip_tags($request->input('id')));
+			$book->judul = trim(strip_tags($request->input('judul')));
+			$book->tahun = trim(strip_tags($request->input('tahun')));
+			$book->jenis = trim(strip_tags(is_numeric($request->input('jenis')) ? 'asli' : 'pkl'));
+			$book->keterangan = trim(strip_tags($request->input('keterangan')));
+			$book->publisher_id = $publisher->id;
+			$book->subject_id = $subject->id;
+			$book->rack_id = $rack->id;
+			$book->save();
+
+			BookAuthor::where('book_id','=',$id)->delete();
+
+			foreach(explode(',',$request->input('pengarang')) as $value){
+				$author = Author::firstOrCreate([
+					'nama'	=>	trim(strip_tags($value)),
+				]);
+
+				BookAuthor::create([
+					'book_id'		=>	$book->id,
+					'author_id'	=>	$author->id,
+				]);
+			}
+
+			if($request->hasFile('file')){
+				$path = public_path('files/');
+				$name = trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul')));
+				$mime = trim(strip_tags($request->file('file')->getClientOriginalExtension()));
+				$size = $request->file('file')->getSize();
+				$file = $path.$name.'.'.$mime;
+
+				if(\File::exists($file)) \File::delete($file);
+
+				if($request->file('file')->move($path,$name.'.'.$mime)){
+					$files = File::findOrNew($id);
+					$files->book_id = $book->id;
+					$files->mime = strtolower($mime);
+					$files->size = humanFileSize($size);
+					$files->sha1sum = sha1_file($file);
+					$files->save();
+				}else{
+					return redirect()->back()->withInput()->withErrors('Error uploading file');
+				}
+			}
+
+			return redirect()->action('Admin\BookController@index')->withMessage(trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('judul'))).' berhasil disimpan.');
+		}
 	}
 
 	/**
@@ -280,7 +319,7 @@ class BookController extends Controller {
 		Borrow::where('book_id','=',$id)->delete();
 		File::where('book_id','=',$id)->delete();
 
-		return redirect()->back()->with('message', $request->input('id').' - '.$request->input('judul').' berhasil dihapus.');
+		return redirect()->back()->withMessage($request->input('id').' - '.$request->input('judul').' berhasil dihapus.');
 	}
 
 	public function export($type)
@@ -302,7 +341,7 @@ class BookController extends Controller {
 					$row = 1;
 					$sheet->freezeFirstRow();
 					$sheet->setFontFamily('Sans Serif');
-					$sheet->row($row, ['KODE BUKU','JUDUL BUKU','PENGARANG','PENERBIT','EDISI','SUBYEK','RAK','TANGGAL MASUK','KETERANGAN']);
+					$sheet->row($row, ['KODE BUKU','JUDUL BUKU','PENGARANG','PENERBIT','TAHUN','SUBYEK','RAK','TANGGAL MASUK','KETERANGAN']);
 					foreach($asli as $book){
 						$authors = [];
 						foreach($book->author as $author) $authors[] = $author->nama;
@@ -314,7 +353,7 @@ class BookController extends Controller {
 							$book->tahun,
 							$book->subject->nama,
 							$book->rack->nama,
-							implode('-',array_reverse(explode('-',$book->tanggal_masuk))),
+							$book->tanggal_masuk,
 							$book->keterangan,
 						]);
 					}
@@ -323,7 +362,7 @@ class BookController extends Controller {
 					$row = 1;
 					$sheet->freezeFirstRow();
 					$sheet->setFontFamily('Sans Serif');
-					$sheet->row($row, ['KODE BUKU','JUDUL BUKU','PENGARANG','PENERBIT','EDISI','SUBYEK','RAK','TANGGAL MASUK','KETERANGAN']);
+					$sheet->row($row, ['KODE BUKU','JUDUL BUKU','PENGARANG','PENERBIT','TAHUN','SUBYEK','RAK','TANGGAL MASUK','KETERANGAN']);
 					foreach($pkl as $book){
 						$authors = [];
 						foreach($book->author as $author) $authors[] = $author->nama;
@@ -335,7 +374,7 @@ class BookController extends Controller {
 							$book->tahun,
 							$book->subject->nama,
 							$book->rack->nama,
-							implode('-',array_reverse(explode('-',$book->tanggal_masuk))),
+							$book->tanggal_masuk,
 							$book->keterangan,
 						]);
 					}

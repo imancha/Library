@@ -1,14 +1,13 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use DB;
 use Request;
 use Validator;
-
 use App\Model\Book;
 use App\Model\Borrow;
 use App\Model\GuestBook;
 use App\Model\Member;
 use App\Model\Slider;
-
 use App\Http\Controllers\Controller;
 
 class HomeController extends Controller {
@@ -31,16 +30,14 @@ class HomeController extends Controller {
 
 	public function getData($data = '')
 	{
-		if(Request::has('start') && Request::has('end'))
-		{
-			foreach(Book::whereBetween('tanggal_masuk',[Request::input('start'),Request::input('end')])->groupBy('tanggal_masuk')->orderBy('tanggal_masuk','asc')->get(['books.tanggal_masuk']) as $key => $book)
-			{
-				$data[$key]['label'] = str_replace('-','/',$book['tanggal_masuk']);
-				$data[$key]['value'] = Book::where('tanggal_masuk','=',$book['tanggal_masuk'])->count();
+		if(Request::has('start') && Request::has('end')){
+			foreach(DB::table('books')->select(DB::raw('date(tanggal_masuk) as tanggal_masuk, count(id) as id'))->whereBetween(DB::raw('date(tanggal_masuk)'),[trim(strip_tags(Request::input('start'))),trim(strip_tags(Request::input('end')))])->groupBy(DB::raw('date(tanggal_masuk)'))->orderBy('tanggal_masuk','desc')->get() as $key => $book){
+				$data[$key]['label'] = str_replace('-','/',$book->tanggal_masuk);
+				$data[$key]['value'] = $book->id;
 			}
 		}
 
-		echo json_encode($data);
+		return response()->json($data);
 	}
 
 	public function postAddress()
@@ -72,15 +69,14 @@ class HomeController extends Controller {
 
 	public function postReturn()
 	{
-		if(Request::input('id') == 1)
-		{
+		if(Request::input('id') == 1){
 			$result = Book::join('borrows', function($join){
 				$join->on('borrows.book_id','=','books.id')->where('borrows.status','like','%pinjam%')->where('borrows.member_id','=',Request::input('id1'));
-			})->get(['borrows.id','borrows.book_id','books.judul','borrows.tanggal_pinjam']);
+			})->get(['borrows.id','borrows.book_id','books.judul','borrows.waktu_pinjam']);
 		}else{
 			$result = Member::join('borrows', function($join){
 				$join->on('borrows.member_id','=','members.id')->where('borrows.status','like','%pinjam%')->where('borrows.book_id','=',Request::input('id2'));
-			})->get(['borrows.id','borrows.book_id','borrows.member_id','members.nama','borrows.tanggal_pinjam']);
+			})->get(['borrows.id','borrows.book_id','borrows.member_id','members.nama','borrows.waktu_pinjam']);
 		}
 
 		return response()->json($result);
@@ -88,8 +84,7 @@ class HomeController extends Controller {
 
 	public function postDashboard()
 	{
-		if(Request::hasFile('img'))
-		{
+		if(Request::hasFile('img')){
 			$path = public_path('/');
 			$file = Request::file('img');
 
@@ -97,8 +92,7 @@ class HomeController extends Controller {
 				['image' => $file], ['image' => 'mimes:jpg,jpeg,png,gif']
 			);
 
-			if($validator->fails())
-			{
+			if($validator->fails()){
 				return redirect()->back()->withErrors($validator->messages());
 			}else{
 				$name = $file->getClientOriginalName();
@@ -119,7 +113,7 @@ class HomeController extends Controller {
 
 		if($result === false) die("Error writing to file");
 
-		return redirect()->back()->with('message','Beranda Control berhasil disimpan.');
+		return redirect()->back()->withMessage('Beranda Control berhasil disimpan.');
 	}
 
 	public function postService($id)
@@ -128,14 +122,14 @@ class HomeController extends Controller {
 
 		if($result === false) die("Error writing to file");
 
-		return redirect()->back()->with('message',Request::input('_id').' berhasil disimpan.');
+		return redirect()->back()->withMessage(Request::input('_id').' berhasil disimpan.');
 	}
 
 	public function guestBook()
 	{
 		GuestBook::where('id','=',Request::input('id'))->delete();
 
-		return redirect()->back()->with('message','Komentar dari '.Request::input('nama').' berhasil dihapus');
+		return redirect()->back()->withMessage('Komentar dari '.Request::input('nama').' berhasil dihapus');
 	}
 
 }
