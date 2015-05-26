@@ -134,7 +134,6 @@
 				});
 			});
 			$('#plus').click(function(){
-				$('#kode,#judul').val('');
 				$('#added').append(
 					'<div id="'+(++i)+'">'+
 						'<div class="form-group">'+
@@ -157,6 +156,7 @@
 						'</div>'+
 					'</div>'
 				);
+				$('#kode,#judul').val('');
 			});
 			$('#cancel').click(function(){
 				$('#added').empty();

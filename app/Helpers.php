@@ -2,7 +2,7 @@
 
 function setCurrent($route, $class = 'current')
 {
-	return (Request::path() == $route  && !Request::has('q')) ? $class : '';
+	return (Route::currentRouteName() == $route  && !Request::has('q')) ? $class : '';
 }
 function setCurren($route, $class = 'current')
 {
@@ -10,7 +10,7 @@ function setCurren($route, $class = 'current')
 }
 function setCurrenq($route, $class = 'current')
 {
-	return (Request::path() == $route && Request::has('q')) ? $class : '';
+	return (Route::currentRouteName() == $route && Request::has('q')) ? $class : '';
 }
 function setActive($route, $class = 'current active hasSub')
 {

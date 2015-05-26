@@ -64,12 +64,12 @@ class BorrowController extends Controller {
 	 */
 	public function store(Request $request)
 	{
+
 		$rules = [
 			'idp'		=>	'required|min:2|',
 			'id'		=>	'required|min:3|numeric',
 			'nama'	=>	'required|min:3',
-			'kode'	=>	'required|min:1|exists:books,id',
-			'judul'	=>	'required|min:3',
+			'kode'	=>	'required|exists:books,id',
 		];
 
 		$validator = Validator::make($request->all(), $rules);

@@ -6,7 +6,7 @@
 				<form class="form-horizontal" method="get" action="{{ action('Admin\BookController@index') }}">
 					<div class="form-group">
 						<label class="control-label sr-only">Search:</label>
-						<input class="form-control q-book" type="text" name="q" placeholder="Type something . . .">
+						<input class="form-control" type="text" name="q" placeholder="Type something . . .">
 					</div>
 					<div class="form-group">
 						<button class="btn btn-dark btn-transparent btn-rounded">Cari</button>

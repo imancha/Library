@@ -120,7 +120,7 @@
 														@endforeach
 														<li class="item">
 															<a href="#{{ $book->id }}" data-target="#{{ $book->id }}" data-toggle="modal">{{ $book->judul }}</a>
-															<div class="modal fade" id="{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+															<div class="modal fade flat" id="{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 																<div class="modal-dialog">
 																	<div class="modal-content">
 																		<div class="modal-body table-responsive">

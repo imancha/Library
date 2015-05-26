@@ -26,6 +26,32 @@
 
   <body>
 		<header>
+			<div class="container hidden-xs">
+				<div class="row clearfix">
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div class="logo">
+							<a href="{{ route('home') }}">
+								<div class="logoimage">
+									<img src="{{ asset('/logo CMYK.jpg') }}" width="90" height="65">
+								</div>
+								<div class="logotext">
+									PERPUSTAKAAN<br><span>INTI</span>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4 col-xs-12 pull-right">
+						<div id="sb-search" class="sb-search">
+							<form action="{{ route('book') }}" method="get" role="form">
+								<input class="sb-search-input" placeholder="Search..." type="search" value="" name="q" id="search">
+								<input class="sb-search-submit" type="submit" value="">
+								<span class="sb-icon-search"></span>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="s-10 hidden-xs"></div>
 			<div class="container">
 				<nav class="navbar navbar-primary">
 					<div class="container-fluid">
@@ -57,7 +83,7 @@
 								</li>
 								<li class="{{ setActiv('guest') }}"><a href="{{ route('guest') }}"><i class="fa fa-comments fa-fw"></i> Buku Tamu</a></li>
 							</ul>
-							<div class="searchbar hidden-xs">
+							<div class="searchbar hidden-xs sr-only">
 								<form action="{{ route('book') }}" method="get" role="form">
 									<div class="searchbox">
 										<div class="input-group">
@@ -110,7 +136,11 @@
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="{{ asset('/plugins/bootstrap-3.3.4/ie10-viewport-bug-workaround.js') }}"></script>
     <script src="{{ asset('/plugins/nprogress/nprogress.js') }}"></script>
-    <script src="{{ asset('/plugins/jquery.nicescroll/jquery.nicescroll.js') }}"></script>
+    <script src="{{ asset('/plugins/expanding-search/js/classie.js') }}"></script>
+		<script src="{{ asset('/plugins/expanding-search/js/uisearch.js') }}"></script>
+		<script>
+			new UISearch( document.getElementById( 'sb-search' ) );
+		</script>
     @yield('script')
     <script>
 			$(function(){
@@ -121,16 +151,6 @@
 					NProgress.done();
 					$('.fade').removeClass('out');
 				}, 1000);
-				$("html").niceScroll({
-					styler:"fb",
-					cursorcolor:"#3FAD85",
-					cursorwidth: '12',
-					cursorborderradius: '1px',
-					background: '#404040',
-					spacebarenabled:false,
-					cursorborder: '',
-					zindex: '10'
-				});
 				$(".dropdown").hover(
 					function() {
 						$('.dropdown-menu', this).stop( true, true ).fadeIn("fast");

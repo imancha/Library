@@ -137,6 +137,27 @@
 				$('#account #ubah').removeClass('sr-only');
 				$('#account #submit').addClass('sr-only');
 			});
+			$('#book form').submit(function(e){
+				if($('#book form input[name="q"]').val().length === 0){
+					e.preventDefault();
+					e.stopPropagation();
+					$('#book form input[name="q"]').focus();
+				}
+			});
+			$('#member form').submit(function(e){
+				if($('#member form input[name="q"]').val().length === 0){
+					e.preventDefault();
+					e.stopPropagation();
+					$('#member form input[name="q"]').focus();
+				}
+			});
+			$('#borrow form').submit(function(e){
+				if($('#borrow form input[name="q"]').val().length === 0){
+					e.preventDefault();
+					e.stopPropagation();
+					$('#borrow form input[name="q"]').focus();
+				}
+			});
 		});
 	</script>
 </body>

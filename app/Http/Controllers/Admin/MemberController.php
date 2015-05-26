@@ -1,6 +1,5 @@
 <?php namespace App\Http\Controllers\Admin;
 
-use DB;
 use Excel;
 use Validator;
 use App\Model\Borrow;
@@ -98,7 +97,7 @@ class MemberController extends Controller {
 		$member = Member::find($id);
 
 		if($request->has('from') && $request->has('to'))
-			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('waktu_pinjam',[$request->input('from').' 00:00:00',$request->input('to').' 23:59:59'])->orderBy('waktu_pinjam','asc')->get();
+			$borrows = Borrow::where('member_id','=',$member->id)->whereBetween('waktu_pinjam',[trim(strip_tags(implode('-',array_reverse(explode('-',$request->input('from')))))). '00:00:00',trim(strip_tags(implode('-',array_reverse(explode('-',$request->input('to')))))).' 23:59:59'])->orderBy('waktu_pinjam','asc')->get();
 		else
 			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('waktu_pinjam','asc')->get();
 
