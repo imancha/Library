@@ -54,20 +54,16 @@ class UserController extends Controller {
 		$validator = Validator::make($request->all(), $rules);
 
 		if($validator->fails()){
-			return redirect()->back()->withErrors($validator->messages());
+			return redirect()->back()->withInput()->withErrors($validator->messages());
 		}else{
-			if(Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')])){
-				if(Auth::user()->status == 'kabag')
-					return new RedirectResponse(url('/administrator'));
-				else
-					return new RedirectResponse(url('/admin'));
-			}else{
-				return redirect()->back()->withErrors('These credentials do not match our records.');
-			}
+			if(Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
+				return new RedirectResponse(url('/admin'));
+			else
+				return redirect()->back()->withInput()->withErrors('These credentials do not match our records.');
 		}
 	}
 
-	public function update(Request $request)
+	public function postUpdate(Request $request)
 	{
 		if(Auth::check()){
 			$validator = Validator::make(

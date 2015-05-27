@@ -76,8 +76,9 @@
 								@endforeach
 								</tbody>
 							</table>
+							<hr>
 						</div>
-						<div class="row">
+						<div class="row clearfix">
 							<div class="col-md-12">
 								<span class="pull-left">
 									<small class="text-muted">
@@ -122,7 +123,7 @@
 			});
 			$('td:containsN("'+search+'")').each(function(index, value){
 				$(this).html(function (i, str) {
-					return str.replace(new RegExp("("+search+")",'gi'), "<strong>$1</strong>");
+					return str.replace(new RegExp("("+search+")",'gi'), "<span style='background:#E5E5E5;border-radius:10%;'>$1</span>");
 				});
 			});
 			$('.i-click').on('click',function(e){

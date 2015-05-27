@@ -54,7 +54,7 @@
 						@endif
 						<form role="form" method="POST" action="{{  action('Admin\UserController@postLogin') }}">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<input type="email" name="email" placeholder="Email" class="input-field form-control user" value="{{ old('email') }}" autofocus />
+							<input type="email" name="email" placeholder="Email" class="input-field form-control user" value="{{ old('email') }}" />
 							<input type="password" name="password" placeholder="Password" class="input-field form-control password" />
 							<button type="submit" class="btn btn-login">Login</button>
 						</form>

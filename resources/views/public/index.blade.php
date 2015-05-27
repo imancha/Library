@@ -17,7 +17,7 @@
 					<div class="col-md-12">
 						<div class="slider">
 							<div id="iview">
-								<div data-iview:image="{{ asset('/img/slide-.jpg') }}" data-iview:pausetime="40000">
+								<div data-iview:image="{{ asset('/img/slider/slide-.jpg') }}" data-iview:pausetime="40000">
 									<div class="iview-caption metro-box1 orange" data-transition="wipeUp" data-x="94" data-y="209">
 										<a href="{{ route('book','original') }}">
 											<div class="box-hover"></div>
@@ -28,7 +28,7 @@
 									<div class="iview-caption metro-box1 blue" data-transition="wipeUp" data-x="266" data-y="209">
 										<a href="{{ route('book','research') }}">
 											<div class="box-hover"></div>
-											<i class="fa fa-university fa-fw"></i>
+											<i class="fa fa-graduation-cap fa-fw"></i>
 											<span>Buku PKL</span>
 										</a>
 									</div>
@@ -36,9 +36,9 @@
 										<div class="monthlydeals">
 											<div class="monthly-deals slide" id="monthly-deals">
 												<div class="carousel-inner">
-													<div class="item active"> <img alt="" src="{{ asset('/img/slider-deal1.jpg') }}"> </div>
-													<div class="item"> <img alt="" src="{{ asset('/img/slider-deal2.jpg') }}"> </div>
-													<div class="item"> <img alt="" src="{{ asset('/img/slider-deal3.jpg') }}"> </div>
+													<div class="item active"> <img alt="" src="{{ asset('/img/slider/slider-deal1.jpg') }}"> </div>
+													<div class="item"> <img alt="" src="{{ asset('/img/slider/slider-deal2.jpg') }}"> </div>
+													<div class="item"> <img alt="" src="{{ asset('/img/slider/slider-deal3.jpg') }}"> </div>
 												</div>
 											</div>
 										</div>
@@ -53,28 +53,28 @@
 									<div class="iview-caption metro-box1 dark-blue" data-transition="wipeDown" data-x="610" data-y="209">
 										<a href="{{ route('book','download') }}">
 											<div class="box-hover"></div>
-											<i class="fa fa-file-pdf-o fa-fw"></i>
-											<span>Ebook</span>
+											<i class="fa fa-download fa-fw"></i>
+											<span>Download</span>
 										</a>
 									</div>
-									<div class="iview-caption metro-heading" data-transition="expandLeft" data-x="95" data-y="40">
+									<div class="iview-caption metro-heading" data-transition="expandLeft" data-x="95" data-y="15">
 										<h1>PERPUSTAKAAN INTI</h1>
 									</div>
-									<div class="iview-caption metro-heading" data-transition="wipeLeft" data-x="95" data-y="100">
+									<div class="iview-caption metro-heading" data-transition="wipeLeft" data-x="95" data-y="64.5">
 										<span class="text-larger">
-											Memiliki sekitar {{ $book }} koleksi buku yang terdiri dari buku referensi, pengetahuan umum, ensiklopedia dan laporan hasil penelitian yang dilakukan di<br>PT. INTI (Persero)
+											Only 175 characters . . .
 										</span>
 									</div>
 								</div>
 								@if(count($sliders) > 0)
 									@foreach($sliders as $slider)
-										<div data-iview:image="{{ asset('/img/slide-'.(empty($slider->mime) ? '.jpg' : $slider->id.'.'.$slider->mime)) }}">
+										<div data-iview:image="{{ asset('/img/slider/slide-'.(empty($slider->mime) ? '.jpg' : $slider->id.'.'.$slider->mime)) }}">
 											<div class="iview-caption caption2" data-easing="easeInOutElastic" data-transition="expandLeft" data-x="90" data-y="50">{{ $slider->judul }}</div>
 											<div class="iview-caption caption3" data-easing="easeInOutElastic" data-transition="expandLeft" data-x="90" data-y="111">{{ $slider->keterangan }}</div>
 										</div>
 									@endforeach
 								@endif
-								<div data-iview:image="{{ asset('/img/slide.jpg') }}">
+								<div data-iview:image="{{ asset('/img/slider/slide.jpg') }}">
 									<div class="iview-caption caption3 btm-bar" data-height="107px" data-transition="expandRight" data-width="867px" data-x="0" data-y="300">
 										<h1><b>Perpustakaan INTI</b></h1>
 										{{ address(1) }}<br>{{ address(2) }}
@@ -120,28 +120,28 @@
 														@endforeach
 														<li class="item">
 															<a href="#{{ $book->id }}" data-target="#{{ $book->id }}" data-toggle="modal">{{ $book->judul }}</a>
-															<div class="modal fade flat" id="{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+															<div class="modal fade" id="{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 																<div class="modal-dialog">
-																	<div class="modal-content">
+																	<div class="modal-content flat">
 																		<div class="modal-body table-responsive">
 																			<table class="table table-striped">
 																				<thead>
-																					<tr><th colspan="2" class="text-center"></th></tr>
+																					<tr><th colspan="3" class="text-center">BUKU ASLI</th></tr>
 																				</thead>
 																				<tbody>
-																					<tr><td><strong>Kode</strong></td><td> {{ $book->id }}</td></tr>
-																					<tr><td><strong>Judul</strong></td><td> {{ $book->judul }}</td></tr>
-																					<tr><td><strong>Tahun</strong></td><td> {{$book->tahun }}</td></tr>
-																					<tr><td><strong>Pengarang</strong></td><td> {{ implode(', ',$authors) }}</td></tr>
-																					<tr><td><strong>Penerbit</strong></td><td> {{ $book->publisher->nama }}</td></tr>
-																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
-																					<tr><td><strong>Rak</strong></td><td> {{ $book->rack->nama }}</td></tr>
+																					<tr><td><strong>Kode</strong></td><td> : </td><td> {{ $book->id }}</td></tr>
+																					<tr><td><strong>Judul</strong></td><td> : </td><td> {{ $book->judul }}</td></tr>
+																					<tr><td><strong>Tahun</strong></td><td> : </td><td> {{$book->tahun }}</td></tr>
+																					<tr><td><strong>Pengarang</strong></td><td> : </td><td> {{ implode(', ',$authors) }}</td></tr>
+																					<tr><td><strong>Penerbit</strong></td><td> : </td><td> {{ $book->publisher->nama }}</td></tr>
+																					<tr><td><strong>Subyek</strong></td><td> : </td><td> {{ $book->subject->nama }}</td></tr>
+																					<tr><td><strong>Rak</strong></td><td> : </td><td> {{ $book->rack->nama }}</td></tr>
 																				</tbody>
 																			</table>
 																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
-																				<button type="button" class="btn btn-success pull-left" data-dismiss="modal">Download</button>
+																				<button type="button" class="btn btn-success pull-left flat" data-dismiss="modal">Download</button>
 																			@endif
-																			<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+																			<button type="button" class="btn btn-default pull-right flat" data-dismiss="modal">Close</button>
 																		</div>
 																	</div>
 																</div>
@@ -172,16 +172,16 @@
 																		<div class="modal-body table-responsive">
 																			<table class="table table-striped">
 																				<thead>
-																					<tr><th colspan="2" class="text-center"></th></tr>
+																					<tr><th colspan="3" class="text-center">BUKU PKL</th></tr>
 																				</thead>
 																				<tbody>
-																					<tr><td><strong>Kode</strong></td><td> {{ $book->id }}</td></tr>
-																					<tr><td><strong>Judul</strong></td><td> {{ $book->judul }}</td></tr>
-																					<tr><td><strong>Tahun</strong></td><td> {{$book->tahun }}</td></tr>
-																					<tr><td><strong>Pengarang</strong></td><td> {{ implode(', ',$authors) }}</td></tr>
-																					<tr><td><strong>Penerbit</strong></td><td> {{ $book->publisher->nama }}</td></tr>
-																					<tr><td><strong>Subyek</strong></td><td> {{ $book->subject->nama }}</td></tr>
-																					<tr><td><strong>Subyek</strong></td><td> {{ $book->rack->nama }}</td></tr>
+																					<tr><td><strong>Kode</strong></td><td> : </td><td> {{ $book->id }}</td></tr>
+																					<tr><td><strong>Judul</strong></td><td> : </td><td> {{ $book->judul }}</td></tr>
+																					<tr><td><strong>Tahun</strong></td><td> : </td><td> {{$book->tahun }}</td></tr>
+																					<tr><td><strong>Pengarang</strong></td><td> : </td><td> {{ implode(', ',$authors) }}</td></tr>
+																					<tr><td><strong>Penerbit</strong></td><td> : </td><td> {{ $book->publisher->nama }}</td></tr>
+																					<tr><td><strong>Subyek</strong></td><td> : </td><td> {{ $book->subject->nama }}</td></tr>
+																					<tr><td><strong>Rak</strong></td><td> : </td><td> {{ $book->rack->nama }}</td></tr>
 																				</tbody>
 																			</table>
 																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))

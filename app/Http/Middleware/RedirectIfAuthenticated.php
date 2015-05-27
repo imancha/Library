@@ -35,10 +35,7 @@ class RedirectIfAuthenticated {
 	{
 		if ($this->auth->check())
 		{
-			if($this->auth->user()->status == 'kabag')
-				return new RedirectResponse(url('/administrator'));
-			elseif($this->auth->user()->status == 'staff')
-				return new RedirectResponse(url('/admin'));
+			return new RedirectResponse(url('/admin'));
 		}
 
 		return $next($request);

@@ -8,7 +8,6 @@ html,
 body{
 	background:#ffffff;
 	overflow-x:hidden;
-	margin-top:5px;
 }
 /* Background colors */
 .bg-red,
@@ -265,6 +264,10 @@ input[type="radio"]:active,
 input[type="checkbox"]:active{
 	outline:none;
 }
+hr{
+	margin-top: 0;
+	margin-bottom: 0;
+}
 .flat{
 	-moz-border-radius:0;
 	-webkit-border-radius:0;
@@ -280,24 +283,68 @@ input[type="checkbox"]:active{
 .i-click:active{
 	color:aqua;
 }
+.top{
+	background-color:#eee;
+	height:42px;
+	cursor:pointer;
+}
+.top .nav > li{
+	margin: 0px;
+	border-radius: 0px;
+	color: #444;
+	font-size:12px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+.top .nav > li.date{
+	width:25%;
+	border-right:1px solid #fff;
+	text-align:left;
+	padding:11.5px;
+	font-size:13px;
+}
+.top .nav > li.and{
+	width:50%;
+	text-align:center;
+	font-size:27px;
+	letter-spacing:1px;
+	padding-bottom:3px;
+}
+.top .nav > li.time{
+	width:25%;
+	border-left:1px solid #fff;
+	text-align:right;
+	padding:11.5px;
+	font-size:13px;
+	letter-spacing:2px;
+}
+.top .nav > li.date:hover,
+.top .nav > li.and:hover,
+.top .nav > li.time:hover{
+	background-color:#3FAD85;
+	color: #FFF;
+}
 .logo{
 	float:left;
 	display:table;
 }
 .logo .logoimage{
 	width:90px;
-	height:65px;
+	height:60px;
 	float:left;
 	display:table-cell;
 	vertical-align:middle;
 	text-align:center;
-
+	margin-right:10px;
+}
+.logo .logoimage img{
+	padding-top:10px;
 }
 .logo .logotext{
 	float: left;
 	color: #444;
 	font-size: 25px;
-	padding: 5px 0px 0px 6px;
+	padding: 2px 0px 0px 10px;
 	line-height: 27px;
 	font-family: 'Happy Monkey', cursive;
 	border-left: 1px solid #eee;
@@ -617,10 +664,10 @@ input[type="checkbox"]:active{
 	line-height: 1.428571429;
 	text-decoration: none;
 	color: #ffffff;
-	background-color: #00aff0;
+	background-color: #3CA37E;
 }
 .pagination > li > a:hover, .pagination > li > span:hover, .pagination > li > a:focus, .pagination > li > span:focus {
-	background-color: #008dce;
+	background-color: #2A8060;
 	color: #ffffff;
 }
 .pagination > li:first-child > a, .pagination > li:first-child > span {
@@ -630,12 +677,13 @@ input[type="checkbox"]:active{
 	z-index: 2;
 	color: #ffffff;
 	cursor: default;
-	background-color: #008dce;
+	background-color: #2A8060;
+	border-color: #2A8060;
 }
 .pagination > .disabled > span, .pagination > .disabled > span:hover, .pagination > .disabled > span:focus, .pagination > .disabled > a, .pagination > .disabled > a:hover, .pagination > .disabled > a:focus {
-	color: #11c0ff;
+	color: #45BD91;
 	cursor: not-allowed;
-	background-color: #22d1ff;
+	background-color: #45BD91;
 }
 .pagination-lg > li > a, .pagination-lg > li > span {
 	padding: 10px 18px;
@@ -644,6 +692,10 @@ input[type="checkbox"]:active{
 .pagination-sm > li > a, .pagination-sm > li > span {
 	padding: 5px 10px;
 	font-size: 12px;
+}
+.pagination > li:first-child > a, .pagination > li:first-child > span,
+.pagination > li:last-child > a, .pagination > li:last-child > span{
+	border-radius:0;
 }
 .table-striped>tbody>tr:nth-child(odd)>td,.table-striped>tbody>tr:nth-child(odd)>th{
 	background-color:#ffffff;

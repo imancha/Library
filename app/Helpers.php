@@ -1,31 +1,24 @@
 <?php
 
-function setCurrent($route, $class = 'current')
-{
+function setCurrent($route, $class = 'current'){
 	return (Route::currentRouteName() == $route  && !Request::has('q')) ? $class : '';
 }
-function setCurren($route, $class = 'current')
-{
+function setCurren($route, $class = 'current'){
 	return (Request::path() == $route) ? $class : '';
 }
-function setCurrenq($route, $class = 'current')
-{
+function setCurrenq($route, $class = 'current'){
 	return (Route::currentRouteName() == $route && Request::has('q')) ? $class : '';
 }
-function setActive($route, $class = 'current active hasSub')
-{
+function setActive($route, $class = 'current active hasSub'){
 	return (Route::currentRouteName() == $route) ? $class : '';
 }
-function setActiv($route, $class = 'active')
-{
+function setActiv($route, $class = 'active'){
 	return (Request::path() === $route) ? $class : '';
 }
-function setSelected($route, $class = 'selected')
-{
+function setSelected($route, $class = 'selected'){
 	return (Request::path() === $route) ? $class : '';
 }
-function tanggal($date)
-{
+function tanggal($date){
 	$Bulan = ["00","Januari","Februari","Maret","April","Mei","Juni","Juli","Agustus","September","Oktober","November","Desember"];
 	$tahun = substr($date,0,4);
 	$bulan = substr($date,5,2);
@@ -33,24 +26,19 @@ function tanggal($date)
 	$result = $tgl." ".$Bulan[(int)$bulan-1 < 0 ? 0 : (int)$bulan]." ".$tahun;
 	return ($result);
 }
-function is_alay($string)
-{
-	for($i=0;$i<strlen($string);$i++)
-	{
-		if(!ctype_alpha($string[$i]) && $string[$i] != '.' && $string[$i] != ',' && $string[$i] != ' ' && $string[$i] != ':' && $string[$i] != '-')
-		{
+function is_alay($string){
+	for($i=0;$i<strlen($string);$i++){
+		if(!ctype_alpha($string[$i]) && $string[$i] != '.' && $string[$i] != ',' && $string[$i] != ' ' && $string[$i] != ':' && $string[$i] != '-'){
 			return true;
 			break;
 		}
 	}
 	return false;
 }
-function date_reverse($date,$delimiter,$glue)
-{
+function date_reverse($date,$delimiter,$glue){
 	return implode($glue,array_reverse(explode($delimiter,$date)));
 }
-function humanFileSize($size,$unit="")
-{
+function humanFileSize($size,$unit=""){
   if( (!$unit && $size >= 1<<30) || $unit == "GB")
     return number_format($size/(1<<30),2)." GB";
   if( (!$unit && $size >= 1<<20) || $unit == "MB")
@@ -59,70 +47,38 @@ function humanFileSize($size,$unit="")
     return number_format($size/(1<<10),2)." KB";
   return number_format($size)." B";
 }
-function remove_alpha($string,$digit='')
-{
+function remove_alpha($string,$digit=''){
 	for($i=0;$i<strlen($string);$i++)
 		if(is_numeric($string[$i]))
 			$digit .= $string[$i];
 	return $digit;
 }
-function bulan($bulan)
-{
+function bulan($bulan){
 	$bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agt","Sep","Okt","Nov","Des"];
 
 	return $bulan[(int)$bulan-1];
 }
-function address($id)
-{
-	try
-	{
+function address($id){
+	try{
 		$result = \File::get(public_path('/inc/').($id == 1 ? 'location' : 'address'));
-	}
-	catch (Illuminate\Filesystem\FileNotFoundException $exception)
-	{
+	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
 		die("The file doesn't exist");
 	}
-
 	return $result;
 }
-function welcome()
-{
-	try
-	{
-		$result = \File::get(public_path('/inc/welcome'));
-	}
-	catch (Illuminate\Filesystem\FileNotFoundException $exception)
-	{
+function welcome(){
+	try{
+		$result = \File::get(public_path('/inc/dashboard'));
+	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
 		die("The file doesn't exist");
 	}
-
 	return $result;
 }
-function service($id)
-{
-	try
-	{
+function service($id){
+	try{
 		$result = \File::get(public_path('/inc/'.$id));
-	}
-	catch (Illuminate\Filesystem\FileNotFoundException $exception)
-	{
+	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
 		die("The file doesn't exist");
 	}
-
 	return $result;
-}
-function prefix()
-{
-	try
-	{
-		$user = new App\Http\Controllers\Admin\UserController;
-
-		$result = \File::get(public_path('/inc/'.$user->getId()));
-	}
-	catch (Illuminate\Filesystem\FileNotFoundException $exception)
-	{
-		die("The file doesn't exist");
-	}
-
-	return trim($result);
 }

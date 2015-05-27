@@ -1,4 +1,4 @@
-@extends('admin.master.app')
+@extends('master.app')
 
 @section('title')
 	Tambah Peminjaman
@@ -55,9 +55,9 @@
 										<div class="col-sm-7">
 											<div class="input-group">
 												<input type="text" id="judul" name="judul" class="form-control" value="" autocomplete="off" readonly />
-												<span id="plus" class="input-group-addon btn btn-sm" data-placement="left" data-toggle="tooltip" rel="tooltip" data-original-title="Tambah Buku">
-													<i class="fa fa-plus"></i>
-												</span>
+												<div class="input-group-btn">
+													<button id="plus" class="btn btn-default" data-placement="right" data-toggle="tooltip" rel="tooltip" data-original-title="Tambah Buku"><i class="fa fa-plus"></i></button>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -133,7 +133,9 @@
 					},
 				});
 			});
-			$('#plus').click(function(){
+			$('#plus').click(function(e){
+				e.preventDefault();
+				e.stopPropagation();
 				$('#added').append(
 					'<div id="'+(++i)+'">'+
 						'<div class="form-group">'+
@@ -148,9 +150,9 @@
 							'<div class="col-sm-7">'+
 								'<div class="input-group">'+
 									'<input type="text" name="judul" class="form-control" value="'+$('#judul').val()+'" autocomplete="off" readonly />'+
-									'<span class="input-group-addon btn btn-sm" data-placement="left" data-toggle="tooltip" rel="tooltip" title="Hapus Buku" data-original-title="Hapus Buku" onclick="remover('+i+');">'+
-										'<i class="fa fa-minus"></i>'+
-									'</span>'+
+									'<div class="input-group-btn">'+
+										'<button class="btn btn-warning" data-placement="left" data-toggle="tooltip" rel="tooltip" title="Hapus Buku" data-original-title="Hapus Buku" onclick="remover('+i+');"><i class="fa fa-minus"></i></button>'+
+									'</div>'+
 								'</div>'+
 							'</div>'+
 						'</div>'+

@@ -1,4 +1,4 @@
-@extends('admin.master.app')
+@extends('master.app')
 
 @section('title')
 	Data Buku
@@ -71,7 +71,7 @@
 													<td>{{ strtoupper($book->jenis) }}</td>
 													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ url('admin/book/'.$book->id) }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
 													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ action('Admin\BookController@edit', $book->id) }}"><i class="fa fa-edit"></i></a></td>
-													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="{{ url('admin/book/'.$book->id.'/delete/') }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
+													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="{{ url('admin/book/'.$book->id.'/delete') }}" data-modal="remove-{{ $book->id }}"><i class="fa fa-trash-o"></i></a></td>
 													<td class="no-print">
 														@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 															<a class="c-green" href="{{ action('PublicController@getDownload', $book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>

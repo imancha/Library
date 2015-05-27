@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Auth;
 use DB;
 use Request;
 use Validator;
@@ -25,7 +26,7 @@ class HomeController extends Controller {
 		$member = service('member');
 		$borrow = service('borrow');
 
-		return view('admin.index', compact('guests','sliders','beranda','member','borrow'));
+		return view('staff.index', compact('guests','sliders','beranda','member','borrow'));
 	}
 
 	public function getData($data = '')
@@ -82,10 +83,15 @@ class HomeController extends Controller {
 		return response()->json($result);
 	}
 
+	public function postSlider()
+	{
+		//
+	}
+
 	public function postDashboard()
 	{
 		if(Request::hasFile('img')){
-			$path = public_path('/');
+			$path = public_path('/img/');
 			$file = Request::file('img');
 
 			$validator = Validator::make(
@@ -95,25 +101,24 @@ class HomeController extends Controller {
 			if($validator->fails()){
 				return redirect()->back()->withErrors($validator->messages());
 			}else{
-				$name = $file->getClientOriginalName();
-				$mime = $file->getClientOriginalExtension();
+				$name = 'beranda.'.$file->getClientOriginalExtension();
 				$fiel = $path.$name;
 
 				if(\File::exists($path.Request::input('_file'))) \File::delete($path.Request::input('_file'));
 				if(\File::exists($fiel)) \File::delete($fiel);
 
 				if($file->move($path,$name))
-					$img = '<img id="img" src="./'.$name.'" class="img img-responsive" alt="'.$name.'" width="200px" height="200px" style="float:right;display:inline;margin:10px 0 10px 10px;">';
+					$img = '<img id="img" src="./img/'.$name.'" class="img img-responsive" alt="'.$name.'" width="200px" height="200px" style="float:right;display:inline;margin:10px 0 10px 10px;">';
 			}
 		}else{
-			$img = '<img id="img" src="./'.Request::input('_file').'" class="img img-responsive" alt="'.Request::input('_file').'" width="200px" height="200px" style="float:right;display:inline;margin:15px 0 10px 10px;">';
+			$img = '<img id="img" src="./img/'.Request::input('_file').'" class="img img-responsive" alt="'.Request::input('_file').'" width="200px" height="200px" style="float:right;display:inline;margin:15px 0 10px 10px;">';
 		}
 
-		$result = \File::put(public_path('/inc/welcome'),'<h3 id="title" style="margin-top:5px;">'.Request::input('title').'</h3>'.$img.'<div id="post" style="margin-top:20px">'.Request::input('post').'</div>');
+		$result = \File::put(public_path('/inc/dashboard'),'<h3 id="title" style="margin-top:5px;">'.Request::input('title').'</h3>'.$img.'<div id="post" style="margin-top:20px">'.Request::input('post').'</div>');
 
 		if($result === false) die("Error writing to file");
 
-		return redirect()->back()->withMessage('Beranda Control berhasil disimpan.');
+		return redirect()->back()->withMessage('Beranda berhasil disimpan.');
 	}
 
 	public function postService($id)

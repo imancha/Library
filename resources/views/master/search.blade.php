@@ -51,7 +51,7 @@
 		<div class="md-content md-content-white">
 			<h3>Account <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 			<div class="p-b-10 m-t-10">
-				<form class="form-horizontal" method="post" action="{{ Action('Admin\UserController@update') }}">
+				<form class="form-horizontal" method="post" action="{{ Action('Admin\UserController@postUpdate') }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
 					<div class="form-group m-b-0">
 						<label class="control-label" style="text-align:left !important">Nama:</label>

@@ -14,6 +14,7 @@
 	<meta content="" name="description" />
 	<meta content="" name="author" />
 	<!-- END META SECTION -->
+	<link rel="icon" href="{{ asset('/favicon.ico.png') }}">
 	<!-- BEGIN MANDATORY STYLE -->
 	<link href="{{ asset('/assets/css/style.css') }}" rel="stylesheet">
 	<!-- END  MANDATORY STYLE -->
@@ -37,7 +38,7 @@
 				<a id="menu-medium" class="sidebar-toggle tooltips">
 					<i class="fa fa-outdent"></i>
 				</a>
-				<a class="navbar-brand" href="{{ route('admin.dashboard') }}">
+				<a class="navbar-brand" href="{{ action('Admin\HomeController@index') }}">
 					<img src="{{ asset('/assets/img/logo.png') }}" alt="INTI" width="70" height="26">
 				</a>
 			</div>
@@ -78,12 +79,12 @@
 	<!-- END TOP MENU -->
 	<!-- BEGIN WRAPPER -->
 	<div id="wrapper">
-		@include('admin.master.sidebar')
-		@include('admin.master.message')
+		@include('master.sidebar')
+		@include('master.message')
 		<!-- BEGIN MAIN CONTENT -->
 		@yield('content')
 		<!-- END MAIN CONTENT -->
-		@include('admin.master.search')
+		@include('master.search')
 	</div>
 	<!-- END WRAPPER -->
 	<!-- BEGIN MANDATORY SCRIPTS -->

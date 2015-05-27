@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Auth;
 use Excel;
 use Validator;
 use App\Model\Borrow;
@@ -29,7 +30,7 @@ class MemberController extends Controller {
 			$members->setPath('../admin/member');
 		}
 
-		return view('admin.member.index', compact('borrows','members'));
+		return view(Auth::user()->status.'.member.index', compact('borrows','members'));
 	}
 
 	/**
@@ -39,7 +40,7 @@ class MemberController extends Controller {
 	 */
 	public function create()
 	{
-		return view('admin.member.create');
+		return view(Auth::user()->status.'.member.create');
 	}
 
 	/**
@@ -101,7 +102,7 @@ class MemberController extends Controller {
 		else
 			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('waktu_pinjam','asc')->get();
 
-		return view('admin.member.show', compact('member','borrows'));
+		return view('staff.member.show', compact('member','borrows'));
 	}
 
 	/**
@@ -114,7 +115,7 @@ class MemberController extends Controller {
 	{
 		$member = Member::find($id);
 
-		return view('admin.member.edit', compact('member'));
+		return view(Auth::user()->status.'.member.edit', compact('member'));
 	}
 
 	/**
@@ -171,7 +172,6 @@ class MemberController extends Controller {
 	public function destroy(Request $request, $id)
 	{
 		Member::where('id','=',$id)->delete();
-		Borrow::where('member_id','=',$id)->delete();
 
 		return redirect()->back()->withMessage($request->input('id').' - '.$request->input('nama').' berhasil dihapus.');
 	}

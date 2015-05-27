@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Auth;
 use Excel;
 use Validator;
 use App\Model\Author;
@@ -34,7 +35,7 @@ class BookController extends Controller {
 			$books->setPath('../admin/book');
 		}
 
-		return view('admin.book.index', compact('borrows','books'));
+		return view(Auth::user()->status.'.book.index', compact('borrows','books'));
 	}
 
 	/**
@@ -68,7 +69,7 @@ class BookController extends Controller {
 			$pkl = 1;
 		}
 
-		return view('admin.book.create', compact('publishers','subjects','racks','asli','pkl'));
+		return view(Auth::user()->status.'.book.create', compact('publishers','subjects','racks','asli','pkl'));
 	}
 
 	/**
@@ -87,18 +88,17 @@ class BookController extends Controller {
 			'tahun'				=>	'required|digits:4',
 			'subyek'			=>	'required|min:3',
 			'rak'					=>	'required|min:3',
-			'keterangan'	=>	$request->has('keterangan') ? 'min:3|max:255' : '',
+			'keterangan'	=>	'min:3|max:255',
 			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
 
 		$validator->after(function($validator) use($request){
-			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id'))){
+			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id')))
 				$validator->errors()->add('id', 'The kode buku must be a number.');
-			}elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P'))){
+			elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P')))
 				$validator->errors()->add('id', 'The kode buku is invalid.');
-			}
 		});
 
 		if($validator->fails()){
@@ -208,7 +208,7 @@ class BookController extends Controller {
 			$pkl = 1;
 		}
 
-		return view('admin.book.edit', compact('book','publishers','subjects','racks','asli','pkl'));
+		return view(Auth::user()->status.'.book.edit', compact('book','publishers','subjects','racks','asli','pkl'));
 	}
 
 	/**
@@ -228,18 +228,17 @@ class BookController extends Controller {
 			'tahun'				=>	'required|digits:4',
 			'subyek'			=>	'required|min:3',
 			'rak'					=>	'required|min:3',
-			'keterangan'	=>	$request->has('keterangan') ? 'min:3|max:255' : '',
+			'keterangan'	=>	'min:3|max:255',
 			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
 		];
 
 		$validator = Validator::make($request->all(), $rules);
 
 		$validator->after(function($validator) use($request){
-			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id'))){
+			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id')))
 				$validator->errors()->add('id', 'The kode buku field must be numeric.');
-			}elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P'))){
+			elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P')))
 				$validator->errors()->add('id', 'The kode buku field is invalid.');
-			}
 		});
 
 		if($validator->fails()){
@@ -315,9 +314,24 @@ class BookController extends Controller {
 	 */
 	public function destroy(Request $request, $id)
 	{
-		Book::where('id','=',$id)->delete();
-		Borrow::where('book_id','=',$id)->delete();
-		File::where('book_id','=',$id)->delete();
+		$book = Book::find($id);
+		$file = File::find($id);
+		$auth = $book->author[0]->id;
+		$book->delete();
+
+		if(count(Book::where('publisher_id','=',$book->publisher_id)->get()) == 0)
+			Publisher::where('id','=',$book->publisher_id)->delete();
+		if(count(Book::where('subject_id','=',$book->subject_id)->get()) == 0)
+			Subject::where('id','=',$book->subject_id)->delete();
+		if(count(Book::where('rack_id','=',$book->rack_id)->get()) == 0)
+			Rack::where('id','=',$book->rack_id)->delete();
+		if(count(BookAuthor::where('author_id','=',$auth)->get()) == 0)
+			Author::where('id','=',$auth)->delete();
+		if(!empty($file)){
+			if(\File::exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$file->mime)))
+				\File::delete(public_path('files/'.$book->id.' - '.$book->judul.'.'.$file->mime));
+			$file->delete();
+		}
 
 		return redirect()->back()->withMessage($request->input('id').' - '.$request->input('judul').' berhasil dihapus.');
 	}

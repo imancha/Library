@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers\Admin;
 
+use Auth;
 use Excel;
 use Validator;
 use App\Model\Book;
@@ -27,7 +28,7 @@ class BorrowController extends Controller {
 			$borrows->setPath('../admin/borrow');
 		}
 
-		return view('admin.borrow.index', compact('borrows'));
+		return view(Auth::user()->status.'.borrow.index', compact('borrows'));
 	}
 
 	/**
@@ -54,7 +55,7 @@ class BorrowController extends Controller {
 			$borrow = 1;
 		}
 
-		return view('admin.borrow.create', compact('members','books','borrow'));
+		return view(Auth::user()->status.'.borrow.create', compact('members','books','borrow'));
 	}
 
 	/**
@@ -124,7 +125,7 @@ class BorrowController extends Controller {
 		$members = Borrow::where('status','like','%pinjam%')->distinct()->get(['borrows.member_id']);
 		$books = Borrow::where('status','like','%pinjam%')->distinct()->get(['borrows.book_id']);
 
-		return view('admin.borrow.patch',compact('members','books'));
+		return view(Auth::user()->status.'.borrow.patch',compact('members','books'));
 	}
 
 	/**

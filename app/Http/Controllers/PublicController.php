@@ -8,11 +8,8 @@ use App\Model\GuestBook;
 use App\Model\Publisher;
 use App\Model\Slider;
 use App\Model\Subject;
-
 use App\Http\Requests;
-
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
 
 class PublicController extends Controller {

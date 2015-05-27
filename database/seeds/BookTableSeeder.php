@@ -52,7 +52,7 @@ class BookTableSeeder extends Seeder {
 					'judul'	=>	$result->judul_buku,
 					'tahun'	=>	$result->edisi,
 					'jenis'	=>	strtolower($result->jenis),
-					'tanggal_masuk'	=>	$result->tanggal_masuk,
+					'tanggal_masuk'	=>	substr($result->tanggal_masuk,0,10).' '.date('H:i:s'),
 					'keterangan'		=>	(empty($result->keterangan) ? '' : $result->keterangan),
 					'publisher_id'	=>	$publisher->id,
 					'subject_id'		=>	$subject->id,

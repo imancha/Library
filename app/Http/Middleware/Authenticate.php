@@ -43,41 +43,6 @@ class Authenticate {
 				return redirect()->guest('/login');
 			}
 		}
-		else
-		{
-			if($this->auth->user()->status == 'kabag')
-			{
-				$route = explode('/', $request->route()->uri());
-
-				if($route[0] == 'admin')
-				{
-					if ($request->ajax())
-					{
-						return response('Unauthorized.', 401);
-					}
-					else
-					{
-						return redirect()->guest('/administrator');
-					}
-				}
-			}
-			elseif($this->auth->user()->status == 'staff')
-			{
-				$route = explode('/', $request->route()->uri());
-
-				if($route[0] == 'administrator')
-				{
-					if($request->ajax())
-					{
-						return response('Unauthorized.', 401);
-					}
-					else
-					{
-						return redirect()->guest('/admin');
-					}
-				}
-			}
-		}
 
 		return $next($request);
 	}

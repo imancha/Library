@@ -28,11 +28,25 @@
 		<header>
 			<div class="container hidden-xs">
 				<div class="row clearfix">
+					<div class="col-md-12">
+						<div class="top">
+							<ul class="nav nav-pills">
+								<li class="date"></li>
+								<li class="and">بِسْمِ اللهِ الرَّحْمنِ الرَّحِيْمِ</li>
+								<li class="time"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="s-20 hidden-xs"></div>
+			<div class="container hidden-xs">
+				<div class="row clearfix">
 					<div class="col-md-6 col-sm-6 col-xs-12">
 						<div class="logo">
 							<a href="{{ route('home') }}">
 								<div class="logoimage">
-									<img src="{{ asset('/logo CMYK.jpg') }}" width="90" height="65">
+									<img class="img img-responsive" src="{{ asset('/img/logo.png') }}" width="90">
 								</div>
 								<div class="logotext">
 									PERPUSTAKAAN<br><span>INTI</span>
@@ -51,7 +65,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="s-10 hidden-xs"></div>
+			<div class="s-20 hidden-xs"></div>
 			<div class="container">
 				<nav class="navbar navbar-primary">
 					<div class="container-fluid">
@@ -138,12 +152,12 @@
     <script src="{{ asset('/plugins/nprogress/nprogress.js') }}"></script>
     <script src="{{ asset('/plugins/expanding-search/js/classie.js') }}"></script>
 		<script src="{{ asset('/plugins/expanding-search/js/uisearch.js') }}"></script>
-		<script>
-			new UISearch( document.getElementById( 'sb-search' ) );
-		</script>
     @yield('script')
     <script>
 			$(function(){
+				(function search(){
+					new UISearch(document.getElementById( 'sb-search' ));
+				})();
 				NProgress.configure({
 					showSpinner: true
 				}).start();
@@ -165,6 +179,29 @@
 					if($('input[name="q"]').val() != '')
 						$('input[name="q"]').val($('input[name="q"]').val().replace(/(<([^>]+)>)/ig,""));
 				});
+				(function dates(){
+					date = new Date;
+					year = date.getFullYear();
+					month = date.getMonth();
+					d = date.getDate();
+					day = date.getDay();
+					months = new Array('Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember');
+					days = new Array('Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu');
+					$('.date').text(days[day]+', '+d+' '+months[month]+' '+year);
+				})();
+				(function times(){
+					date = new Date;
+					h = date.getHours();
+					m = date.getMinutes();
+					s = date.getSeconds();
+					t = h >= 12 ? 'PM' : 'AM';
+					h = h >= 12 ? Math.abs(h-12) : h;
+					if(h<10){h = "0"+h;}
+					if(m<10){m = "0"+m;}
+					if(s<10){s = "0"+s;}
+					$('.time').text(h+':'+m+':'+s+' '+t);
+					setTimeout(times,1000);
+				})();
 			});
     </script>
   </body>
