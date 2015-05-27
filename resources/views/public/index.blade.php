@@ -139,7 +139,7 @@
 																				</tbody>
 																			</table>
 																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
-																				<button type="button" class="btn btn-success pull-left flat" data-dismiss="modal">Download</button>
+																				<button type="button" class="btn btn-success pull-left flat" data-dismiss="modal" onclick="window.location='{{ action('PublicController@getDownload', $book->file->sha1sum) }}'">Download</button>
 																			@endif
 																			<button type="button" class="btn btn-default pull-right flat" data-dismiss="modal">Close</button>
 																		</div>
