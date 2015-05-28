@@ -9,6 +9,16 @@
 @endsection
 
 @section('content')
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 col-sm-12 cl-xs-12">
+				<div class="page-title">
+					<h3>{{ $title }}</h3>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="s-10"></div>
 	@if(count($books) > 0)
 		@if(count($subjects) > 0)
 			<div class="container">

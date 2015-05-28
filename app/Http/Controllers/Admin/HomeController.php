@@ -25,8 +25,10 @@ class HomeController extends Controller {
 		$beranda = welcome();
 		$member = service('member');
 		$borrow = service('borrow');
+		$slider = slider();
+		$gallery = array_filter(explode(' && ', gallery()));
 
-		return view('staff.index', compact('guests','sliders','beranda','member','borrow'));
+		return view('staff.index', compact('guests','sliders','beranda','member','borrow','slider','gallery'));
 	}
 
 	public function getData($data = '')
@@ -41,9 +43,21 @@ class HomeController extends Controller {
 		return response()->json($data);
 	}
 
+	public function getDetail($data = '')
+	{
+		if(Request::has('id')){
+			foreach(Book::where('tanggal_masuk','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('judul','asc')->get() as $key => $book){
+				$data[$key]['kode'] = $book->id;
+				$data[$key]['judul'] = $book->judul;
+				$data[$key]['jenis'] = strtoupper($book->jenis);
+			}
+		}
+		return response()->json($data);
+	}
+
 	public function postAddress()
 	{
-		$result = \File::put(public_path('/inc/').(Request::input('id') == 1 ? 'location' : 'address'), Request::input('txt'));
+		$result = \File::put(public_path('/inc/').(Request::input('id') == 1 ? 'location' : 'address'), trim(strip_tags(Request::input('txt'))));
 		if($result === false) die("Error writing to file");
 
 		return response()->json($result);
@@ -85,7 +99,11 @@ class HomeController extends Controller {
 
 	public function postSlider()
 	{
-		//
+		$result = \File::put(public_path('/inc/slider'), trim(strip_tags(Request::input('keterangan'))));
+
+		if($result === false) die("Error writing to file");
+
+		return redirect()->back()->withMessage('Slider-Start berhasil disimpan.');
 	}
 
 	public function postDashboard()
@@ -137,4 +155,44 @@ class HomeController extends Controller {
 		return redirect()->back()->withMessage('Komentar dari '.Request::input('nama').' berhasil dihapus');
 	}
 
+	public function postGallery()
+	{
+		if(Request::hasFile('file')){
+			$path = public_path('/img/slider-deal/');
+			$file = Request::file('file');
+
+			$validator = Validator::make(
+				['image' => $file], ['image' => 'mimes:jpg,jpeg,png,gif']
+			);
+
+			if($validator->fails()){
+				return redirect()->back()->withErrors($validator->messages());
+			}else{
+				$name = trim($file->getClientOriginalName());
+				if($file->move($path,$name)){
+					$result = \File::append(public_path('/inc/gallery'), ' && '.$name);
+					if($result === false) die("Error writing to file");
+
+					return redirect()->back()->withMessage('Gallery berhasil disimpan.');
+				}
+			}
+		}
+		return redirect()->back()->withErrors('Error uploading file.');
+	}
+
+	public function getGallery($id)
+	{
+		foreach(array_filter(explode(' && ', gallery())) as $galery){
+			if(sha1($galery) == $id)
+				$delete = $galery;
+			else
+				$gallery[] = $galery;
+		}
+
+		if(\File::exists(public_path('/img/slider-deal/'.$delete)))
+			\File::delete(public_path('/img/slider-deal/'.$delete));
+		if(\File::put(public_path('/inc/gallery'), implode(' && ', $gallery)) === false) die("Error writing to file");
+
+		return redirect()->back()->withMessage('Gambar berhasil dihapus.');
+	}
 }

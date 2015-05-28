@@ -82,3 +82,19 @@ function service($id){
 	}
 	return $result;
 }
+function slider(){
+	try{
+		$result = \File::get(public_path('/inc/slider'));
+	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
+		die("The file doesn't exist");
+	}
+	return $result;
+}
+function gallery(){
+	try{
+		$result = \File::get(public_path('/inc/gallery'));
+	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
+		die("The file doesn't exist");
+	}
+	return $result;
+}

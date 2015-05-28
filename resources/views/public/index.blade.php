@@ -36,9 +36,12 @@
 										<div class="monthlydeals">
 											<div class="monthly-deals slide" id="monthly-deals">
 												<div class="carousel-inner">
-													<div class="item active"> <img alt="" src="{{ asset('/img/slider/slider-deal1.jpg') }}"> </div>
-													<div class="item"> <img alt="" src="{{ asset('/img/slider/slider-deal2.jpg') }}"> </div>
-													<div class="item"> <img alt="" src="{{ asset('/img/slider/slider-deal3.jpg') }}"> </div>
+													<div class="item active"> <img alt="" src=""> </div>
+													@if(count($gallery) > 0)
+														@foreach($gallery as $galery)
+															<div class="item"> <img alt="" src="{{ asset('/img/slider-deal/'.$galery) }}"> </div>
+														@endforeach
+													@endif
 												</div>
 											</div>
 										</div>
@@ -62,7 +65,7 @@
 									</div>
 									<div class="iview-caption metro-heading" data-transition="wipeLeft" data-x="95" data-y="64.5">
 										<span class="text-larger">
-											Only 175 characters . . .
+											{!! $slider !!}
 										</span>
 									</div>
 								</div>

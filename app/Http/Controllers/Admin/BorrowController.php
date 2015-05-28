@@ -28,7 +28,7 @@ class BorrowController extends Controller {
 			$borrows->setPath('../admin/borrow');
 		}
 
-		return view(Auth::user()->status.'.borrow.index', compact('borrows'));
+		return view(Auth::user()->status.'.borrow.index', compact('borrows','details'));
 	}
 
 	/**

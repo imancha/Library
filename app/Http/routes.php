@@ -29,7 +29,14 @@ Route::controllers([
 Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/', ['as' => 'admin.dashboard', 'uses' => 'Admin\HomeController@index']);
 	Route::get('/dashboard/data', ['as' => 'admin.dashboard.data', 'uses' => 'Admin\HomeController@getData']);
+	Route::get('/dashboard/detail', ['as' => 'admin.dashboard.detail', 'uses' => 'Admin\HomeController@getDetail']);
 	Route::post('/dashboard/address', ['as' => 'admin.dashboard.address', 'uses' => 'Admin\HomeController@postAddress']);
+	Route::post('/dashboard/slider', ['as' => 'admin.dashboard.slider', 'uses' => 'Admin\HomeController@postSlider']);
+	Route::post('/dashboard/welcome', ['as' => 'admin.welcome','uses' => 'Admin\HomeController@postDashboard']);
+	Route::post('/dashboard/service/{id}', ['as' => 'admin.service','uses' => 'Admin\HomeController@postService']);
+	Route::post('/dashboard/guest', ['as' => 'admin.guest','uses' => 'Admin\HomeController@guestBook']);
+	Route::post('/dashboard/gallery', ['as' => 'admin.gallery', 'uses' => 'Admin\HomeController@postGallery']);
+	Route::get('/dashboard/gallery/{id}', ['as' => 'admin.galery.delete', 'uses' => 'Admin\HomeController@getGallery']);
 	Route::get('/book/export/{type}', ['as' => 'admin.book.export', 'uses' => 'Admin\BookController@export']);
 	Route::post('/book/borrow', ['as' => 'admin.book.borrow', 'uses' => 'Admin\HomeController@postBook']);
 	Route::post('/book/return', ['as' => 'admin.book.return', 'uses' => 'Admin\HomeController@postReturn']);
@@ -38,9 +45,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/borrow/export/{type}', ['as' => 'admin.borrow.export', 'uses' => 'Admin\BorrowController@export']);
 	Route::get('/borrow/return', ['as' => 'admin.borrow.return', 'uses' => 'Admin\BorrowController@patch']);
 	Route::post('/user/update', ['as' => 'admin.user.update', 'uses' => 'Admin\UserController@postUpdate']);
-	Route::post('/ajax/welcome', ['as' => 'admin.welcome','uses' => 'Admin\HomeController@postDashboard']);
-	Route::post('/ajax/service/{id}', ['as' => 'admin.service','uses' => 'Admin\HomeController@postService']);
-	Route::post('/ajax/guest', ['as' => 'admin.guest','uses' => 'Admin\HomeController@guestBook']);
 	Route::get('/logout', ['as' => 'admin.user.logout', 'uses' => 'Admin\UserController@getLogout']);
 	Route::resource('book', 'Admin\BookController');
 	Route::resource('member', 'Admin\MemberController');

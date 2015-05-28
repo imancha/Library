@@ -7,6 +7,7 @@
 @section('style')
 	<link href="{{ asset('/assets/plugins/xcharts/xcharts.min.css') }}" rel="stylesheet">
 	<link href="{{ asset('/assets/plugins/daterangepicker/daterangepicker.css') }}" rel="stylesheet">
+	<link href="{{ asset('/assets/plugins/magnific/magnific-popup.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -69,6 +70,24 @@
 								<figure id="chart" style="height:400px"></figure>
 							</div>
 						</div>
+						<div class="md-modal md-effect-3" id="exists">
+							<div class="md-content md-content-white">
+								<h3><span id="judul"></span> <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+								<div class="p-10 withScroll" data-height="400px">
+									<table class="table table-responsive table-hover table-vatop">
+										<thead>
+											<tr>
+												<th>Kode</th>
+												<th>Judul</th>
+												<th>Jenis</th>
+											</tr>
+										</thead>
+										<tbody></tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="md-overlay"></div>
 					</div>
 				</div>
 			</div>
@@ -92,28 +111,28 @@
 								<div class="withScroll" data-height="388">
 									<div class="message-item media">
 										<div class="media">
-											<img src="{{ asset('/img/slide-.jpg') }}" alt="" width="50" height="40" class="pull-left">
+											<img src="{{ asset('/img/slider/slide-.jpg') }}" alt="" width="50" height="40" class="pull-left">
 											<div class="media-body">
 												<small class="pull-right">
 													<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-														<a href="" class="md-trigger" data-modal="ubah-slider-"><i class="fa fa-edit"></i></a>
+														<a href="" class="md-trigger" data-modal="-slider-"><i class="fa fa-edit"></i></a>
 													</span>
 												</small>
-												<h5 class="c-dark"><strong>Slide-0</strong></h5>
+												<h5 class="c-dark"><strong>Slide-Start</strong></h5>
 												<h4 class="c-dark">PERPUSTAKAAN INTI</h4>
 											</div>
 										</div>
-										<p class="f-14 c-gray">Memiliki sekitar koleksi buku yang terdiri dari buku referensi, pengetahuan umum, ensiklopedia dan laporan hasil penelitian yang dilakukan di PT. INTI (Persero)</p>
+										{{ $slider }}
 									</div>
-									<div class="md-modal md-effect-8" id="ubah-slider-">
+									<div class="md-modal md-effect-8" id="-slider-">
 										<div class="md-content md-content-white">
-											<h3>Ubah Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+											<h3>Start-Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 											<div class="p-10">
-												<form method="post" action="">
+												<form method="post" action="{{ action('Admin\HomeController@postSlider') }}">
 													<input type="hidden" name="_token" value="{{ csrf_token() }}">
 													<div class="form-group">
 														<label for="field-2" class="control-label sr-only">Keterangan</label>
-														<textarea class="form-control cke-editor" name="keterangan" value="" placeholder="" autocomplete="off"></textarea>
+														<textarea class="form-control" name="keterangan" value="" placeholder="" autocomplete="off" rows="5" maxlength="321">{{ $slider }}</textarea>
 													</div>
 													<div class="form-group">
 														<button class="btn btn-dark btn-transparent btn-rounded">Submit</button>
@@ -128,7 +147,7 @@
 										@foreach($sliders as $slider)
 											<div class="message-item media">
 												<div class="media">
-													<img src="{{ asset('/img/slide-'.(empty($slider->mime) ? '.jpg' : $slider->id.'.'.$slider->mime)) }}" alt="" width="50" height="40" class="pull-left">
+													<img src="{{ asset('/img/slider/slide-'.(empty($slider->mime) ? '.jpg' : $slider->id.'.'.$slider->mime)) }}" alt="" width="50" height="40" class="pull-left">
 													<div class="media-body">
 														<small class="pull-right">
 															<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
@@ -142,11 +161,11 @@
 														<h4 class="c-dark">{{ $slider->judul }}</h4>
 													</div>
 												</div>
-												<p class="f-14 c-gray">{{ $slider->keterangan }}</p>
+												{{ $slider->keterangan }}
 											</div>
 											<div class="md-modal md-effect-8" id="ubah-{{ $slider->id }}">
 												<div class="md-content md-content-white">
-													<h3>Ubah Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+													<h3>Slide-{{ $i }} <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 													<div class="p-b-10 m-t-10">
 														<form method="post" action="{{ action('Admin\SliderController@update',$slider->id) }}" enctype="multipart/form-data">
 														<input name="_method" type="hidden" value="PATCH">
@@ -252,7 +271,7 @@
 												</small>
 												<small class="text-muted">{{ $guest->email }}</small>
 											</div>
-											<p>{{ $guest->komentar }}</p>
+											{{ $guest->komentar }}
 										</div>
 									</li>
 									<div class="md-modal md-effect-1" id="remove-{{ $guest->id }}">
@@ -401,6 +420,47 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h2 class="panel-title w-100">
+							Gallery
+						</h2>
+					</div>
+					<div class="panel-body p-t-0">
+						@if(count($gallery) > 0)
+							<div class="gallery config-open p-t-0">
+								<div class="row">
+									@foreach($gallery as $galery)
+										<div class="mix col-md-2 col-sm-3 col-xs-12" style="display: inline-block;">
+											<div class="thumbnail">
+												<div class="overlay">
+													<div class="thumbnail-actions">
+														<a href="{{ asset('/img/slider-deal/'.$galery) }}" class="btn btn-default btn-icon btn-rounded magnific" title="Lihat"><i class="fa fa-search"></i></a>
+														<a href="{{ action('Admin\HomeController@getGallery', [sha1($galery)]) }}" class="btn btn-danger btn-icon btn-rounded" title="Hapus"><i class="fa fa-trash-o"></i></a>
+													</div>
+												</div>
+												<img class="img img-responsive thumbnail" src="{{ asset('/img/slider-deal/'.$galery)}}">
+											</div>
+										</div>
+									@endforeach
+								</div>
+							</div>
+						@endif
+						<div class="pull-right">
+							<form method="post" action="{{ action('Admin\HomeController@postGallery') }}" enctype="multipart/form-data">
+								<input type="hidden" name="_token" value="{{ csrf_token() }}">
+								<a class="file-input-wrapper">
+									<input type="file" name="file" data-filename-placement="inside" class="btn-transparent">
+								</a>
+								<button class="btn btn-dark btn-transparent">Submit</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 @endsection
 
@@ -413,6 +473,9 @@
 	<script src="{{ asset('/assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/ckeditor/ckeditor.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/ckeditor/adapters/jquery.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/magnific/jquery.magnific-popup.min.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/gallery-mixitup/jquery.mixitup.js') }}"></script>
+	<script src="{{ asset('/assets/js/gallery.js') }}"></script>
 	<script>
 	$(function(){
 		$('input[type="file"]').bootstrapFileInput();
@@ -531,7 +594,7 @@
 				return;
 			}
 			// Otherwise, issue an AJAX request
-			$.getJSON("{{ route('admin.dashboard.data') }}", {
+			$.getJSON("{{ action('Admin\HomeController@getData') }}", {
 				start:	startDate.format('{yyyy}-{MM}-{dd}'),
 				end:	endDate.format('{yyyy}-{MM}-{dd}')
 			}, function(data) {
@@ -550,7 +613,7 @@
 						'<tr>'+
 							'<td class="text-center">'+(++i)+'</td>'+
 							'<td class="text-center">'+this.label+'</td>'+
-							'<td class="text-center">'+this.value+'</td>'+
+							'<td class="text-center"><a class="badge" href="javascript:;" onclick="exists(\''+this.label+'\');" title="Lihat">'+this.value+'</a></td>'+
 						'</tr>'
 					);
 					total += parseInt(this.value);
@@ -565,7 +628,32 @@
 					}]
 				});
 			});
+			$('#exists a.md-close').click(function(){
+				$('#exists').removeClass('md-show');
+			});
 		}
 	});
+	function exists(tid){
+		$('#exists table > tbody').empty();
+		$('#exists #judul').empty();
+		$('#exists').addClass('md-show');
+		$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
+			id: tid,
+		}, function(data){
+			var i = 0;
+			$('#exists table > tbody').empty();
+			$('#exists #judul').empty().append(tid);
+			$.each(data, function(){
+
+				$('#exists table > tbody').append(
+					'<tr>'+
+						'<td class="text-left">'+this.kode+'</td>'+
+						'<td class="text-left">'+this.judul+'</td>'+
+						'<td class="text-left">'+this.jenis+'</td>'+
+					'</tr>'
+				);
+			});
+		});
+	}
 	</script>
 @endsection

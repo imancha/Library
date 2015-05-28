@@ -46,7 +46,7 @@ class SliderController extends Controller {
 
 		if($request->hasFile('file'))
 		{
-			$path = public_path('img/');
+			$path = public_path('img/slider/');
 			$name = 'slide-'.$slider->id;
 			$mime = $request->file('file')->getClientOriginalExtension();
 			$file = $path.$name.'.'.$mime;
@@ -98,7 +98,7 @@ class SliderController extends Controller {
 
 		if($request->hasFile('file'))
 		{
-			$path = public_path('img/');
+			$path = public_path('img/slider/');
 			$name = 'slide-'.$id;
 			$mime = $request->file('file')->getClientOriginalExtension();
 			$file = $path.$name.'.'.$mime;
@@ -124,7 +124,7 @@ class SliderController extends Controller {
 	public function destroy($id)
 	{
 		$slider = Slider::find($id);
-		$file = public_path('img/slide-').$slider->id.'.'.$slider->mime;
+		$file = public_path('img/slider/slide-').$slider->id.'.'.$slider->mime;
 
 		if(\File::exists($file)) \File::delete($file);
 

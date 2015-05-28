@@ -26,8 +26,10 @@ class PublicController extends Controller {
 		$pkl = Book::where('jenis','=','pkl')->orderBy('tanggal_masuk','desc')->take(10)->get();
 		$sliders = Slider::all();
 		$beranda = welcome();
+		$slider = slider();
+		$gallery = array_filter(explode(' && ', gallery()));
 
-		return view('public.index',compact('book','asli','pkl','sliders','beranda'));
+		return view('public.index',compact('book','asli','pkl','sliders','beranda','slider','gallery'));
 	}
 
 	public function getDownload($file)

@@ -40,7 +40,7 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Komentar</label>
-							<textarea class="flat form-control" name="komentar" rows="5" title="" autocomplete="off" required></textarea>
+							<textarea class="flat form-control" name="komentar" rows="5" title="" autocomplete="off" maxlength="255" required></textarea>
 						</div>
 						<div class="form-group text-right">
 							<button class="btn btn-default flat" type="reset">Clear</button>

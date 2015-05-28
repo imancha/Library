@@ -195,7 +195,7 @@
 					m = date.getMinutes();
 					s = date.getSeconds();
 					t = h >= 12 ? 'PM' : 'AM';
-					h = h >= 12 ? Math.abs(h-12) : h;
+					h = h > 12 ? Math.abs(h-12) : h;
 					if(h<10){h = "0"+h;}
 					if(m<10){m = "0"+m;}
 					if(s<10){s = "0"+s;}
