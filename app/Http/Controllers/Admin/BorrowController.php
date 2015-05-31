@@ -19,16 +19,26 @@ class BorrowController extends Controller {
 	 */
 	public function index(Request $request)
 	{
+		$perpage = 10;
+		if($request->has('page')) $page = trim(strip_tags($request->input('page')));
+		else $page = 1;
+
 		if($request->has('q')){
 			$q = trim(strip_tags($request->input('q')));
-			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('waktu_pinjam','like','%'.$q.'%')->orWhere('waktu_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->orderBy('waktu_pinjam','desc')->paginate(10);
-			$borrows->setPath('../admin/borrow^q='.$q);
+			$query = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('waktu_pinjam','like','%'.$q.'%')->orWhere('waktu_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray());
+			$total = count(array_map('unserialize',array_unique(array_map('serialize',Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('waktu_pinjam','like','%'.$q.'%')->orWhere('waktu_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->get(['borrows.id'])->toArray()))));
+			$borrows = Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('waktu_pinjam','like','%'.$q.'%')->orWhere('waktu_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->groupBy('id')->orderBy('waktu_pinjam','desc')->skip(($page-1)*$perpage)->take(10)->get();
+			$details = Borrow::whereIn('id',Borrow::where('id','like','%'.$q.'%')->orWhere('member_id','like','%'.$q.'%')->orWhere('book_id','like','%'.$q.'%')->orWhere('waktu_pinjam','like','%'.$q.'%')->orWhere('waktu_kembali','like','%'.$q.'%')->orWhere('status','like','%'.$q.'%')->orWhereIn('member_id',Member::whereIn('id',Borrow::groupBy('member_id')->get(['borrows.member_id'])->toArray())->where('nama','like','%'.$q.'%')->get(['members.id'])->toArray())->orWhereIn('book_id',Book::whereIn('id',Borrow::groupBy('book_id')->get(['borrows.book_id'])->toArray())->where('judul','like','%'.$q.'%')->get(['books.id'])->toArray())->groupBy('id')->get(['borrows.id'])->toArray())->get();
+			$path = '../admin/borrow?q='.$q.'&page=';
 		}else{
-			$borrows = Borrow::orderBy('waktu_pinjam','desc')->paginate(10);
-			$borrows->setPath('../admin/borrow');
+			$total = count(array_map('unserialize',array_unique(array_map('serialize',Borrow::get(['borrows.id'])->toArray()))));
+			$borrows = Borrow::groupBy('id')->orderBy('waktu_pinjam','desc')->skip(($page-1)*$perpage)->take(10)->get();
+			$details = Borrow::whereIn('id',Borrow::groupBy('id')->get(['borrows.id'])->toArray())->get();
+			$path = '../admin/borrow?page=';
 		}
+		$totalpage = ceil($total/$perpage);
 
-		return view(Auth::user()->status.'.borrow.index', compact('borrows','details'));
+		return view(Auth::user()->status.'.borrow.index', compact('borrows','details','total','page','perpage','totalpage','path'));
 	}
 
 	/**

@@ -23,12 +23,10 @@ class HomeController extends Controller {
 		$guests = GuestBook::orderBy('waktu','desc')->get();
 		$sliders = Slider::all();
 		$beranda = welcome();
-		$member = service('member');
-		$borrow = service('borrow');
 		$slider = slider();
 		$gallery = array_filter(explode(' && ', gallery()));
 
-		return view('staff.index', compact('guests','sliders','beranda','member','borrow','slider','gallery'));
+		return view('staff.index', compact('guests','sliders','beranda','slider','gallery'));
 	}
 
 	public function getData($data = '')
@@ -49,6 +47,14 @@ class HomeController extends Controller {
 			foreach(Book::where('tanggal_masuk','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('judul','asc')->get() as $key => $book){
 				$data[$key]['kode'] = $book->id;
 				$data[$key]['judul'] = $book->judul;
+				$authors = [];
+				foreach($book->author as $author)
+					$authors[] = $author->nama;
+				$data[$key]['pengarang'] = implode(', ',$authors);
+				$data[$key]['penerbit'] = $book->publisher->nama;
+				$data[$key]['tahun'] = $book->tahun;
+				$data[$key]['subyek'] = $book->subject->nama;
+				$data[$key]['rak'] = $book->rack->nama;
 				$data[$key]['jenis'] = strtoupper($book->jenis);
 			}
 		}

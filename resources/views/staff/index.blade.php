@@ -70,20 +70,27 @@
 								<figure id="chart" style="height:400px"></figure>
 							</div>
 						</div>
-						<div class="md-modal md-effect-3" id="exists">
+						<div class="md-modal md-effect-3" id="exists" style="width:95%;max-width:95%;">
 							<div class="md-content md-content-white">
 								<h3><span id="judul"></span> <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
 								<div class="p-10 withScroll" data-height="400px">
-									<table class="table table-responsive table-hover table-vatop">
-										<thead>
-											<tr>
-												<th>Kode</th>
-												<th>Judul</th>
-												<th>Jenis</th>
-											</tr>
-										</thead>
-										<tbody></tbody>
-									</table>
+									<div class="table-responsive">
+										<table class="table table-hover table-vatop">
+											<thead>
+												<tr>
+													<th>Kode</th>
+													<th>Judul</th>
+													<th>Pengarang</th>
+													<th>Penerbit</th>
+													<th>Tahun</th>
+													<th>Subyek</th>
+													<th>Rak</th>
+													<th>Jenis</th>
+												</tr>
+											</thead>
+											<tbody></tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -347,80 +354,6 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h2 class="panel-title w-100">
-							Layanan Keanggotaan
-							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-								<a href="" class="c-green md-trigger" data-modal="anggota">
-									<i class="fa fa-edit"></i>
-								</a>
-							</span>
-						</h2>
-					</div>
-					<div class="panel-body text-justify p-t-0 withScroll" data-height="400">
-						{!! $member !!}
-					</div>
-					<div class="md-modal md-effect-14" id="anggota">
-						<div class="md-content md-content-white">
-							<h3>Layanan Keanggotaan<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
-							<div class="p-10">
-								<form method="post" action="{{ action('Admin\HomeController@postService','member') }}">
-									<input type="hidden" name="_token" value="{{ csrf_token() }}">
-									<input type="hidden" name="_id" value="Layanan Keanggotaan">
-									<div class="form-group">
-										<label for="field-2" class="control-label sr-only">Keterangan</label>
-										<textarea class="form-control cke-editor" name="member" rows="10" value="" placeholder="" autocomplete="off" required>{{ $member }}</textarea>
-									</div>
-									<div class="form-group">
-										<button class="btn btn-dark btn-transparent btn-rounded">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-					<div class="md-overlay"></div>
-				</div>
-			</div>
-			<div class="col-md-6 col-sm-6 col-xs-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h2 class="panel-title w-100">
-							Layanan Peminjaman
-							<span class="pull-right" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
-								<a href="" class="c-green md-trigger" data-modal="pinjam">
-									<i class="fa fa-edit"></i>
-								</a>
-							</span>
-						</h2>
-					</div>
-					<div class="panel-body text-justify p-t-0 withScroll" data-height="400">
-						{!! $borrow !!}
-					</div>
-					<div class="md-modal md-effect-14" id="pinjam">
-						<div class="md-content md-content-white">
-							<h3>Layanan Peminjaman <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
-							<div class="p-10">
-								<form method="post" action="{{ action('Admin\HomeController@postService','borrow') }}">
-									<input type="hidden" name="_token" value="{{ csrf_token() }}">
-									<input type="hidden" name="_id" value="Layanan Peminjaman">
-									<div class="form-group">
-										<label for="field-2" class="control-label sr-only">Keterangan</label>
-										<textarea class="form-control cke-editor" name="borrow" rows="10" value="" placeholder="" autocomplete="off" required>{{ $borrow }}</textarea>
-									</div>
-									<div class="form-group">
-										<button class="btn btn-dark btn-transparent btn-rounded">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-					<div class="md-overlay"></div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
 			<div class="col-md-12 col-sm-12 col-xs-12">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -448,13 +381,13 @@
 								</div>
 							</div>
 						@endif
-						<div class="pull-right">
+						<div class="pull-right" id="gallery">
 							<form method="post" action="{{ action('Admin\HomeController@postGallery') }}" enctype="multipart/form-data">
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
 								<a class="file-input-wrapper">
 									<input type="file" name="file" data-filename-placement="inside" class="btn-transparent">
 								</a>
-								<button class="btn btn-dark btn-transparent">Submit</button>
+								<button class="btn btn-dark btn-transparent sr-only">Submit</button>
 							</form>
 						</div>
 					</div>
@@ -471,8 +404,6 @@
 	<script src="{{ asset('/assets/plugins/xcharts/xcharts.min.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/daterangepicker/sugar.min.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
-	<script src="{{ asset('/assets/plugins/ckeditor/ckeditor.js') }}"></script>
-	<script src="{{ asset('/assets/plugins/ckeditor/adapters/jquery.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/magnific/jquery.magnific-popup.min.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/gallery-mixitup/jquery.mixitup.js') }}"></script>
 	<script src="{{ asset('/assets/js/gallery.js') }}"></script>
@@ -631,29 +562,35 @@
 			$('#exists a.md-close').click(function(){
 				$('#exists').removeClass('md-show');
 			});
+			$('#gallery input[type="file"]').change(function(){
+				if($('#gallery button').hasClass('sr-only'))
+					$('#gallery button').removeClass('sr-only');
+			});
 		}
 	});
 	function exists(tid){
 		$('#exists table > tbody').empty();
-		$('#exists #judul').empty();
-		$('#exists').addClass('md-show');
+		$('#exists #judul').empty().text(tid);
 		$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
 			id: tid,
 		}, function(data){
 			var i = 0;
-			$('#exists table > tbody').empty();
-			$('#exists #judul').empty().append(tid);
 			$.each(data, function(){
-
 				$('#exists table > tbody').append(
 					'<tr>'+
 						'<td class="text-left">'+this.kode+'</td>'+
 						'<td class="text-left">'+this.judul+'</td>'+
+						'<td class="text-left">'+this.pengarang+'</td>'+
+						'<td class="text-left">'+this.penerbit+'</td>'+
+						'<td class="text-left">'+this.tahun+'</td>'+
+						'<td class="text-left">'+this.subyek+'</td>'+
+						'<td class="text-left">'+this.rak+'</td>'+
 						'<td class="text-left">'+this.jenis+'</td>'+
 					'</tr>'
 				);
 			});
 		});
+		$('#exists').addClass('md-show');
 	}
 	</script>
 @endsection

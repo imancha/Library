@@ -74,14 +74,6 @@ function welcome(){
 	}
 	return $result;
 }
-function service($id){
-	try{
-		$result = \File::get(public_path('/inc/'.$id));
-	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
-		die("The file doesn't exist");
-	}
-	return $result;
-}
 function slider(){
 	try{
 		$result = \File::get(public_path('/inc/slider'));

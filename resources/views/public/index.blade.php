@@ -171,7 +171,7 @@
 															<a href="#{{ $book->id }}" data-target="#{{ $book->id }}" data-toggle="modal">{{ $book->judul }}</a>
 															<div class="modal fade" id="{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 																<div class="modal-dialog">
-																	<div class="modal-content">
+																	<div class="modal-content flat">
 																		<div class="modal-body table-responsive">
 																			<table class="table table-striped">
 																				<thead>
@@ -188,9 +188,9 @@
 																				</tbody>
 																			</table>
 																			@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
-																				<button type="button" class="btn btn-success pull-left" data-dismiss="modal" onclick="window.location='{{ route('book.download',$book->file->sha1sum) }}'">Download</button>
+																				<button type="button" class="btn btn-success pull-left flat" data-dismiss="modal" onclick="window.location='{{ route('book.download',$book->file->sha1sum) }}'">Download</button>
 																			@endif
-																			<button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+																			<button type="button" class="btn btn-default pull-right flat" data-dismiss="modal">Close</button>
 																		</div>
 																	</div>
 																</div>

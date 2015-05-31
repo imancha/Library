@@ -49,7 +49,7 @@
 									<img class="img img-responsive" src="{{ asset('/img/logo.png') }}" width="90">
 								</div>
 								<div class="logotext">
-									PERPUSTAKAAN<br><span>INTI</span>
+									PERPUSTAKAAN
 								</div>
 							</a>
 						</div>
@@ -81,20 +81,9 @@
 						<div id="navbar" class="navbar-collapse collapse">
 							<ul class="nav navbar-nav">
 								<li class="{{ setActiv('/') }}"><a href="{{ route('home') }}"><i class="fa fa-home fa-fw"></i> Beranda</a></li>
-								<li class="dropdown">
-									<a class="dropdown-toggle" href="{{ route('book') }}" data-hover="dropdown"><i class="fa fa-book fa-fw"></i> Koleksi Buku</a>
-									<ul class="dropdown-menu navbar-secondy">
-										<li class="{{ setActiv('book/original') }}"><a href="{{ route('book','original') }}"><i class="fa fa-tasks fa-fw"></i> Buku Asli</a></li>
-										<li class="{{ setActiv('book/research') }}"><a href="{{ route('book','research') }}"><i class="fa fa-graduation-cap fa-fw"></i> Buku PKL</a></li>
-									</ul>
-								</li>
-								<li class="dropdown">
-									<a class="dropdown-toggle" href="#" data-hover="dropdown"><i class="fa fa-list-alt fa-fw"></i> Layanan</a>
-									<ul class="dropdown-menu navbar-secondy">
-										<li class="{{ setActiv('service/member') }}"><a href="{{ route('service','member') }}"><i class="fa fa-group fa-fw"></i> Keanggotaan</a></li>
-										<li class="{{ setActiv('service/borrow') }}"><a href="{{ route('service','borrow') }}"><i class="fa fa-retweet fa-fw"></i> Peminjaman</a></li>
-									</ul>
-								</li>
+								<li class="{{ setActiv('book') }}"><a href="{{ route('book') }}"><i class="fa fa-book fa-fw"></i> Koleksi Buku</a></li>
+								<li class="{{ setActiv('book/original') }}"><a href="{{ route('book','original') }}"><i class="fa fa-tasks fa-fw"></i> Buku Asli</a></li>
+								<li class="{{ setActiv('book/research') }}"><a href="{{ route('book','research') }}"><i class="fa fa-graduation-cap fa-fw"></i> Buku PKL</a></li>
 								<li class="{{ setActiv('guest') }}"><a href="{{ route('guest') }}"><i class="fa fa-comments fa-fw"></i> Buku Tamu</a></li>
 							</ul>
 							<div class="searchbar hidden-xs sr-only">

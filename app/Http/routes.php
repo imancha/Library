@@ -14,7 +14,6 @@
 Route::get('/', ['as' => 'home','uses' => 'PublicController@getIndex']);
 Route::get('/book/{jenis?}', ['as' => 'book','uses' => 'PublicController@getBook']);
 Route::get('/book/download/{file}', ['as' => 'book.download','uses' => 'PublicController@getDownload']);
-Route::get('/service/{id?}', ['as' => 'service','uses' => 'PublicController@getService']);
 Route::any('/guest', ['as' => 'guest','uses' => 'PublicController@guestBook']);
 Route::get('/register', 'Admin\UserController@getRegister');
 Route::post('/register', 'Admin\UserController@postRegister');
@@ -33,7 +32,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::post('/dashboard/address', ['as' => 'admin.dashboard.address', 'uses' => 'Admin\HomeController@postAddress']);
 	Route::post('/dashboard/slider', ['as' => 'admin.dashboard.slider', 'uses' => 'Admin\HomeController@postSlider']);
 	Route::post('/dashboard/welcome', ['as' => 'admin.welcome','uses' => 'Admin\HomeController@postDashboard']);
-	Route::post('/dashboard/service/{id}', ['as' => 'admin.service','uses' => 'Admin\HomeController@postService']);
 	Route::post('/dashboard/guest', ['as' => 'admin.guest','uses' => 'Admin\HomeController@guestBook']);
 	Route::post('/dashboard/gallery', ['as' => 'admin.gallery', 'uses' => 'Admin\HomeController@postGallery']);
 	Route::get('/dashboard/gallery/{id}', ['as' => 'admin.galery.delete', 'uses' => 'Admin\HomeController@getGallery']);

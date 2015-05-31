@@ -41,6 +41,7 @@ class PublicController extends Controller {
 
 	public function getBook(Request $request, $jenis='')
 	{
+		$subjects = Subject::orderBy('nama','asc')->get();
 		if(empty($jenis))
 		{
 			if($request->has('q'))
@@ -55,10 +56,10 @@ class PublicController extends Controller {
 				$title = 'Koleksi Buku';
 			}
 		}elseif($jenis == 'original' || $jenis == 'research'){
-			$jenis = $jenis == 'original' ? 'asli' : 'pkl';
-			$books = Book::where('jenis','like',$jenis)->orderBy('tanggal_masuk','desc')->paginate(15);
+			$books = Book::where('jenis','like',($jenis == 'original' ? 'asli' : 'pkl'))->orderBy('tanggal_masuk','desc')->paginate(15);
 			$books->setPath('../book/'.$jenis);
 			$title = ($jenis == 'asli' ? 'Buku Asli' : 'Buku PKL');
+			$subjects = Subject::whereIn('id',Book::where('jenis','=',($jenis == 'original' ? 'asli' : 'pkl'))->get(['books.subject_id'])->toArray())->orderBy('nama','asc')->get();
 		}elseif($jenis == 'download'){
 			$books = Book::has('file')->orderBy('tanggal_masuk','desc')->paginate(15);
 			$title = 'Download Buku';
@@ -67,17 +68,8 @@ class PublicController extends Controller {
 			$books->setPath('../book/'.$jenis);
 			$title = ucwords(str_replace('+',' ',$jenis));
 		}
-		$subjects = Subject::orderBy('nama','asc')->get();
 
 		return view('public.book', compact('jenis','subjects','books','title'));
-	}
-
-	public function getService($id)
-	{
-		$service = service($id);
-		$id = $id == 'member' ? 'Keanggotaan' : 'Peminjaman';
-
-		return view('public.service', compact('service','id'));
 	}
 
 	public function guestBook(Request $request)
