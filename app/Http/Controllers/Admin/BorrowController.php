@@ -77,22 +77,35 @@ class BorrowController extends Controller {
 	{
 
 		$rules = [
-			'idp'		=>	'required|min:2|',
+			'idp'		=>	'required|min:2',
 			'id'		=>	'required|min:3|numeric',
 			'nama'	=>	'required|min:3',
 			'kode'	=>	'required|exists:books,id',
 		];
 
-		$validator = Validator::make($request->all(), $rules);
+		$messages = [
+			'idp.required'	=>	'ID Peminjaman harus diisi.',
+			'idp.min'				=>	'ID Peminjaman minimal 2 karakter.',
+			'id.required'		=>	'NIP/NIM/NIS harus diisi.',
+			'id.min'				=>	'NIP/NIM/NIS minimal 3 karakter.',
+			'id.numeric'		=>	'NIP/NIM/NIS hanya boleh berupa angka.',
+			'nama.required'	=>	'Nama harus diisi.',
+			'nama.min'			=>	'Nama minimal 3 karakter.',
+			'kode.required'	=>	'Kode Buku harus diisi.',
+			'kode.exists'		=>	'Kode Buku tidak ditemukan.',
+		];
+
+		$validator = Validator::make($request->all(), $rules, $messages);
 
 		$validator->after(function($validator) use($request){
-			if(is_alay($request->input('nama'))){
-				$validator->errors()->add('nama', 'The nama must be alphabetic.');
-			}
+			if(!is_numeric(substr($request->input('idp'),1,1)) || (substr($request->input('idp'),0,1) != 'P'))
+				$validator->errors()->add('idp', 'ID Peminjaman harus diawali huruf P dan diikuti angka.');
+			if(is_alay($request->input('nama')))
+				$validator->errors()->add('nama', 'Nama hanya boleh berupa huruf.');
 		});
 
 		if($validator->fails()){
-			return redirect()->back()->withInput()->withErrors($validator->messages());
+			return redirect()->back()->withInput()->withErrors($validator);
 		}else{
 			empty(Member::find(trim(strip_tags($request->input('id'))))) ? $empty = true : $empty = false;
 

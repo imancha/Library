@@ -59,7 +59,7 @@ class UserController extends Controller {
 			if(Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
 				return new RedirectResponse(url('/admin'));
 			else
-				return redirect()->back()->withInput()->withErrors('These credentials do not match our records.');
+				return redirect()->back()->withInput()->withErrors('Email dan password tidak cocok.');
 		}
 	}
 
@@ -96,7 +96,7 @@ class UserController extends Controller {
 
 					return redirect()->back()->with('message', 'Account berhasil disimpan.');
 				}else{
-					return redirect()->back()->withErrors($validator->getMessageBag()->add('password', 'Invalid password'));
+					return redirect()->back()->withErrors($validator->getMessageBag()->add('password', 'Password salah.'));
 				}
 			}
 		}
