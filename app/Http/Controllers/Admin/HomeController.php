@@ -24,17 +24,31 @@ class HomeController extends Controller {
 		$sliders = Slider::all();
 		$beranda = welcome();
 		$slider = slider();
+		$slider_ = slider_(0);
+		$slider__ = slider_(1);
 		$gallery = array_filter(explode(' && ', gallery()));
 
-		return view('staff.index', compact('guests','sliders','beranda','slider','gallery'));
+		return view(Auth::user()->status.'.index', compact('guests','sliders','beranda','slider','gallery','slider_','slider__'));
 	}
 
 	public function getData($data = '')
 	{
 		if(Request::has('start') && Request::has('end')){
-			foreach(DB::table('books')->select(DB::raw('date(tanggal_masuk) as tanggal_masuk, count(id) as id'))->whereBetween(DB::raw('date(tanggal_masuk)'),[trim(strip_tags(Request::input('start'))),trim(strip_tags(Request::input('end')))])->groupBy(DB::raw('date(tanggal_masuk)'))->orderBy('tanggal_masuk','desc')->get() as $key => $book){
-				$data[$key]['label'] = str_replace('-','/',$book->tanggal_masuk);
-				$data[$key]['value'] = $book->id;
+			if(Request::input('id') == 1){
+				foreach(DB::table('members')->select(DB::raw('date(waktu) as waktu, count(id) as id'))->whereBetween(DB::raw('date(waktu)'),[trim(strip_tags(Request::input('start'))),trim(strip_tags(Request::input('end')))])->groupBy(DB::raw('date(waktu)'))->orderBy('waktu','desc')->get() as $key => $member){
+					$data[$key]['label'] = str_replace('-','/',$member->waktu);
+					$data[$key]['value'] = $member->id;
+				}
+			}elseif(Request::input('id') == 2){
+				foreach(DB::table('borrows')->select(DB::raw('date(waktu_pinjam) as waktu_pinjam'))->whereBetween(DB::raw('date(waktu_pinjam)'),[trim(strip_tags(Request::input('start'))),trim(strip_tags(Request::input('end')))])->groupBy(DB::raw('date(waktu_pinjam)'))->orderBy('waktu_pinjam','desc')->get() as $key => $borrow){
+					$data[$key]['label'] = str_replace('-','/',$borrow->waktu_pinjam);
+					$data[$key]['value'] = count(array_map('unserialize',array_unique(array_map('serialize',Borrow::where('waktu_pinjam','like',$borrow->waktu_pinjam.'%')->get(['borrows.id'])->toArray()))));
+				}
+			}else{
+				foreach(DB::table('books')->select(DB::raw('date(tanggal_masuk) as tanggal_masuk, count(id) as id'))->whereBetween(DB::raw('date(tanggal_masuk)'),[trim(strip_tags(Request::input('start'))),trim(strip_tags(Request::input('end')))])->groupBy(DB::raw('date(tanggal_masuk)'))->orderBy('tanggal_masuk','desc')->get() as $key => $book){
+					$data[$key]['label'] = str_replace('-','/',$book->tanggal_masuk);
+					$data[$key]['value'] = $book->id;
+				}
 			}
 		}
 
@@ -44,18 +58,39 @@ class HomeController extends Controller {
 	public function getDetail($data = '')
 	{
 		if(Request::has('id')){
-			foreach(Book::where('tanggal_masuk','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('judul','asc')->get() as $key => $book){
-				$data[$key]['kode'] = $book->id;
-				$data[$key]['judul'] = $book->judul;
-				$authors = [];
-				foreach($book->author as $author)
-					$authors[] = $author->nama;
-				$data[$key]['pengarang'] = implode(', ',$authors);
-				$data[$key]['penerbit'] = $book->publisher->nama;
-				$data[$key]['tahun'] = $book->tahun;
-				$data[$key]['subyek'] = $book->subject->nama;
-				$data[$key]['rak'] = $book->rack->nama;
-				$data[$key]['jenis'] = strtoupper($book->jenis);
+			if(Request::input('it') == 1){
+				foreach(Member::where('waktu','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('waktu','asc')->get() as $key => $member){
+					$data[$key]['kode'] = $member->id;
+					$data[$key]['nama'] = $member->nama;
+					$data[$key]['jkel'] = $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki';
+					$data[$key]['jang'] = $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan';
+					$data[$key]['alam'] = $member->alamat;
+				}
+			}elseif(Request::input('it') == 2){
+				foreach(Borrow::whereIn('id',array_map('unserialize',array_unique(array_map('serialize',Borrow::where('waktu_pinjam','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('waktu_pinjam','asc')->get(['borrows.id'])->toArray()))))->groupBy('id')->orderBy('waktu_pinjam','asc')->get() as $key => $borrow){
+					$data[$key]['kode'] = $borrow->id;
+					$data[$key]['pinj'] = $borrow->waktu_pinjam;
+					$data[$key]['nipn'] = $borrow->member->id;
+					$data[$key]['nama'] = $borrow->member->nama;
+					$result = '';
+					foreach(Borrow::where('id','=',$borrow->id)->get() as $val)
+						$result .= '<tr><td width="78px">'.$val->book->id.'</td><td width="385px">'.$val->book->judul.'</td><td width="100px">'.(empty($val->waktu_kembali) ? ' ' : $val->waktu_kembali).'</td><td width="124px">'.(empty($val->waktu_kembali) ? 'Peminjaman' : 'Pengembalian').'</td></tr>';
+					$data[$key]['buku'] = $result;
+				}
+			}else{
+				foreach(Book::where('tanggal_masuk','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('tanggal_masuk','asc')->get() as $key => $book){
+					$data[$key]['kode'] = $book->id;
+					$data[$key]['judul'] = $book->judul;
+					$authors = [];
+					foreach($book->author as $author)
+						$authors[] = $author->nama;
+					$data[$key]['pengarang'] = implode(', ',$authors);
+					$data[$key]['penerbit'] = $book->publisher->nama;
+					$data[$key]['tahun'] = $book->tahun;
+					$data[$key]['subyek'] = $book->subject->nama;
+					$data[$key]['rak'] = $book->rack->nama;
+					$data[$key]['jenis'] = strtoupper($book->jenis);
+				}
 			}
 		}
 		return response()->json($data);
@@ -112,6 +147,41 @@ class HomeController extends Controller {
 		return redirect()->back()->withMessage('Slider-Start berhasil disimpan.');
 	}
 
+	public function postSlider_()
+	{
+		$result = \File::put(public_path('/inc/slider_'), Request::input('keterangan'));
+
+		if($result === false) die("Error writing to file");
+
+		if(Request::hasFile('img')){
+			$path = public_path('/img/slider/');
+			$file = Request::file('img');
+
+			$validator = Validator::make(
+				['image' => $file], ['image' => 'mimes:jpg,jpeg,png,gif']
+			);
+
+			if($validator->fails()){
+				return redirect()->back()->withErrors($validator->messages());
+			}else{
+				$name = 'slide-end.'.$file->getClientOriginalExtension();
+				$fiel = $path.$name;
+
+				if(\File::exists($path.Request::input('_img'))) \File::delete($path.Request::input('_img'));
+				if(\File::exists($fiel)) \File::delete($fiel);
+
+				if($file->move($path,$name)){
+					$result = \File::append(public_path('/inc/slider_'), ' && '.$name);
+					if($result === false) die("Error writing to file");
+				}else{
+					return redirect()->back()->withErrors('Error uploading file.');
+				}
+			}
+		}
+
+		return redirect()->back()->withMessage('Slider-End berhasil disimpan.');
+	}
+
 	public function postDashboard()
 	{
 		if(Request::hasFile('img')){
@@ -143,15 +213,6 @@ class HomeController extends Controller {
 		if($result === false) die("Error writing to file");
 
 		return redirect()->back()->withMessage('Beranda berhasil disimpan.');
-	}
-
-	public function postService($id)
-	{
-		$result = \File::put(public_path('/inc/'.$id), Request::input($id));
-
-		if($result === false) die("Error writing to file");
-
-		return redirect()->back()->withMessage(Request::input('_id').' berhasil disimpan.');
 	}
 
 	public function guestBook()

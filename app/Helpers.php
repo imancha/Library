@@ -82,6 +82,15 @@ function slider(){
 	}
 	return $result;
 }
+function slider_($id){
+	try{
+		$result = \File::get(public_path('/inc/slider_'));
+	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
+		die("The file doesn't exist");
+	}
+	$result = array_filter(explode(' && ', $result));
+	return $result[$id];
+}
 function gallery(){
 	try{
 		$result = \File::get(public_path('/inc/gallery'));

@@ -31,6 +31,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function(){
 	Route::get('/dashboard/detail', ['as' => 'admin.dashboard.detail', 'uses' => 'Admin\HomeController@getDetail']);
 	Route::post('/dashboard/address', ['as' => 'admin.dashboard.address', 'uses' => 'Admin\HomeController@postAddress']);
 	Route::post('/dashboard/slider', ['as' => 'admin.dashboard.slider', 'uses' => 'Admin\HomeController@postSlider']);
+	Route::post('/dashboard/slider_', ['as' => 'admin.dashboard.slider_', 'uses' => 'Admin\HomeController@postSlider_']);
 	Route::post('/dashboard/welcome', ['as' => 'admin.welcome','uses' => 'Admin\HomeController@postDashboard']);
 	Route::post('/dashboard/guest', ['as' => 'admin.guest','uses' => 'Admin\HomeController@guestBook']);
 	Route::post('/dashboard/gallery', ['as' => 'admin.gallery', 'uses' => 'Admin\HomeController@postGallery']);

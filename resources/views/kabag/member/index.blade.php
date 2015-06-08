@@ -11,7 +11,7 @@
 				<div class="col-md-12">
 					<div class="panel panel-default">
 						<div class="panel-heading bg-red no-print">
-							<h3 class="panel-title"><strong>Data </strong> Peminjaman</h3>
+							<h3 class="panel-title"><strong>Data </strong> Anggota</h3>
 							<ul class="pull-right header-menu">
 								<li class="dropdown" id="user-header">
 									<a href="#" class="dropdown-toggle c-white" data-toggle="dropdown" data-close-others="true">
@@ -34,16 +34,10 @@
 						<h3 class="text-center visible-print p-t-0 m-t-0 p-b-10">DATA ANGGOTA PERPUSTAKAAN INTI</h3>
 						<div class="panel-body p-5">
 							<div class="row m-b-10 m-t-5">
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<div class="btn-group">
-										<button class="btn btn-default" onclick="window.location='{{ action('Admin\BorrowController@index') }}'">Buku</button>
-										<button class="btn btn-default active" onclick="window.location='{{ action('Admin\MemberController@index') }}'">Anggota</button>
-									</div>
-								</div>
-								<div class="col-md-6 col-sm-6 col-xs-12">
-									<form method="get" action="{{ action('Admin\BorrowController@index') }}">
+								<div class="col-md-12 col-sm-12 col-xs-12">
+									<form method="get" action="{{ action('Admin\MemberController@index') }}">
 										<div class="input-group">
-											<input class="form-control" type="text" name="q" placeholder="Search...">
+											<input class="form-control" type="text" name="q" placeholder="Search..." value="{{ isset($_REQUEST['q']) ? $_REQUEST['q'] : '' }}">
 											<div class="input-group-btn">
 												<button class="btn btn-default" title="Search" style="padding:6.5px 24px;"><i class="fa fa-search"></i></button>
 											</div>
@@ -58,26 +52,21 @@
 											<tr>
 												<th class="text-center">NIP/NIM/NIS</th>
 												<th class="text-center">Nama</th>
-												<th class="text-center">Buku</th>
-												<th class="text-center no-print">Detail</th>
+												<th class="text-center">Jenis Kelamin</th>
+												<th class="text-center">Jenis Anggota</th>
+												<th class="text-center">Alamat / Divisi</th>
+												<th class="text-center no-print"><i class="fa fa-eye"></i></th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($members as $member)
 												<tr>
-													<td style="vertical-align:top;">{{ $member->id }}</td>
-													<td style="vertical-align:top;">{{ $member->nama }}</td>
-													<td style="vertical-align:top;" class="text-left">
-														<ul style="list-style-position:inside;margin-left:1em;" class="fa-ul">
-															@foreach($member->borrow as $borrow)
-																<li style="text-indent:-0.6em;">
-																	<i class="fa {{ empty($borrow->waktu_kembali) ? 'fa-circle-o' : 'fa-check-circle-o' }} c-gray"></i>
-																	{{ $borrow->book->id }} - {{ $borrow->book->judul }}
-																</li>
-															@endforeach
-														</ol>
-													</td>
-													<td style="vertical-align:top;" class="no-print"><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" title="Lihat" href="{{ action('Admin\MemberController@show', [$member->id]) }}"><i class="fa fa-eye"></i></a></td>
+													<td>{{ $member->id }}</td>
+													<td>{{ $member->nama }}</td>
+													<td>{{ $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki' }}</td>
+													<td>{{ $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan' }}</td>
+													<td>{{ $member->alamat }}</td>
+													<td class="no-print"><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ action('Admin\MemberController@show', [$member->id]) }}"><i class="fa fa-eye"></i></a></td>
 												</tr>
 											@endforeach
 										</tbody>

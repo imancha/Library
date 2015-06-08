@@ -27,9 +27,11 @@ class PublicController extends Controller {
 		$sliders = Slider::all();
 		$beranda = welcome();
 		$slider = slider();
+		$slider_ = slider_(0);
+		$slider__ = slider_(1);
 		$gallery = array_filter(explode(' && ', gallery()));
 
-		return view('public.index',compact('book','asli','pkl','sliders','beranda','slider','gallery'));
+		return view('public.index',compact('book','asli','pkl','sliders','beranda','slider','gallery','slider_','slider__'));
 	}
 
 	public function getDownload($file)

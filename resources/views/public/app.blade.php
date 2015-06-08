@@ -86,16 +86,6 @@
 								<li class="{{ setActiv('book/research') }}"><a href="{{ route('book','research') }}"><i class="fa fa-graduation-cap fa-fw"></i> Buku PKL</a></li>
 								<li class="{{ setActiv('guest') }}"><a href="{{ route('guest') }}"><i class="fa fa-comments fa-fw"></i> Buku Tamu</a></li>
 							</ul>
-							<div class="searchbar hidden-xs sr-only">
-								<form action="{{ route('book') }}" method="get" role="form">
-									<div class="searchbox">
-										<div class="input-group">
-											<input class="searchinput" type="text" name="q" placeholder="Search...">
-											<button class="fa fa-search fa-fw fa-flip-horizontal" type="submit" title="Search"></button>
-										</div>
-									</div>
-								</form>
-							</div>
 						</div><!--/.nav-collapse -->
 					</div><!--/.container-fluid -->
 				</nav>

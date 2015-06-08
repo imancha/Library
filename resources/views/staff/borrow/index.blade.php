@@ -39,7 +39,7 @@
 											<tr>
 												<th class="text-center">ID</th>
 												<th width="99px" class="text-center">Waktu Pinjam</th>
-												<th class="text-center">NIS/NIM/NIP</th>
+												<th class="text-center">NIP/NIM/NIS</th>
 												<th class="text-center">Nama</th>
 												<th width="79px" class="text-center">Kode Buku</th>
 												<th width="384px" class="text-center">Judul Buku</th>
@@ -54,7 +54,7 @@
 													<td>{{ tanggal($borrow->waktu_pinjam) }}</td>
 													<td>{{ $borrow->member->id }}</td>
 													<td>{{ $borrow->member->nama }}</td>
-													<td colspan="5" style="padding:0px;" class="nested">
+													<td colspan="4" style="padding:0px;" class="nested">
 														<table class="table table-bordered table-hover" style="margin-bottom:0px;">
 															<tbody>
 																@foreach($details as $detail)

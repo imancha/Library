@@ -66,7 +66,7 @@ class MemberController extends Controller {
 			'id.min'					=>	'NIP/NIM/NIS minimal 3 karakter.',
 			'id.max'					=>	'NIP/NIM/NIS maksimal 15 karakter.',
 			'id.unique'				=>	'NIP/NIM/NIS telah digunakan.',
-			'nama.required'		=>	'Nama haris diisi.',
+			'nama.required'		=>	'Nama harus diisi.',
 			'nama.min'				=> 	'Nama minimal 3 karakter.',
 			'nama.max'				=>	'Nama maksimal 50 karakter.',
 			'lahir.min'				=>	'Tempat & Tanggal Lahir minimal 3 karakter.',
@@ -102,7 +102,8 @@ class MemberController extends Controller {
 				'jenis_anggota'	=>	trim(strip_tags($request->input('ja'))),
 				'phone'		=>	trim(strip_tags($request->input('phone'))),
 				'alamat'	=>	trim(strip_tags($request->input('alamat'))),
-				'keterangan'		=>	trim(strip_tags($request->input('keterangan'))),
+				'waktu'	=>	new \DateTime,
+				'keterangan'	=>	trim(strip_tags($request->input('keterangan'))),
 			]);
 
 			return redirect()->action('Admin\MemberController@create')->withMessage(trim(strip_tags($request->input('id'))).' - '.trim(strip_tags($request->input('nama'))).' berhasil disimpan.');
@@ -124,7 +125,7 @@ class MemberController extends Controller {
 		else
 			$borrows = Borrow::where('member_id','=',$member->id)->orderBy('waktu_pinjam','asc')->get();
 
-		return view('staff.member.show', compact('member','borrows'));
+		return view(Auth::user()->status.'.member.show', compact('member','borrows'));
 	}
 
 	/**
@@ -164,7 +165,7 @@ class MemberController extends Controller {
 			'id.min'					=>	'NIP/NIM/NIS minimal 3 karakter.',
 			'id.max'					=>	'NIP/NIM/NIS maksimal 15 karakter.',
 			'id.exists'				=>	'NIP/NIM/NIS tidak ditemukan.',
-			'nama.required'		=>	'Nama haris diisi.',
+			'nama.required'		=>	'Nama harus diisi.',
 			'nama.min'				=> 	'Nama minimal 3 karakter.',
 			'nama.max'				=>	'Nama maksimal 50 karakter.',
 			'lahir.min'				=>	'Tempat & Tanggal Lahir minimal 3 karakter.',

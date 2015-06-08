@@ -107,7 +107,7 @@ class BookController extends Controller {
 			'penerbit.max'				=>	'Penerbit maksimal 255 karakter.',
 			'tahun.required'			=>	'Tahun harus diisi.',
 			'tahun.digits'				=>	'Tahun hanya boleh berupa angka.',
-			'subyek.required'			=>	'Subyek harus diisi',
+			'subyek.required'			=>	'Subyek harus diisi.',
 			'subyek.min'					=>	'Subyek minimal 3 karakter.',
 			'rak.required'				=>	'Rak harus diisi.',
 			'rak.min'							=>	'Rak minimal 3 karakter.',
@@ -122,7 +122,7 @@ class BookController extends Controller {
 			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id')))
 				$validator->errors()->add('id', 'Kode Buku hanya boleh berupa angka.');
 			elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P')))
-				$validator->errors()->add('id', 'Kode Buku hanya boleh berupa huruf dan angka.');
+				$validator->errors()->add('id', 'Kode Buku hanya boleh berupa angka dan diakhiri huruf P.');
 		});
 
 		if($validator->fails()){
@@ -272,7 +272,7 @@ class BookController extends Controller {
 			'penerbit.max'				=>	'Penerbit maksimal 255 karakter.',
 			'tahun.required'			=>	'Tahun harus diisi.',
 			'tahun.digits'				=>	'Tahun hanya boleh berupa angka.',
-			'subyek.required'			=>	'Subyek harus diisi',
+			'subyek.required'			=>	'Subyek harus diisi.',
 			'subyek.min'					=>	'Subyek minimal 3 karakter.',
 			'rak.required'				=>	'Rak harus diisi.',
 			'rak.min'							=>	'Rak minimal 3 karakter.',
@@ -287,7 +287,7 @@ class BookController extends Controller {
 			if(is_numeric($request->input('jenis')) && !is_numeric($request->input('id')))
 				$validator->errors()->add('id', 'Kode Buku hanya boleh berupa angka.');
 			elseif(!is_numeric($request->input('jenis')) && (is_numeric($request->input('id')) || !is_numeric(substr($request->input('id'),0,-1)) || (substr($request->input('id'),-1) != 'P')))
-				$validator->errors()->add('id', 'Kode Buku hanya boleh berupa huruf dan angka.');
+				$validator->errors()->add('id', 'Kode Buku hanya boleh berupa angka dan diakhiri huruf P.');
 		});
 
 		if($validator->fails()){

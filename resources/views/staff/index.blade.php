@@ -133,8 +133,8 @@
 									</div>
 									<div class="md-modal md-effect-8" id="-slider-">
 										<div class="md-content md-content-white">
-											<h3>Start-Slider <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
-											<div class="p-10">
+											<h3>Slider-Start <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+											<div class="p-b-10 m-t-10">
 												<form method="post" action="{{ action('Admin\HomeController@postSlider') }}">
 													<input type="hidden" name="_token" value="{{ csrf_token() }}">
 													<div class="form-group">
@@ -217,6 +217,46 @@
 										@endforeach
 										<div class="md-overlay"></div>
 									@endif
+									<div class="message-item media">
+										<div class="media">
+											<img src="{{ asset('/img/slider/'.$slider__) }}" alt="" width="50" height="40" class="pull-left">
+											<div class="media-body">
+												<small class="pull-right">
+													<span class="m-r-5" data-placement="left" title="" rel="tooltip" data-original-title="Ubah">
+														<a href="" class="md-trigger" data-modal="-slider_-"><i class="fa fa-edit"></i></a>
+													</span>
+												</small>
+												<h5 class="c-dark"><strong>Slide-End</strong></h5>
+												<h4 class="c-dark">PERPUSTAKAAN INTI</h4>
+											</div>
+										</div>
+										{!! $slider_ !!}
+									</div>
+									<div class="md-modal md-effect-8" id="-slider_-">
+										<div class="md-content md-content-white">
+											<h3>Slide-End <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+											<div class="p-b-10 m-t-10">
+												<form method="post" action="{{ action('Admin\HomeController@postSlider_') }}" enctype="multipart/form-data">
+													<input type="hidden" name="_token" value="{{ csrf_token() }}">
+													<input type="hidden" name="_img" value="{{ $slider__ }}">
+													<div class="form-group">
+														<label for="field-2" class="control-label">Keterangan</label>
+														<textarea class="form-control" name="keterangan" value="" placeholder="" autocomplete="off" rows="5" maxlength="321">{!! $slider_ !!}</textarea>
+													</div>
+													<div class="form-group">
+														<label for="field-3" class="control-label">Gambar</label>
+														<a class="file-input-wrapper">
+															<input type="file" name="img" data-filename-placement="inside" class="btn-transparent">
+														</a>
+													</div>
+													<div class="form-group">
+														<button class="btn btn-dark btn-transparent btn-rounded">Submit</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+									<div class="md-overlay"></div>
 								</div>
 							</div>
 						</div>
@@ -446,28 +486,24 @@
 		$('input:text[name="title"]').val($.trim($('#title').text()));
 		$('textarea[name="post"]').val($.trim($('#post').text()));
 		$('input[name="_file"]').val($('img#img').attr('alt'));
-		// Set the default dates
-		var startDate	= Date.create().addDays(-29),	// 30 days ago
-				endDate		= Date.create(); 				// today
+		var startDate	= Date.create().addDays(-29),
+				endDate		= Date.create();
 		var range = $('#range');
-		// Show the dates in the range input
 		range.val(startDate.format('{MM}/{dd}/{yyyy}') + ' - ' + endDate.format('{MM}/{dd}/{yyyy}'));
-		// Load chart
 		ajaxLoadChart(startDate,endDate);
 		range.daterangepicker({
 			opens: 'left',
 			startDate: startDate,
 			endDate: endDate,
 			ranges: {
-							'Today': ['today', 'today'],
-							'Yesterday': ['yesterday', 'yesterday'],
-							'Last 7 Days': [Date.create().addDays(-6), 'today'],
-							'Last 30 Days': [Date.create().addDays(-29), 'today']
+				'Hari Ini': ['today', 'today'],
+				'Kemarin': ['yesterday', 'yesterday'],
+				'7 Hari Terakhir': [Date.create().addDays(-6), 'today'],
+				'30 Hari Terakhir': [Date.create().addDays(-29), 'today']
 			}
 		},function(start, end){
 			ajaxLoadChart(start, end);
 		});
-		// The tooltip shown over the chart
 		var tt = $('<div class="ex-tooltip">').appendTo('body'),
 			topOffset = -32;
 		var data = {
@@ -483,15 +519,11 @@
 			paddingTop : 20,
 			paddingRight : 10,
 			axisPaddingLeft : 25,
-			tickHintX: 9, // How many ticks to show horizontally
+			tickHintX: 9,
 			dataFormatX : function(x) {
-				// This turns converts the timestamps coming from
-				// ajax.php into a proper JavaScript Date object
 				return Date.create(x);
 			},
 			tickFormatX : function(x) {
-				// Provide formatting for the x-axis tick labels.
-				// This uses sugar's format method of the date object.
 				return x.format('{MM}/{dd}');
 			},
 			"mouseover": function (d, i) {
@@ -505,12 +537,8 @@
 				tt.hide();
 			}
 		};
-		// Create a new xChart instance, passing the type
-		// of chart a data set and the options object
 		var chart = new xChart('line-dotted', data, '#chart' , opts);
-		// Function for loading data via AJAX and showing it on the chart
 		function ajaxLoadChart(startDate,endDate) {
-			// If no data is passed (the chart was cleared)
 			if(!startDate || !endDate){
 				chart.setData({
 					"xScale" : "time",
@@ -521,10 +549,9 @@
 					}]
 				});
 				$('tbody#data').empty();
-				$('#total').empty();
+				$('#total').empty().text('0');
 				return;
 			}
-			// Otherwise, issue an AJAX request
 			$.getJSON("{{ action('Admin\HomeController@getData') }}", {
 				start:	startDate.format('{yyyy}-{MM}-{dd}'),
 				end:	endDate.format('{yyyy}-{MM}-{dd}')
@@ -549,7 +576,7 @@
 					);
 					total += parseInt(this.value);
 				});
-				$('#total').empty().append(total);
+				$('#total').empty().text(total);
 				chart.setData({
 					"xScale" : "time",
 					"yScale" : "linear",
@@ -559,14 +586,14 @@
 					}]
 				});
 			});
-			$('#exists a.md-close').click(function(){
-				$('#exists').removeClass('md-show');
-			});
-			$('#gallery input[type="file"]').change(function(){
-				if($('#gallery button').hasClass('sr-only'))
-					$('#gallery button').removeClass('sr-only');
-			});
 		}
+		$('#exists a.md-close').click(function(){
+			$('#exists').removeClass('md-show');
+		});
+		$('#gallery input[type="file"]').change(function(){
+			if($('#gallery button').hasClass('sr-only'))
+				$('#gallery button').removeClass('sr-only');
+		});
 	});
 	function exists(tid){
 		$('#exists table > tbody').empty();

@@ -77,10 +77,10 @@
 										</div>
 									@endforeach
 								@endif
-								<div data-iview:image="{{ asset('/img/slider/slide.jpg') }}">
+								<div data-iview:image="{{ asset('/img/slider/'.$slider__) }}">
 									<div class="iview-caption caption3 btm-bar" data-height="107px" data-transition="expandRight" data-width="867px" data-x="0" data-y="300">
 										<h1><b>Perpustakaan INTI</b></h1>
-										{{ address(1) }}<br>{{ address(2) }}
+										{!! $slider_ !!}
 									</div>
 								</div>
 							</div>

@@ -36,7 +36,7 @@
 								<div class="col-md-12 col-sm-12 col-xs-12">
 									<form method="get" action="{{ action('Admin\BookController@index') }}">
 										<div class="input-group">
-											<input class="form-control" type="text" name="q" placeholder="Search...">
+											<input class="form-control" type="text" name="q" placeholder="Search..." value="{{ isset($_REQUEST['q']) ? $_REQUEST['q'] : '' }}">
 											<div class="input-group-btn">
 												<button class="btn btn-default" title="Search" style="padding:6.5px 24px;"><i class="fa fa-search"></i></button>
 											</div>
@@ -57,8 +57,8 @@
 												<th class="text-center">Subyek</th>
 												<th class="text-center">Rak</th>
 												<th class="text-center">Jenis</th>
-												<th class="text-center hidden-print" colspan="2">Actions</th>
-												<th class="text-center visible-print">Entry</th>
+												<th class="text-center">Tanggal Masuk</th>
+												<th class="text-center no-print"><i class="fa fa-download"></i></th>
 											</tr>
 										</thead>
 										<tbody>
@@ -81,7 +81,7 @@
 													<td>{{ $book->subject->nama }}</td>
 													<td>{{ $book->rack->nama }}</td>
 													<td>{{ strtoupper($book->jenis) }}</td>
-													<td class="no-print"><a class="c-blue md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ url('admin/book/'.$book->id) }}" data-modal="view-{{ $book->id }}"><i class="fa fa-eye"></i></a></td>
+													<td>{{ tanggal($book->tanggal_masuk) }}</td>
 													<td class="no-print">
 														@if(!empty($book->file->book_id) AND file_exists(public_path('files/'.$book->id.' - '.$book->judul.'.'.$book->file->mime)))
 															<a class="c-green" href="{{ action('PublicController@getDownload', $book->file->sha1sum) }}" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="{{ $book->file->size }}"><i class="fa fa-download"></i></a>
@@ -89,32 +89,10 @@
 															<i class="fa fa-download c-gray ch-disabled"></i>
 														@endif
 													</td>
-													<td class="visible-print">{{ tanggal($book->tanggal_masuk) }}</td>
 												</tr>
-												<div class="md-modal md-effect-13" id="view-{{ $book->id }}">
-													<div class="md-content">
-														<h3 class="c-white">Detail Buku<span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
-														<div class="p-b-0 text-left">
-															<ul>
-																<li><strong>Kode:</strong> {{ $book->id }}</li>
-																<li><strong>Judul:</strong> {{ $book->judul }}</li>
-																<li><strong>Tahun:</strong> {{$book->tahun }}</li>
-																<li><strong>Pengarang:</strong> {{ implode(', ',$authors) }}</li>
-																<li><strong>Penerbit:</strong> {{ $book->publisher->nama }}</li>
-																<li><strong>Jenis:</strong> {{ strtoupper($book->jenis) }}</li>
-																<li><strong>Subyek:</strong> {{ $book->subject->nama }}</li>
-																<li><strong>Rak:</strong> {{ $book->rack->nama }}</li>
-																<li><strong>Tanggal Masuk:</strong> {{ tanggal($book->tanggal_masuk) }}</li>
-																@if(!empty($book->keterangan)) <li><strong>Keterangan:</strong> {{ $book->keterangan }}</li> @endif
-																<li><strong>Status:</strong> {{ $borrowed ? 'Dipinjam' : 'Tersedia' }}</li>
-															</ul>
-														</div>
-													</div>
-												</div>
 											@endforeach
 										</tbody>
 									</table>
-									<div class="md-overlay"></div><!-- the overlay element -->
 									<small class="pull-right" style="font-size:smaller;color:gray !important;"><i id="timestamp"></i></small>
 								</div>
 								<div class="col-md-12 col-sm-12 col-xs-12 table-red no-print">
