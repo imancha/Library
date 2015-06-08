@@ -60,7 +60,7 @@ class PublicController extends Controller {
 		}elseif($jenis == 'original' || $jenis == 'research'){
 			$books = Book::where('jenis','like',($jenis == 'original' ? 'asli' : 'pkl'))->orderBy('tanggal_masuk','desc')->paginate(15);
 			$books->setPath('../book/'.$jenis);
-			$title = ($jenis == 'asli' ? 'Buku Asli' : 'Buku PKL');
+			$title = ($jenis == 'original' ? 'Buku Asli' : 'Buku PKL');
 			$subjects = Subject::whereIn('id',Book::where('jenis','=',($jenis == 'original' ? 'asli' : 'pkl'))->get(['books.subject_id'])->toArray())->orderBy('nama','asc')->get();
 		}elseif($jenis == 'download'){
 			$books = Book::has('file')->orderBy('tanggal_masuk','desc')->paginate(15);
