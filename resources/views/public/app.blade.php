@@ -39,35 +39,33 @@
 					</div>
 				</div>
 			</div>
+			<div class="s-20 hidden-xs"></div>
 			<div class="container hidden-xs">
-				<div class="row">
-					<div class="col-md-12">
+				<div class="row clearfix">
+					<div class="col-md-6 col-sm-6 col-xs-12">
 						<div class="logo">
-							<div class="row clearfix">
-								<div class="col-md-4 col-sm-4 col-xs-12">
-									<div class="logoimage">
-										<img class="img img-responsive" src="{{ asset('/img/logo.png') }}">
-									</div>
+							<a href="{{ route('home') }}">
+								<div class="logoimage">
+									<img class="img img-responsive" src="{{ asset('/img/logo.png') }}" width="90">
 								</div>
-								<div class="col-md-4 col-sm-4">
-									<div class="logotext">
-										PERPUSTAKAAN
-									</div>
+								<div class="logotext">
+									PERPUSTAKAAN
 								</div>
-								<div class="col-md-4 col-sm-4 col-xs-12 pull-right">
-									<div id="sb-search" class="sb-search">
-										<form action="{{ route('book') }}" method="get" role="form">
-											<input class="sb-search-input" placeholder="Search..." type="search" value="" name="q" id="search">
-											<input class="sb-search-submit" type="submit" value="">
-											<span class="sb-icon-search" title="Search"></span>
-										</form>
-									</div>
-								</div>
-							</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-md-4 col-sm-4 col-xs-12 pull-right">
+						<div id="sb-search" class="sb-search">
+							<form action="{{ route('book') }}" method="get" role="form">
+								<input class="sb-search-input" placeholder="Search..." type="search" value="" name="q" id="search">
+								<input class="sb-search-submit" type="submit" value="">
+								<span class="sb-icon-search"></span>
+							</form>
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="s-20 hidden-xs"></div>
 			<div class="container">
 				<nav class="navbar navbar-primary">
 					<div class="container-fluid">

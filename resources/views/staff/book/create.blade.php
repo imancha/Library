@@ -20,7 +20,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('Admin\BookController@store') }}" parsley-validate>
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('Admin\BookController@store') }}">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
 										<label class="col-sm-3 control-label">Jenis</label>

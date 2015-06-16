@@ -126,10 +126,10 @@
 													</span>
 												</small>
 												<h5 class="c-dark"><strong>Slide-Start</strong></h5>
-												<h4 class="c-dark">PERPUSTAKAAN INTI</h4>
+												<h4 class="c-dark">{!! $slidej !!}</h4>
 											</div>
 										</div>
-										{{ $slider }}
+										{!! $slider !!}
 									</div>
 									<div class="md-modal md-effect-8" id="-slider-">
 										<div class="md-content md-content-white">
@@ -138,8 +138,12 @@
 												<form method="post" action="{{ action('Admin\HomeController@postSlider') }}">
 													<input type="hidden" name="_token" value="{{ csrf_token() }}">
 													<div class="form-group">
-														<label for="field-2" class="control-label sr-only">Keterangan</label>
-														<textarea class="form-control" name="keterangan" value="" placeholder="" autocomplete="off" rows="5" maxlength="321">{{ $slider }}</textarea>
+														<label for="field-1" class="control-label">Judul</label>
+														<input type="text" name="judul" class="form-control" value="{!! $slidej !!}" placeholder="" autocomplete="off" required />
+													</div>
+													<div class="form-group">
+														<label for="field-2" class="control-label">Keterangan</label>
+														<textarea class="form-control" name="keterangan" value="" placeholder="" autocomplete="off" rows="5" maxlength="321" required>{!! $slider !!}</textarea>
 													</div>
 													<div class="form-group">
 														<button class="btn btn-dark btn-transparent btn-rounded">Submit</button>
@@ -227,7 +231,7 @@
 													</span>
 												</small>
 												<h5 class="c-dark"><strong>Slide-End</strong></h5>
-												<h4 class="c-dark">PERPUSTAKAAN INTI</h4>
+												<h4 class="c-dark">{!! $slidej_ !!}</h4>
 											</div>
 										</div>
 										{!! $slider_ !!}
@@ -240,8 +244,12 @@
 													<input type="hidden" name="_token" value="{{ csrf_token() }}">
 													<input type="hidden" name="_img" value="{{ $slider__ }}">
 													<div class="form-group">
+														<label for="field-1" class="control-label">Judul</label>
+														<input type="text" name="judul" class="form-control" value="{!! $slidej_ !!}" placeholder="" autocomplete="off" required />
+													</div>
+													<div class="form-group">
 														<label for="field-2" class="control-label">Keterangan</label>
-														<textarea class="form-control" name="keterangan" value="" placeholder="" autocomplete="off" rows="5" maxlength="321">{!! $slider_ !!}</textarea>
+														<textarea class="form-control" name="keterangan" value="" placeholder="" autocomplete="off" rows="5" maxlength="321" required>{!! $slider_ !!}</textarea>
 													</div>
 													<div class="form-group">
 														<label for="field-3" class="control-label">Gambar</label>
@@ -407,27 +415,28 @@
 								<div class="row">
 									@foreach($gallery as $galery)
 										<div class="mix col-md-2 col-sm-3 col-xs-12" style="display: inline-block;">
-											<div class="thumbnail">
+											<div class="thumbnail" style="width:144px;height:70px;background: #C7D6E9 none repeat scroll 0% 0%;">
 												<div class="overlay">
 													<div class="thumbnail-actions">
 														<a href="{{ asset('/img/slider-deal/'.$galery) }}" class="btn btn-default btn-icon btn-rounded magnific" title="Lihat"><i class="fa fa-search"></i></a>
 														<a href="{{ action('Admin\HomeController@getGallery', [sha1($galery)]) }}" class="btn btn-danger btn-icon btn-rounded" title="Hapus"><i class="fa fa-trash-o"></i></a>
 													</div>
 												</div>
-												<img class="img img-responsive thumbnail" src="{{ asset('/img/slider-deal/'.$galery)}}">
+												<img class="thumbnail" src="{{ asset('/img/slider-deal/'.$galery)}}" style="max-width:100%;max-height:100%;margin:auto;display:block;">
 											</div>
 										</div>
 									@endforeach
 								</div>
 							</div>
 						@endif
-						<div class="pull-right" id="gallery">
+						<div class="pull-left" id="gallery">
 							<form method="post" action="{{ action('Admin\HomeController@postGallery') }}" enctype="multipart/form-data">
 								<input type="hidden" name="_token" value="{{ csrf_token() }}">
 								<a class="file-input-wrapper">
 									<input type="file" name="file" data-filename-placement="inside" class="btn-transparent">
 								</a>
 								<button class="btn btn-dark btn-transparent sr-only">Submit</button>
+								 <small> *(Best Resolution: 335x163 px)</small>
 							</form>
 						</div>
 					</div>
@@ -486,9 +495,13 @@
 		$('input:text[name="title"]').val($.trim($('#title').text()));
 		$('textarea[name="post"]').val($.trim($('#post').text()));
 		$('input[name="_file"]').val($('img#img').attr('alt'));
+		var range = $('#range');
 		var startDate	= Date.create().addDays(-29),
 				endDate		= Date.create();
-		var range = $('#range');
+		@if(count($bdate) == 1)
+		var startDate = Date.create('{!! date('F j, Y', strtotime('-30 day', strtotime($bdate->tanggal_masuk))) !!}'),
+				endDate		= Date.create('{!! date('F j, Y', strtotime($bdate->tanggal_masuk)) !!}');
+		@endif
 		range.val(startDate.format('{MM}/{dd}/{yyyy}') + ' - ' + endDate.format('{MM}/{dd}/{yyyy}'));
 		ajaxLoadChart(startDate,endDate);
 		range.daterangepicker({
@@ -528,14 +541,17 @@
 			},
 			"mouseover": function (d, i) {
 				var pos = $(this).offset();
-				tt.text(d.x.format('{Month} {ord}') + ': ' + d.y).css({
+				tt.text(d.x.format('{dd}-{Mon}-{yyyy}') + ': ' + d.y).css({
 					top: topOffset + pos.top,
-					left: pos.left
+					left: pos.left - 46
 				}).show();
 			},
 			"mouseout": function (x) {
 				tt.hide();
-			}
+			},
+			"click": function(d, i) {
+				exists(d.x.format('{yyyy}/{MM}/{dd}'));
+			},
 		};
 		var chart = new xChart('line-dotted', data, '#chart' , opts);
 		function ajaxLoadChart(startDate,endDate) {
@@ -597,7 +613,7 @@
 	});
 	function exists(tid){
 		$('#exists table > tbody').empty();
-		$('#exists #judul').empty().text(tid);
+		$('#exists #judul').empty().text(Date.create(tid).format('{Weekday}, {dd} {Month} {yyyy}'));
 		$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
 			id: tid,
 		}, function(data){

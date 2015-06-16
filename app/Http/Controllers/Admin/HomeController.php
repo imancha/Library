@@ -23,12 +23,15 @@ class HomeController extends Controller {
 		$guests = GuestBook::orderBy('waktu','desc')->get();
 		$sliders = Slider::all();
 		$beranda = welcome();
-		$slider = slider();
+		$slider = slider(0);
+		$slidej = slider(1);
 		$slider_ = slider_(0);
-		$slider__ = slider_(1);
+		$slidej_ = slider_(1);
+		$slider__ = slider_(2);
 		$gallery = array_filter(explode(' && ', gallery()));
+		$bdate = Book::orderBy('tanggal_masuk','desc')->first();
 
-		return view(Auth::user()->status.'.index', compact('guests','sliders','beranda','slider','gallery','slider_','slider__'));
+		return view(Auth::user()->status.'.index', compact('guests','sliders','beranda','slider','slidej','gallery','slider_','slidej_','slider__','bdate'));
 	}
 
 	public function getData($data = '')
@@ -141,6 +144,7 @@ class HomeController extends Controller {
 	public function postSlider()
 	{
 		$result = \File::put(public_path('/inc/slider'), trim(strip_tags(Request::input('keterangan'))));
+		$result = \File::append(public_path('/inc/slider'), ' && '.trim(strip_tags(Request::input('judul'))));
 
 		if($result === false) die("Error writing to file");
 
@@ -150,6 +154,7 @@ class HomeController extends Controller {
 	public function postSlider_()
 	{
 		$result = \File::put(public_path('/inc/slider_'), Request::input('keterangan'));
+		$result = \File::append(public_path('/inc/slider_'), ' && '.Request::input('judul'));
 
 		if($result === false) die("Error writing to file");
 
@@ -174,9 +179,15 @@ class HomeController extends Controller {
 					$result = \File::append(public_path('/inc/slider_'), ' && '.$name);
 					if($result === false) die("Error writing to file");
 				}else{
+					$result = \File::append(public_path('/inc/slider_'), ' && '.Request::input('_img'));
+					if($result === false) die("Error writing to file");
+
 					return redirect()->back()->withErrors('Error uploading file.');
 				}
 			}
+		}else{
+			$result = \File::append(public_path('/inc/slider_'), ' && '.Request::input('_img'));
+			if($result === false) die("Error writing to file");
 		}
 
 		return redirect()->back()->withMessage('Slider-End berhasil disimpan.');

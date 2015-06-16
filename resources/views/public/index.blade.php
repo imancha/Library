@@ -17,7 +17,7 @@
 					<div class="col-md-12">
 						<div class="slider">
 							<div id="iview">
-								<div data-iview:image="{{ asset('/img/slider/slide-.jpg') }}" data-iview:pausetime="40000">
+								<div data-iview:image="{{ asset('/img/slider/slide-.jpg') }}" data-iview:pausetime="5000">
 									<div class="iview-caption metro-box1 orange" data-transition="wipeUp" data-x="94" data-y="209">
 										<a href="{{ route('book','original') }}">
 											<div class="box-hover"></div>
@@ -61,7 +61,7 @@
 										</a>
 									</div>
 									<div class="iview-caption metro-heading" data-transition="expandLeft" data-x="95" data-y="15">
-										<h1>PERPUSTAKAAN INTI</h1>
+										<h1>{!! $slidej !!}</h1>
 									</div>
 									<div class="iview-caption metro-heading" data-transition="wipeLeft" data-x="95" data-y="64.5">
 										<span class="text-larger">
@@ -79,7 +79,7 @@
 								@endif
 								<div data-iview:image="{{ asset('/img/slider/'.$slider__) }}">
 									<div class="iview-caption caption3 btm-bar" data-height="107px" data-transition="expandRight" data-width="867px" data-x="0" data-y="300">
-										<h1><b>Perpustakaan INTI</b></h1>
+										<h1><b>{!! $slidej_ !!}</b></h1>
 										{!! $slider_ !!}
 									</div>
 								</div>
@@ -215,10 +215,10 @@
 							</div>
 							<div class="box-content">
 								<div id="fb-root"></div>
-								<div class="fb-page" data-href="https://www.facebook.com/pages/Perpustakaan-INTI/457424021090691" data-width="500px" data-hide-cover="false" data-show-facepile="true" data-show-posts="false">
+								<div class="fb-page" data-href="https://www.facebook.com/pages/Perpustakaan-PT-INTI/819216111486878" data-width="500px" data-hide-cover="false" data-show-facepile="true" data-show-posts="false">
 									<div class="fb-xfbml-parse-ignore">
-										<blockquote cite="https://www.facebook.com/pages/Perpustakaan-INTI/457424021090691">
-											<a href="https://www.facebook.com/pages/Perpustakaan-INTI/457424021090691">Perpustakaan INTI</a>
+										<blockquote cite="https://www.facebook.com/pages/Perpustakaan-PT-INTI/819216111486878">
+											<a href="https://www.facebook.com/pages/Perpustakaan-PT-INTI/819216111486878">Perpustakaan INTI</a>
 										</blockquote>
 									</div>
 								</div>
@@ -241,7 +241,7 @@
 		(function($) {
 			"use strict";
 			$('#iview').iView({
-				pauseTime: 12345,
+				pauseTime: 2345,
 				pauseOnHover: true,
 				directionNavHoverOpacity: 0.6,
 				timer: "360Bar",
@@ -255,7 +255,7 @@
 				timerBarStrokeColor: '#fff'
 			});
 			$('#monthly-deals').carousel({
-				interval: 3000
+				interval: 1789
 			});
 			$('.recent').mCustomScrollbar({
 				theme:"minimal-dark",

@@ -50,7 +50,7 @@
 								@endforeach
 								</ul>
 							</div>
-						<!-- END ERROR BOX -->
+							<!-- END ERROR BOX -->
 						@endif
 						<form role="form" method="POST" action="{{  action('Admin\UserController@postLogin') }}">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">

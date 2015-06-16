@@ -74,13 +74,14 @@ function welcome(){
 	}
 	return $result;
 }
-function slider(){
+function slider($id){
 	try{
 		$result = \File::get(public_path('/inc/slider'));
 	}catch (Illuminate\Filesystem\FileNotFoundException $exception){
 		die("The file doesn't exist");
 	}
-	return $result;
+	$result = array_filter(explode(' && ', $result));
+	return $result[$id];
 }
 function slider_($id){
 	try{

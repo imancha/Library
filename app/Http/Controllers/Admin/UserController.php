@@ -47,14 +47,20 @@ class UserController extends Controller {
 	public function postLogin(Request $request)
 	{
 		$rules = [
-			'email' => 'required',
+			'email' => 'required|email',
 			'password' => 'required',
 		];
 
-		$validator = Validator::make($request->all(), $rules);
+		$messages = [
+			'email.required' => 'Email harus diisi.',
+			'email.email' => 'Email harus berupa alamat email.',
+			'password.required' => 'Password harus diisi.',
+		];
+
+		$validator = Validator::make($request->all(), $rules, $messages);
 
 		if($validator->fails()){
-			return redirect()->back()->withInput()->withErrors($validator->messages());
+			return redirect()->back()->withInput()->withErrors($validator);
 		}else{
 			if(Auth::attempt(['email' => $request->input('email'), 'password' => $request->input('password')]))
 				return new RedirectResponse(url('/admin'));
