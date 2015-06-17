@@ -14,7 +14,7 @@ class CreateBooksTable extends Migration {
 	{
 		Schema::create('books', function(Blueprint $table)
 		{
-			$table->char('id', 10);
+			$table->char('id', 255);
 			$table->string('judul');
 			$table->char('tahun', 4);
 			$table->enum('jenis', ['asli','pkl']);

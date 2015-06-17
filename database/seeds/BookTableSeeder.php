@@ -20,7 +20,7 @@ class BookTableSeeder extends Seeder {
 	{
 		DB::table('books')->delete();
 
-		Excel::load('database/seeds/xls/Books.xls', function($reader)
+		Excel::load('database/Books.xls', function($reader)
 		{
 			$results = $reader->get();
 

@@ -496,13 +496,14 @@
 		$('textarea[name="post"]').val($.trim($('#post').text()));
 		$('input[name="_file"]').val($('img#img').attr('alt'));
 		var range = $('#range');
-		var startDate	= Date.create().addDays(-29),
-				endDate		= Date.create();
 		@if(count($bdate) == 1)
 		var startDate = Date.create('{!! date('F j, Y', strtotime('-30 day', strtotime($bdate->tanggal_masuk))) !!}'),
 				endDate		= Date.create('{!! date('F j, Y', strtotime($bdate->tanggal_masuk)) !!}');
+		@else
+		var startDate	= Date.create().addDays(-29),
+				endDate		= Date.create();
 		@endif
-		range.val(startDate.format('{MM}/{dd}/{yyyy}') + ' - ' + endDate.format('{MM}/{dd}/{yyyy}'));
+		range.val(startDate.format('{yyyy}/{MM}/{dd}') + ' - ' + endDate.format('{yyyy}/{MM}/{dd}'));
 		ajaxLoadChart(startDate,endDate);
 		range.daterangepicker({
 			opens: 'left',
@@ -541,7 +542,7 @@
 			},
 			"mouseover": function (d, i) {
 				var pos = $(this).offset();
-				tt.text(d.x.format('{dd}-{Mon}-{yyyy}') + ': ' + d.y).css({
+				tt.text(d.x.format('{yyyy}/{MM}/{dd}') + ': ' + d.y).css({
 					top: topOffset + pos.top,
 					left: pos.left - 46
 				}).show();
@@ -592,7 +593,7 @@
 					);
 					total += parseInt(this.value);
 				});
-				$('#total').empty().text(total);
+				$('#total').empty().append('<a class="badge" href="javascript:;" onclick="_tbook(\''+startDate.format('{yyyy}-{MM}-{dd}')+'\',\''+endDate.format('{yyyy}-{MM}-{dd}')+'\');" title="Lihat">'+total+'</a>');
 				chart.setData({
 					"xScale" : "time",
 					"yScale" : "linear",
@@ -629,6 +630,31 @@
 						'<td class="text-left">'+this.subyek+'</td>'+
 						'<td class="text-left">'+this.rak+'</td>'+
 						'<td class="text-left">'+this.jenis+'</td>'+
+					'</tr>'
+				);
+			});
+		});
+		$('#exists').addClass('md-show');
+	}
+	function _tbook(istart,iend){
+		$('#exists table > tbody').empty();
+		$('#exists #judul').empty().text(Date.create(istart).format('{dd} {Month} {yyyy}')+' - '+Date.create(iend).format('{dd} {Month} {yyyy}'));
+		$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
+			start: istart,
+			end: iend,
+		}, function(data){
+			var i = 0;
+			$.each(data, function(){
+				$('#exists table > tbody').append(
+					'<tr>'+
+						'<td class="text-left">'+this.kode+'</td>'+
+						'<td class="text-left">'+this.judul+'</td>'+
+						'<td class="text-left">'+this.pengarang+'</td>'+
+						'<td class="text-left">'+this.penerbit+'</td>'+
+						'<td class="text-left">'+this.tahun+'</td>'+
+						'<td class="text-left">'+this.jenis+'</td>'+
+						'<td class="text-left">'+this.subyek+'</td>'+
+						'<td class="text-left">'+this.rak+'</td>'+
 					'</tr>'
 				);
 			});

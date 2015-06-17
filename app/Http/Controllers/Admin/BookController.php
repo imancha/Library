@@ -81,38 +81,27 @@ class BookController extends Controller {
 	{
 		$rules = [
 			'jenis'				=>	'required',
-			'id'					=>	'required|max:10|unique:books,id',
-			'judul'				=>	'required|min:3|max:255',
-			'pengarang'		=>	'required|min:3',
-			'penerbit'		=>	'required|min:3|max:255',
+			'id'					=>	'required|unique:books,id',
+			'judul'				=>	'required',
+			'pengarang'		=>	'required',
+			'penerbit'		=>	'required',
 			'tahun'				=>	'required|digits:4',
-			'subyek'			=>	'required|min:3',
-			'rak'					=>	'required|min:3',
-			'keterangan'	=>	'min:3|max:255',
+			'subyek'			=>	'required',
+			'rak'					=>	'required',
 			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
 		];
 
 		$messages = [
 			'jenis.required'			=>	'Jenis harus dipilih.',
 			'id.required'					=>	'Kode Buku harus diisi.',
-			'id.max'							=>	'Kode Buku maksimal 10 karakter.',
 			'id.unique'						=>	'Kode Buku telah digunakan.',
 			'judul.required'			=>	'Judul Buku harus diisi.',
-			'judul.min'						=>	'Judul Buku minimal 3 karakter.',
-			'judul.max'						=>	'Judul Buku maksimal 255 karakter.',
 			'pengarang.required'	=>	'Pengarang harus diisi.',
-			'pengarang.min'				=>	'Pengarang minimal 3 karakter.',
 			'penerbit.required'		=>	'Penerbit harus diisi.',
-			'penerbit.min'				=>	'Penerbit minimal 3 karakter.',
-			'penerbit.max'				=>	'Penerbit maksimal 255 karakter.',
 			'tahun.required'			=>	'Tahun harus diisi.',
 			'tahun.digits'				=>	'Tahun hanya boleh berupa angka.',
 			'subyek.required'			=>	'Subyek harus diisi.',
-			'subyek.min'					=>	'Subyek minimal 3 karakter.',
 			'rak.required'				=>	'Rak harus diisi.',
-			'rak.min'							=>	'Rak minimal 3 karakter.',
-			'keterangan.min'			=>	'Keterangan minimal 3 karakter.',
-			'keterangan.max'			=>	'Keterangan maksimal 255 karakter.',
 			'file.mimes'					=>	'File hanya boleh berupa: pdf, doc, docx, ppt, pptx, zip, rar.',
 		];
 
@@ -247,37 +236,26 @@ class BookController extends Controller {
 	{
 		$rules = [
 			'jenis'				=>	'required',
-			'id'					=>	'required|max:10',
-			'judul'				=>	'required|min:3|max:255',
-			'pengarang'		=>	'required|min:3',
-			'penerbit'		=>	'required|min:3|max:255',
+			'id'					=>	'required',
+			'judul'				=>	'required',
+			'pengarang'		=>	'required',
+			'penerbit'		=>	'required',
 			'tahun'				=>	'required|digits:4',
-			'subyek'			=>	'required|min:3',
-			'rak'					=>	'required|min:3',
-			'keterangan'	=>	'min:3|max:255',
+			'subyek'			=>	'required',
+			'rak'					=>	'required',
 			'file'				=>	'mimes:pdf,doc,docx,ppt,pptx,zip,rar',
 		];
 
 		$messages = [
 			'jenis.required'			=>	'Jenis harus dipilih.',
 			'id.required'					=>	'Kode Buku harus diisi.',
-			'id.max'							=>	'Kode Buku maksimal 10 karakter.',
 			'judul.required'			=>	'Judul Buku harus diisi.',
-			'judul.min'						=>	'Judul Buku minimal 3 karakter.',
-			'judul.max'						=>	'Judul Buku maksimal 255 karakter.',
 			'pengarang.required'	=>	'Pengarang harus diisi.',
-			'pengarang.min'				=>	'Pengarang minimal 3 karakter.',
 			'penerbit.required'		=>	'Penerbit harus diisi.',
-			'penerbit.min'				=>	'Penerbit minimal 3 karakter.',
-			'penerbit.max'				=>	'Penerbit maksimal 255 karakter.',
 			'tahun.required'			=>	'Tahun harus diisi.',
 			'tahun.digits'				=>	'Tahun hanya boleh berupa angka.',
 			'subyek.required'			=>	'Subyek harus diisi.',
-			'subyek.min'					=>	'Subyek minimal 3 karakter.',
 			'rak.required'				=>	'Rak harus diisi.',
-			'rak.min'							=>	'Rak minimal 3 karakter.',
-			'keterangan.min'			=>	'Keterangan minimal 3 karakter.',
-			'keterangan.max'			=>	'Keterangan maksimal 255 karakter.',
 			'file.mimes'					=>	'File hanya boleh berupa: pdf, doc, docx, ppt, pptx, zip, rar.',
 		];
 
@@ -307,6 +285,8 @@ class BookController extends Controller {
 				'nama'	=>	trim(strip_tags($request->input('rak'))),
 			]);
 
+			BookAuthor::where('book_id','=',$id)->delete();
+
 			$book->id = trim(strip_tags($request->input('id')));
 			$book->judul = trim(strip_tags($request->input('judul')));
 			$book->tahun = trim(strip_tags($request->input('tahun')));
@@ -317,14 +297,12 @@ class BookController extends Controller {
 			$book->rack_id = $rack->id;
 			$book->save();
 
-			BookAuthor::where('book_id','=',$id)->delete();
-
 			foreach(explode(',',$request->input('pengarang')) as $value){
 				$author = Author::firstOrCreate([
 					'nama'	=>	trim(strip_tags($value)),
 				]);
 
-				BookAuthor::create([
+				BookAuthor::firstOrCreate([
 					'book_id'		=>	$book->id,
 					'author_id'	=>	$author->id,
 				]);

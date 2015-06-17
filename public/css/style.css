@@ -287,7 +287,7 @@ hr{
 	background-color:#eee;
 	height:42px;
 	cursor:pointer;
-	border-bottom:2px solid #572791;
+	border-bottom:2px solid #01C2FF;
 }
 .top .nav > li{
 	margin: 0px;
@@ -343,7 +343,7 @@ hr{
 }
 .logo .logotext{
 	float: left;
-	color: #2D86B3;
+	color: #444;
 	font-size: 27px;
 	padding: 17px 0 5px 10px;
 	font-family: 'Happy Monkey', cursive;
@@ -352,7 +352,7 @@ hr{
 }
 .navbar{
 	margin:0;
-	border-top:2px solid #572791;
+	border-top:2px solid #01C2FF;
 }
 .navbar-secondy{
 	padding:0;

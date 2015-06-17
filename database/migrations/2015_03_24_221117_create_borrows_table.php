@@ -14,12 +14,12 @@ class CreateBorrowsTable extends Migration {
 	{
 		Schema::create('borrows', function(Blueprint $table)
 		{
-			$table->char('id',10);
+			$table->char('id',255);
 			$table->timestamp('waktu_pinjam');
 			$table->timestamp('waktu_kembali')->nullable();
 			$table->enum('status',['peminjaman/dipinjam','pengembalian/tersedia'])->default('peminjaman/dipinjam');
-			$table->char('member_id',15);
-			$table->char('book_id',10);
+			$table->char('member_id',50);
+			$table->char('book_id',255);
 			$table->foreign('member_id')->references('id')->on('members')->onUpdate('cascade')->onDelete('cascade');
 			$table->foreign('book_id')->references('id')->on('books')->onUpdate('cascade')->onDelete('cascade');
 		});

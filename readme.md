@@ -20,7 +20,7 @@ Library Site with Laravel 5
 <a name="step1"></a>
 ### Step 1: Get the code - Download the repository
 
-    https://github.com/imancha/Library/releases
+    https://github.com/imancha/Library/archive/master.zip
 
 Extract it in www(or htdocs if you using XAMPP) folder and put it for example in library folder.
 

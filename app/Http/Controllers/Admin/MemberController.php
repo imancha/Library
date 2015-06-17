@@ -26,7 +26,7 @@ class MemberController extends Controller {
 			$members = Member::where('id','like','%'.$q.'%')->orWhere('nama','like','%'.$q.'%')->orWhere('jenis_kelamin','like','%'.$q.'%')->orWhere('jenis_anggota','like','%'.$q.'%')->orWhere('alamat','like','%'.$q.'%')->orWhere('keterangan','like','%'.$q.'%')->orderBy('nama','asc')->paginate(10);
 			$members->setPath('../admin/member^q='.$q);
 		}else{
-			$members = Member::orderBy('nama','asc')->paginate(10);
+			$members = Member::orderBy('waktu','asc')->paginate(10);
 			$members->setPath('../admin/member');
 		}
 
@@ -51,43 +51,26 @@ class MemberController extends Controller {
 	public function store(Request $request)
 	{
 		$rules = [
-			'id'					=>	'required|min:3|max:15|unique:members,id',
-			'nama'				=>	'required|min:3|max:50',
-			'lahir'				=>	'min:3',
+			'id'					=>	'required|unique:members,id',
+			'nama'				=>	'required',
 			'jk'					=>	'required',
 			'ja'					=>	'required',
-			'phone'				=>	'min:8|max:12',
-			'alamat'			=>	'min:3|max:255',
-			'keterangan'	=>	'min:3|max:255',
 		];
 
 		$messages = [
-			'id.required'			=>	'NIP/NIM/NIS harus diisi.',
-			'id.min'					=>	'NIP/NIM/NIS minimal 3 karakter.',
-			'id.max'					=>	'NIP/NIM/NIS maksimal 15 karakter.',
 			'id.unique'				=>	'NIP/NIM/NIS telah digunakan.',
+			'id.required'			=>	'NIP/NIM/NIS harus diisi.',
 			'nama.required'		=>	'Nama harus diisi.',
-			'nama.min'				=> 	'Nama minimal 3 karakter.',
-			'nama.max'				=>	'Nama maksimal 50 karakter.',
-			'lahir.min'				=>	'Tempat & Tanggal Lahir minimal 3 karakter.',
-			'jk.required'			=>	'Jenis Kelamin harus dipilih.',
-			'ja.required'			=>	'Jenis Anggota harus dipilih.',
-			'phone.min'				=>	'Nomor Telepon minimal 8 karakter.',
-			'phone.max'				=>	'Nomor Telepon maksimal 12 karakter.',
-			'alamat.min'			=>	'Alamat/Divisi minimal 3 karakter.',
-			'alamat.max'			=>	'Alamat/Divisi maksimal 255 karakter.',
-			'keterangan.min'	=>	'Keterangan minimal 3 karakter.',
-			'keterangan.max'	=>	'Keterangan maksimal 255 karakter.',
 		];
 
 		$validator = Validator::make($request->all(), $rules, $messages);
 
 		$validator->after(function($validator) use($request){
-			if(!is_numeric($request->input('id')))
+			if(!is_numeric($request->input('id')) && !empty($request->input('id')))
 				$validator->errors()->add('id', 'NIP/NIM/NIS hanya boleh berupa angka.');
 			if(is_alay($request->input('nama')))
 				$validator->errors()->add('nama', 'Nama hanya boleh berupa huruf.');
-			if(!is_numeric($request->input('phone')))
+			if(!is_numeric($request->input('phone')) && !empty($request->input('phone')))
 				$validator->errors()->add('phone', 'Nomor Telepon hanya boleh berupa angka.');
 		});
 
@@ -150,39 +133,22 @@ class MemberController extends Controller {
 	public function update(Request $request, $id)
 	{
 		$rules = [
-			'id'					=>	'required|min:3|max:15|exists:members,id',
-			'nama'				=>	'required|min:3|max:50',
-			'lahir'				=>	'min:3',
+			'id'					=>	'required|exists:members,id',
+			'nama'				=>	'required',
 			'jk'					=>	'required',
 			'ja'					=>	'required',
-			'phone'				=>	'min:8|max:12',
-			'alamat'			=>	'min:3|max:255',
-			'keterangan'	=>	'min:3|max:255',
 		];
 
 		$messages = [
 			'id.required'			=>	'NIP/NIM/NIS harus diisi.',
-			'id.min'					=>	'NIP/NIM/NIS minimal 3 karakter.',
-			'id.max'					=>	'NIP/NIM/NIS maksimal 15 karakter.',
 			'id.exists'				=>	'NIP/NIM/NIS tidak ditemukan.',
 			'nama.required'		=>	'Nama harus diisi.',
-			'nama.min'				=> 	'Nama minimal 3 karakter.',
-			'nama.max'				=>	'Nama maksimal 50 karakter.',
-			'lahir.min'				=>	'Tempat & Tanggal Lahir minimal 3 karakter.',
-			'jk.required'			=>	'Jenis Kelamin harus dipilih.',
-			'ja.required'			=>	'Jenis Anggota harus dipilih.',
-			'phone.min'				=>	'Nomor Telepon minimal 8 karakter.',
-			'phone.max'				=>	'Nomor Telepon maksimal 12 karakter.',
-			'alamat.min'			=>	'Alamat/Divisi minimal 3 karakter.',
-			'alamat.max'			=>	'Alamat/Divisi maksimal 255 karakter.',
-			'keterangan.min'	=>	'Keterangan minimal 3 karakter.',
-			'keterangan.max'	=>	'Keterangan maksimal 255 karakter.',
 		];
 
 		$validator = Validator::make($request->all(), $rules, $messages);
 
 		$validator->after(function($validator) use($request){
-			if(!is_numeric($request->input('id')))
+			if(!is_numeric($request->input('id')) && !empty($request->input('id')))
 				$validator->errors()->add('id', 'NIP/NIM/NIS hanya boleh berupa angka.');
 			if(is_alay($request->input('nama')))
 				$validator->errors()->add('nama', 'Nama hanya boleh berupa huruf.');

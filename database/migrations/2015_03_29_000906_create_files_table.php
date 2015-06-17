@@ -14,7 +14,7 @@ class CreateFilesTable extends Migration {
 	{
 		Schema::create('files', function(Blueprint $table)
 		{
-			$table->char('book_id',10);
+			$table->char('book_id',255);
 			$table->char('mime',4);
 			$table->char('size',10);
 			$table->string('sha1sum',40);
