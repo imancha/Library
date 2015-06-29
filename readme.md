@@ -110,7 +110,7 @@ If the .htaccess file that ships with Laravel does not work with your Apache ins
 -----
 ### Virtual Host
 
-Navigate to `C:/xampp/apache/conf/extra` or wherever you installed xampp and open up `httpd-vhosts.conf`.
+If the site can't be accessed, try to create virtual host first. Navigate to `C:/xampp/apache/conf/extra` or wherever you installed xampp and open up `httpd-vhosts.conf`.
 Then at the very bottom of the file paste the following:
 
 	<VirtualHost *:80>
