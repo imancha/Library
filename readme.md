@@ -131,7 +131,7 @@ Then at the very bottom of the file paste the following:
 
 And to open the homepage, type on web browser:
 
-	library.dev
+	http://library.dev
 	
 -----
 ### License
