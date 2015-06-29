@@ -52,9 +52,9 @@
 							</div>
 						<!-- END ERROR BOX -->
 						@endif
-						<form role="form" method="POST" action="{{  action('Admin\UserController@postLogin') }}">
+						<form role="form" method="POST" action="{{ action('Admin\UserController@postLogin') }}">
 							<input type="hidden" name="_token" value="{{ csrf_token() }}">
-							<input type="text" name="email" placeholder="Email" class="input-field form-control user" value="{{ old('email') }}" />
+							<input type="text" name="email" placeholder="example@email.com" class="input-field form-control user" value="{{ old('email') }}" />
 							<input type="password" name="password" placeholder="Password" class="input-field form-control password" />
 							<button type="submit" class="btn btn-login">Login</button>
 						</form>

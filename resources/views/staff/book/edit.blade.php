@@ -28,12 +28,8 @@
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
-													<input type="radio" name="jenis" value="{{ $book->jenis == 'asli' ? $book->id : $asli  }}" {{ empty(old('jenis')) ? ($book->jenis == 'asli' ? 'checked' : '') : (is_numeric(old('jenis')) ? 'checked' : '') }} />
-													<label class="m-r-20">ASLI</label>
-												</li>
-												<li>
-													<input type="radio" name="jenis" value="{{ $book->jenis == 'pkl' ? $book->id : $pkl.'P' }}" {{ empty(old('jenis')) ? ($book->jenis == 'pkl' ? 'checked' : '') : (is_numeric(old('jenis')) ? '' : 'checked') }} />
-													<label>PKL</label>
+													<input type="radio" name="jenis" value="{{ $book->id  }}" checked="checked" />
+													<label class="m-r-20">{{ strtoupper($book->jenis) }}</label>
 												</li>
 											</ul>
 										</div>
@@ -42,7 +38,7 @@
 										<label class="col-sm-3 control-label">Kode Buku<span class="c-gray">*</span></label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" readonly />
+											<input type="text" id="id" name="id" class="form-control" value="{{ $book->id }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" readonly />
 										</div>
 									</div>
 									<div class="form-group">
@@ -130,7 +126,6 @@
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 	<script>
 		$(document).ready(function(){
-			$('#id').val($('input:radio[name=jenis]:checked').val());
 			$('input:text[name=pengarang]').tagsinput({
 				trimValue: true
 			});

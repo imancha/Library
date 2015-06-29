@@ -4,8 +4,11 @@ Library Site with Laravel 5
 
 ##Requirements
 
-	PHP >= 5.4.0
-	MCrypt PHP Extension
+	PHP >= 5.4
+	Mcrypt PHP Extension
+	OpenSSL PHP Extension
+	Mbstring PHP Extension
+	Tokenizer PHP Extension
 	SQL server(for example MySQL)
 
 -----
@@ -20,9 +23,9 @@ Library Site with Laravel 5
 <a name="step1"></a>
 ### Step 1: Get the code - Download the repository
 
-    https://github.com/imancha/Library/archive/master.zip
+    https://github.com/imancha/Library/release
 
-Extract it in www(or htdocs if you using XAMPP) folder and put it for example in library folder.
+Extract it in www(or htdocs if you using XAMPP) folder and put it for example in `library` folder.
 
 -----
 <a name="step2"></a>
@@ -36,6 +39,7 @@ On Windows, you can use the Composer [Windows installer](https://getcomposer.org
 Then run:
 
     composer install
+
 to install dependencies Laravel and other packages.
 
 -----
@@ -48,6 +52,7 @@ After that, copy .env.example and rename it as .env and put connection and chang
 Then run:
 
     php artisan key:generate
+
 to generate key for the application.
 
 -----
@@ -62,13 +67,23 @@ And to initial populate database use this:
 
     php artisan db:seed
 
+Or import database from `../database/Library.sql`
+
 -----
 <a name="step5"></a>
 ### Step 5: Start Page
 
-If you install on your localhost in folder library, you can type on web browser:
+If you install on your localhost in folder `library`, you can type on web browser:
 
 	http://localhost/library/public
+
+Or run:
+
+	php artisan serve
+
+Then type on web browser:
+
+	http://localhost:8000
 
 You can now view the library homepage.
 
@@ -79,6 +94,40 @@ You can now view the library homepage.
 
 	composer dump-autoload
 	php artisan optimize
+
+-----
+### Pretty URLs
+
+The framework ships with a public/.htaccess file that is used to allow URLs without index.php. If you use Apache to serve your Laravel application, be sure to enable the mod_rewrite module. 
+If the .htaccess file that ships with Laravel does not work with your Apache installation, try this one:
+
+	Options +FollowSymLinks
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteRule ^ index.php [L]
+
+-----
+### Virtual Host
+
+Navigate to `C:/xampp/apache/conf/extra` or wherever you installed xampp and open up `httpd-vhosts.conf`.
+Then at the very bottom of the file paste the following:
+
+	<VirtualHost *:80>
+		DocumentRoot "C:/xampp/htdocs/Library/public"
+		ServerName perpustakaan.dev
+		<Directory "C:/xampp/htdocs/Library/public">
+			<IfModule mod_rewrite.c>
+				Options +FollowSymLinks
+				RewriteEngine On
+				RewriteCond %{REQUEST_FILENAME} !-d
+				RewriteCond %{REQUEST_FILENAME} !-f
+				RewriteRule ^ index.php [L]
+			</IfModule>
+			Require all granted
+			AllowOverride All
+		</Directory>
+	</VirtualHost>
 
 -----
 ### License
