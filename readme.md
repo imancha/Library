@@ -115,7 +115,7 @@ Then at the very bottom of the file paste the following:
 
 	<VirtualHost *:80>
 		DocumentRoot "C:/xampp/htdocs/Library/public"
-		ServerName perpustakaan.dev
+		ServerName library.dev
 		<Directory "C:/xampp/htdocs/Library/public">
 			<IfModule mod_rewrite.c>
 				Options +FollowSymLinks
@@ -131,7 +131,7 @@ Then at the very bottom of the file paste the following:
 
 And to open the homepage, type on web browser:
 
-	perpustakaan.dev
+	library.dev
 	
 -----
 ### License
