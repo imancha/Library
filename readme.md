@@ -129,6 +129,10 @@ Then at the very bottom of the file paste the following:
 		</Directory>
 	</VirtualHost>
 
+And to open the homepage, type on web browser:
+
+	perpustakaan.dev
+	
 -----
 ### License
 
