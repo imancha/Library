@@ -47,7 +47,7 @@ to install dependencies Laravel and other packages.
 ### Step 3: Create database
 
 Now you can create database on your database server(MySQL). You must create database with utf-8 collation(uft8_general_ci), to install and application work perfectly.
-After that, copy .env.example and rename it as .env and put connection and change default database connection name, only database connection, put name database, database username and password.
+After that, copy `.env.example` and rename it as `.env` and put connection and change default database connection name, only database connection, put name database, database username and password.
 
 Then run:
 
