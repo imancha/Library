@@ -85,7 +85,29 @@ Then type on web browser:
 
 	http://localhost:8000
 
-You can now view the library homepage.
+You can now view the public homepage. If you want to view the admin homepage, you can type on web browser:
+
+	http://localhost/library/public/admin
+
+Or run:
+
+	php artisan serve
+
+Then type on web browser:
+
+	http://localhost:8000/admin
+
+And fill the login form with account below.
+
+Staff Account:
+
+	email   : staff@imail.com
+	password: imancha
+
+Kabag Account:
+
+	email   : kabag@imail.com
+	password: imancha
 
 -----
 ## Troubleshooting
