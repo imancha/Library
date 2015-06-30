@@ -77,17 +77,20 @@ class BorrowController extends Controller {
 	{
 
 		$rules = [
-			'idp'		=>	'required',
-			'id'		=>	'required|numeric',
-			'nama'	=>	'required',
+			'idp'		=>	'required|min:2',
+			'id'		=>	'required|min:3|numeric',
+			'nama'	=>	'required|min:3',
 			'kode'	=>	'required|exists:books,id',
 		];
 
 		$messages = [
 			'idp.required'	=>	'ID Peminjaman harus diisi.',
+			'idp.min'				=>	'ID Peminjaman minimal 2 karakter.',
 			'id.required'		=>	'NIP/NIM/NIS harus diisi.',
+			'id.min'				=>	'NIP/NIM/NIS minimal 3 karakter.',
 			'id.numeric'		=>	'NIP/NIM/NIS hanya boleh berupa angka.',
 			'nama.required'	=>	'Nama harus diisi.',
+			'nama.min'			=>	'Nama minimal 3 karakter.',
 			'kode.required'	=>	'Kode Buku harus diisi.',
 			'kode.exists'		=>	'Kode Buku tidak ditemukan.',
 		];
@@ -167,35 +170,7 @@ class BorrowController extends Controller {
 	 */
 	public function update(Request $request)
 	{
-		if($request->input('tipe') == 1){
-			$rules = [
-				'id1' => 'required|exists:members,id',
-				'nama' => 'required',
-			];
-
-			$messages = [
-				'id1.required' => 'NIP/NIM/NIS harus diisi.',
-				'id1.exists' => 'NIP/NIM/NIS tidak ditemukan.',
-				'nama.required' => 'Nama harus diisi.',
-			];
-		}elseif($request->input('tipe') == 2){
-			$rules = [
-				'id2' => 'required|exists:books,id',
-				'nama' => 'required',
-			];
-
-			$messages = [
-				'id2.required' => 'Kode Buku harus diisi.',
-				'id2.exists' => 'Kode Buku tidak ditemukan.',
-				'nama.required' => 'Judul harus diisi.',
-			];
-		}
-
-		$validator = Validator::make($request->all(), $rules, $messages);
-
-		if($validator->fails()){
-			return redirect()->back()->withErrors($validator);
-		}else{
+		if(!empty($request->input('kode'))){
 			$book = [];
 			foreach($request->input('kode') as $kode){
 				$kode = explode('/',$kode);

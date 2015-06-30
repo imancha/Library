@@ -14,6 +14,11 @@
 Route::get('/', ['as' => 'home','uses' => 'PublicController@getIndex']);
 Route::get('/book/{jenis?}', ['as' => 'book','uses' => 'PublicController@getBook']);
 Route::get('/book/download/{file}', ['as' => 'book.download','uses' => 'PublicController@getDownload']);
+Route::get('/member', ['as' => 'member','uses' => 'PublicController@getMember']);
+Route::get('/borrow', ['as' => 'borrow','uses' => 'PublicController@getBorrow']);
+Route::get('/report', ['as' => 'report','uses' => 'PublicController@getReport']);
+Route::get('/report/data', ['as' => 'report.data','uses' => 'PublicController@getData']);
+Route::get('/report/detail', ['as' => 'report.detail','uses' => 'PublicController@getDetail']);
 Route::any('/guest', ['as' => 'guest','uses' => 'PublicController@guestBook']);
 Route::get('/register', 'Admin\UserController@getRegister');
 Route::post('/register', 'Admin\UserController@postRegister');

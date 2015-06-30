@@ -70,16 +70,17 @@ class HomeController extends Controller {
 					$data[$key]['jkel'] = $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki';
 					$data[$key]['jang'] = $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan';
 					$data[$key]['alam'] = $member->alamat;
+					$data[$key]['wakt'] = tanggal($member->waktu);
 				}
 			}elseif(Request::input('it') == 2){
 				foreach(Borrow::whereIn('id',array_map('unserialize',array_unique(array_map('serialize',Borrow::where('waktu_pinjam','like',trim(strip_tags(str_replace('/','-',Request::input('id'))).'%'))->orderBy('waktu_pinjam','asc')->get(['borrows.id'])->toArray()))))->groupBy('id')->orderBy('waktu_pinjam','asc')->get() as $key => $borrow){
 					$data[$key]['kode'] = $borrow->id;
-					$data[$key]['pinj'] = $borrow->waktu_pinjam;
+					$data[$key]['pinj'] = tanggal($borrow->waktu_pinjam);
 					$data[$key]['nipn'] = $borrow->member->id;
 					$data[$key]['nama'] = $borrow->member->nama;
 					$result = '';
 					foreach(Borrow::where('id','=',$borrow->id)->get() as $val)
-						$result .= '<tr><td width="78px" style="padding:3px;">'.$val->book->id.'</td><td width="385px" style="padding:3px;">'.$val->book->judul.'</td><td width="100px" style="padding:3px;">'.(empty($val->waktu_kembali) ? ' ' : $val->waktu_kembali).'</td><td width="124px" style="padding:3px;">'.(empty($val->waktu_kembali) ? 'Peminjaman' : 'Pengembalian').'</td></tr>';
+						$result .= '<tr><td width="78px" style="padding:3px;">'.$val->book->id.'</td><td width="385px" style="padding:3px;">'.$val->book->judul.'</td><td width="100px" style="padding:3px;">'.(empty($val->waktu_kembali) ? ' ' : tanggal($val->waktu_kembali)).'</td><td width="124px" style="padding:3px;">'.(empty($val->waktu_kembali) ? 'Peminjaman' : 'Pengembalian').'</td></tr>';
 					$data[$key]['buku'] = $result;
 				}
 			}else{
@@ -105,16 +106,17 @@ class HomeController extends Controller {
 					$data[$key]['jkel'] = $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki';
 					$data[$key]['jang'] = $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan';
 					$data[$key]['alam'] = $member->alamat;
+					$data[$key]['wakt'] = tanggal($member->waktu);
 				}
 			}elseif(Request::input('it') == 2){
 				foreach(Borrow::whereIn('id',array_map('unserialize',array_unique(array_map('serialize',Borrow::whereBetween(DB::raw('date(waktu_pinjam)'),[trim(strip_tags(Request::input('start'))),trim(strip_tags(Request::input('end')))])->orderBy('waktu_pinjam','asc')->get(['borrows.id'])->toArray()))))->groupBy('id')->orderBy('waktu_pinjam','asc')->get() as $key => $borrow){
 					$data[$key]['kode'] = $borrow->id;
-					$data[$key]['pinj'] = $borrow->waktu_pinjam;
+					$data[$key]['pinj'] = tanggal($borrow->waktu_pinjam);
 					$data[$key]['nipn'] = $borrow->member->id;
 					$data[$key]['nama'] = $borrow->member->nama;
 					$result = '';
 					foreach(Borrow::where('id','=',$borrow->id)->get() as $val)
-						$result .= '<tr><td width="78px" style="padding:3px;">'.$val->book->id.'</td><td width="385px" style="padding:3px;">'.$val->book->judul.'</td><td width="100px" style="padding:3px;">'.(empty($val->waktu_kembali) ? ' ' : $val->waktu_kembali).'</td><td width="124px" style="padding:3px;">'.(empty($val->waktu_kembali) ? 'Peminjaman' : 'Pengembalian').'</td></tr>';
+						$result .= '<tr><td width="78px" style="padding:3px;">'.$val->book->id.'</td><td width="385px" style="padding:3px;">'.$val->book->judul.'</td><td width="100px" style="padding:3px;">'.(empty($val->waktu_kembali) ? ' ' : tanggal($val->waktu_kembali)).'</td><td width="124px" style="padding:3px;">'.(empty($val->waktu_kembali) ? 'Peminjaman' : 'Pengembalian').'</td></tr>';
 					$data[$key]['buku'] = $result;
 				}
 			}else{

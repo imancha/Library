@@ -74,7 +74,7 @@ class UserController extends Controller {
 		if(Auth::check()){
 			$validator = Validator::make(
 				[
-					'id' => $request->input('_id'),
+					'id' => $request->input('id'),
 					'name' => $request->input('name'),
 					'email' => $request->input('email'),
 					'password' => $request->input('password'),
@@ -93,7 +93,7 @@ class UserController extends Controller {
 				return redirect()->back()->withErrors($validator->messages());
 			}else{
 				if(Auth::attempt(['password' => $request->input('password')])){
-					$user = User::find(trim(strip_tags($request->input('_id'))));
+					$user = User::find($request->input('id'));
 					$user->name = trim(strip_tags($request->input('name')));
 					$user->email = trim(strip_tags($request->input('email')));
 					$user->status = trim(strip_tags($request->input('status')));

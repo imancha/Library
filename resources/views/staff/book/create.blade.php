@@ -23,7 +23,7 @@
 								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" enctype="multipart/form-data" action="{{ action('Admin\BookController@store') }}">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Jenis<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Jenis</label>
 										<div class="col-sm-7 skin-section">
 											<ul class="list inline m-t-5">
 												<li>
@@ -38,49 +38,49 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Kode Buku<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Kode Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" readonly />
+											<input type="text" id="id" name="id" class="form-control" value="{{ old('id') }}" maxlength="10" size="10" parsley-minlength="1" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Judul Buku<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Judul Buku</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
-											<input type="text" name="judul" class="form-control" value="{{ old('judul') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
+											<input type="text" name="judul" class="form-control" value="{{ old('judul') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Pengarang<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Pengarang</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="text" name="pengarang" data-role="tagsinput" class="form-control" value="{{ old('pengarang') }}" placeholder="Nama 1, Nama 2, . . . " parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Penerbit<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Penerbit</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="text" id="penerbit" name="penerbit" class="form-control" value="{{ old('penerbit') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Tahun<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Tahun</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="year" name="tahun" class="form-control" maxlength="4" size="4" value="{{ old('tahun') }}" parsley-type="digits" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Subyek<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Subyek</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="text" id="subyek" name="subyek" class="form-control" value="{{ old('subyek') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Rak<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Rak</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="text" id="rak" name="rak" class="form-control" value="{{ old('rak') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
@@ -98,11 +98,10 @@
 											<a class="file-input-wrapper">
 												<input type="file" id="file" name="file" data-filename-placement="inside" class="btn-transparent">
 											</a>
-											<small class="text-muted"> *(pdf,doc,docx,ppt,pptx,zip,rar)</small>
 										</div>
 									</div>
 									<div class="form-group text-center">
-										<button class="btn btn-danger" type="submit">Submit</button>
+										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
 										<button type="reset" class="btn btn-default">Clear</button>
 									</div>
 								</form>
@@ -116,6 +115,8 @@
 @endsection
 
 @section('script')
+	<script src="{{ asset('/assets/plugins/parsley/parsley.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/parsley/parsley.extend.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/icheck/custom.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/icheck/icheck.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/bootstrap-fileinput/bootstrap.file-input.js') }}"></script>

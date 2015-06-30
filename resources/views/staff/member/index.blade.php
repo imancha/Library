@@ -41,8 +41,10 @@
 												<th class="text-center">NIP/NIM/NIS</th>
 												<th class="text-center">Nama</th>
 												<th class="text-center">Jenis Kelamin</th>
+												<th class="text-center">Tempat &amp; Tanggal Lahir</th>
 												<th class="text-center">Jenis Anggota</th>
 												<th class="text-center">Alamat / Divisi</th>
+												<th class="text-center">Waktu Daftar</th>
 												<th class="text-center no-print" colspan="3">Actions</th>
 											</tr>
 										</thead>
@@ -52,8 +54,10 @@
 													<td>{{ $member->id }}</td>
 													<td>{{ $member->nama }}</td>
 													<td>{{ $member->jenis_kelamin == 'perempuan' ? 'Perempuan' : 'Laki-Laki' }}</td>
+													<td>{{ $member->tanggal_lahir }}</td>
 													<td>{{ $member->jenis_anggota == 'karyawan' ? 'Karyawan' : 'Non-Karyawan' }}</td>
 													<td>{{ $member->alamat }}</td>
+													<td>{{ tanggal($member->waktu) }}</td>
 													<td class="no-print"><a class="c-blue" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ action('Admin\MemberController@show', [$member->id]) }}"><i class="fa fa-eye"></i></a></td>
 													<td class="no-print"><a class="c-orange" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Ubah" href="{{ action('Admin\MemberController@edit', [$member->id]) }}"><i class="fa fa-edit"></i></a></td>
 													<td class="no-print"><a class="c-red md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Hapus" href="{{ url('admin/member/'.$member->id.'/delete') }}" data-modal="remove-{{ $member->id }}"><i class="fa fa-trash-o"></i></a></td>

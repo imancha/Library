@@ -53,7 +53,7 @@
 			<div class="p-b-10 m-t-10">
 				<form class="form-horizontal" method="post" action="{{ Action('Admin\UserController@postUpdate') }}">
 					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-					<input type="hidden" name="_id" value="{{ Auth::user()->id }}">
+					<input type="hidden" name="id" value="{{ Auth::user()->id }}">
 					<input type="hidden" name="status" value="{{ Auth::user()->status }}">
 					<div class="form-group m-b-0">
 						<label class="control-label" style="text-align:left !important">Nama:</label>
@@ -64,7 +64,7 @@
 						<input class="form-control" type="email" name="email" placeholder="Email" value="{{ Auth::user()->email }}" autocomplete="off" required disabled>
 					</div>
 					<div class="form-group m-b-0 sr-only">
-						<label class="control-label" style="text-align:left !important">Password: <small class="text-muted" style="font-size:12px;"><sup>*</sup>password saat ini</small></label>
+						<label class="control-label" style="text-align:left !important">Password: <small class="text-muted" style="font-size:12px;"><sup>*</sup>yang sedang digunakan</small></label>
 						<input class="form-control" type="password" name="password" placeholder="Password" value="" autocomplete="off" required>
 					</div>
 					<div class="form-group m-b-0 sr-only">

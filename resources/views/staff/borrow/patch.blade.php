@@ -19,7 +19,7 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@update','return') }}">
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\BorrowController@update','return') }}" parsley-validate>
 									<input name="_method" type="hidden" value="PATCH">
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
@@ -80,7 +80,7 @@
 										</div>
 									</div>
 									<div class="form-group text-center">
-										<button class="btn btn-danger" type="submit">Submit</button>
+										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
 										<button id="cancel" type="reset" class="btn btn-default">Clear</button>
 									</div>
 								</form>
@@ -94,6 +94,8 @@
 @endsection
 
 @section('script')
+	<script src="{{ asset('/assets/plugins/parsley/parsley.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/parsley/parsley.extend.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/jquery-autocomplete/jquery.autocomplete.js') }}"></script>
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 	<script>
@@ -116,12 +118,12 @@
 				limit:'10',
 				openOnFocus:false,
 			});
-			$('label#select').empty().append(option[select-1]+'<span class="c-gray">*</span>');
+			$('label#select').empty().append(option[select-1]);
 			if(select==1) $('#id2').toggle();
 			else $('#id1').toggle();
 			$('select[name="tipe"]').change(function(){
 				select = $('select[name="tipe"]').val();
-				$('label#select').empty().append(option[select-1]+'<span class="c-gray">*</span>');
+				$('label#select').empty().append(option[select-1]);
 				$('#id1,#id2').toggle();
 				$('.xdsoft_autocomplete_dropdown').css('top','37px');
 				$('input:text[name="id1"]').val(''),

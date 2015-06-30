@@ -46,83 +46,41 @@
 							</div>
 							<div class="row">
 								<div class="col-md-12 col-sm-12 col-xs-12 table-responsive table-red">
-									<table class="table table-bordered table-hover table-vatop">
+									<table class="table table-bordered table-hover">
 										<thead>
 											<tr>
 												<th class="text-center">ID</th>
-												<th class="text-center">Waktu Pinjam</th>
-												<th class="text-center">NIP/NIM/NIS</th>
+												<th width="99px" class="text-center">Waktu Pinjam</th>
+												<th class="text-center">NIS/NIM/NIP</th>
 												<th class="text-center">Nama</th>
-												<th class="text-center">Peminjaman</th>
+												<th width="79px" class="text-center">Kode Buku</th>
+												<th width="384px" class="text-center">Judul Buku</th>
+												<th width="99px" class="text-center">Waktu Kembali</th>
+												<th width="111px" class="text-center">Keterangan</th>
 											</tr>
 										</thead>
 										<tbody>
 											@foreach($borrows as $borrow)
-												<?php $total = 0; ?>
-												@foreach($details as $detail)
-													@if($detail->id == $borrow->id)
-														<?php ++$total; ?>
-													@endif
-												@endforeach
 												<tr>
 													<td>{{ $borrow->id }}</td>
 													<td>{{ tanggal($borrow->waktu_pinjam) }}</td>
 													<td>{{ $borrow->member->id }}</td>
 													<td>{{ $borrow->member->nama }}</td>
-													<td colspan="4" style="padding:0px;" class="nested visible-print">
+													<td colspan="4" style="padding:0px;" class="nested">
 														<table class="table table-bordered table-hover" style="margin-bottom:0px;">
 															<tbody>
 																@foreach($details as $detail)
 																	@if($detail->id == $borrow->id)
 																		<tr {{ empty($detail->waktu_kembali) ? 'class=c-red' : '' }}>
-																			<td style="width:80px;padding:3px;" class="text-center">{{ $detail->book->id }}</td>
-																			<td style="width:352px;padding:3px;" class="text-center">{{ $detail->book->judul }}</td>
-																			<td style="width:96px;padding:3px;" class="text-center">{{ empty($detail->waktu_kembali) ? '' : tanggal($detail->waktu_kembali) }}</td>
-																			<td style="width:110px;padding:3px;" class="text-center">{{ empty($detail->waktu_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
+																			<td width="78px" class="text-center">{{ $detail->book->id }}</td>
+																			<td width="385px" class="text-center">{{ $detail->book->judul }}</td>
+																			<td width="99px" class="text-center">{{ empty($detail->waktu_kembali) ? '' : tanggal($detail->waktu_kembali) }}</td>
+																			<td width="110px" class="text-center">{{ empty($detail->waktu_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
 																		</tr>
 																	@endif
 																@endforeach
 															</body>
 														</table>
-													</td>
-													<td class="no-print nested">
-														<a class="badge md-trigger" data-placement="top" data-toggle="tooltip" rel="tooltip" data-original-title="Lihat" href="{{ url('admin/borrow/'.$borrow->id) }}" data-modal="view-{{ $borrow->id }}">{{ $total }}</a>
-														<div class="md-modal md-effect-3" id="view-{{ $borrow->id }}" style="width:95%;max-width:95%;">
-															<div class="md-content md-content-white">
-																<h3>{{ $borrow->id }} <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
-																<div class="p-10 withScroll" data-height="400px">
-																	<div class="table-responsive">
-																		<table class="table table-hover table-vatop">
-																			<thead>
-																				<tr>
-																					<th>Kode</th>
-																					<th>Judul</th>
-																					<th>Waktu Kembali</th>
-																					<th>Keterangan</th>
-																				</tr>
-																			</thead>
-																			<tbody>
-																				@foreach($details as $detail)
-																					@if($detail->id == $borrow->id)
-																						<?php $authors = []; ?>
-																						@foreach($detail->book->author as $author)
-																							<?php $authors[] = $author->nama ?>
-																						@endforeach
-																						<tr {{ empty($detail->waktu_kembali) ? 'class=c-red' : '' }}>
-																							<td class="text-left">{{ $detail->book->id }}</td>
-																							<td class="text-left">{{ $detail->book->judul }}</td>
-																							<td class="text-left">{{ empty($detail->waktu_kembali) ? '' : tanggal($detail->waktu_kembali) }}</td>
-																							<td class="text-left">{{ empty($detail->waktu_kembali) ? 'Peminjaman' : 'Pengembalian' }}</td>
-																						</tr>
-																					@endif
-																				@endforeach
-																			</tbody>
-																		</table>
-																	</div>
-																</div>
-															</div>
-														</div>
-														<div class="md-overlay"></div>
 													</td>
 												</tr>
 											@endforeach
@@ -209,6 +167,9 @@
 					});
 				});
 			@endif
+			$('.nested td').each(function(){
+				$(this).height($(this).parent().height());
+			});
 			$('a.event').click(function(){
 				var currentdate = new Date();
 				$('#timestamp').append("Waktu cetak: "+currentdate.getDate()+"/"+(currentdate.getMonth()+1)+"/"+currentdate.getFullYear()+" "+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds());

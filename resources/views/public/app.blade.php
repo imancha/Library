@@ -54,9 +54,9 @@
 							</a>
 						</div>
 					</div>
-					<div class="col-md-4 col-sm-4 col-xs-12 pull-right">
+					<div class="col-md-4 col-sm-4 col-xs-12 pull-right no-print">
 						<div id="sb-search" class="sb-search">
-							<form action="{{ route('book') }}" method="get" role="form">
+							<form action="" method="get" role="form">
 								<input class="sb-search-input" placeholder="Search..." type="search" value="" name="q" id="search">
 								<input class="sb-search-submit" type="submit" value="">
 								<span class="sb-icon-search"></span>
@@ -84,6 +84,9 @@
 								<li class="{{ setActiv('book') }}"><a href="{{ route('book') }}"><i class="fa fa-book fa-fw"></i> Koleksi Buku</a></li>
 								<li class="{{ setActiv('book/original') }}"><a href="{{ route('book','original') }}"><i class="fa fa-tasks fa-fw"></i> Buku Asli</a></li>
 								<li class="{{ setActiv('book/research') }}"><a href="{{ route('book','research') }}"><i class="fa fa-graduation-cap fa-fw"></i> Buku PKL</a></li>
+								<li class="{{ setActiv('member') }}"><a href="{{ route('member') }}"><i class="fa fa-group fa-fw"></i> Anggota</a></li>
+								<li class="{{ setActiv('borrow') }}"><a href="{{ route('borrow') }}"><i class="fa fa-retweet fa-fw"></i> Peminjaman</a></li>
+								<li class="{{ setActiv('report') }}"><a href="{{ route('report') }}"><i class="fa fa-line-chart fa-fw"></i> Laporan</a></li>
 								<li class="{{ setActiv('guest') }}"><a href="{{ route('guest') }}"><i class="fa fa-comments fa-fw"></i> Buku Tamu</a></li>
 							</ul>
 						</div><!--/.nav-collapse -->
@@ -93,7 +96,7 @@
 		</header>
 		<div class="visible-xs">
 			<div class="container">
-				<form action="{{ route('book') }}" method="get" role="form">
+				<form action="" method="get" role="form">
 					<div class="input-group searchbox">
 						<input class="form-control" type="text" name="q" placeholder="Search...">
 						<span class="input-group-addon">
@@ -116,7 +119,7 @@
 						{{ address(1) }}<br>{{ address(2) }}
 					</div>
 					<div class="col-xs-12 col-md-6 col-md-pull-6 pt-10">
-						<div class="text-right-xs pb-5">Copyright &copy; 2015 by Imancha - All rights reserved</div>
+						<div class="text-right-xs pb-5">Copyright &copy; 2015 by <a href="https://www.facebook.com/imancha.os" target="_blank" style="color:#AAA;">Imancha</a> - All rights reserved</div>
 					</div>
 				</div>
 			</div>

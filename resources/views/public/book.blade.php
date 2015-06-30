@@ -21,7 +21,7 @@
 	<div class="s-10"></div>
 	@if(count($books) > 0)
 		@if(count($subjects) > 0)
-			<div class="container">
+			<div class="container no-print">
 				<div class="row">
 					<div class="col-md-12">
 						<div class="bg-dark p-10">
@@ -58,12 +58,50 @@
 								</thead>
 								<tbody>
 								@foreach($books as $book)
-									<?php $authors = [] ?>
+									<?php $authors = []; $borrowed = false; $nama=$waktu=$alamat=''; ?>
 									@foreach($book->author as $author)
 										<?php $authors[] = $author->nama ?>
 									@endforeach
-									<tr id="{{ $book->id }}">
-										<td>{{ $book->id }}</td>
+									@foreach($borrows as $borrow)
+										@if($borrow->book_id == $book->id)
+											<?php
+												$borrowed = true;
+												$nama = $borrow->member->nama;
+												$alamat = $borrow->member->alamat;
+												$waktu = $borrow->waktu_pinjam;
+												break;
+											?>
+										@endif
+									@endforeach
+									<tr id="{{ $book->id }}"{{ $borrowed ? ' class=text-red' : '' }}>
+										<td class="nested">
+											@if($borrowed)
+												<a href="javascript:;" class="text-red underline" data-target="#view-{{ $book->id }}" data-toggle="modal">{{ $book->id }}</a>
+												<div class="modal fade" id="view-{{ $book->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+													<div class="modal-dialog">
+														<div class="modal-content flat">
+															<div class="modal-body table-responsive">
+																<table class="table table-striped text-black">
+																	<thead><tr><th colspan="3" class="text-center">DATA PEMINJAMAN</th></tr>
+																	</thead>
+																	<tbody>
+																		<tr><td><strong>Kode Buku</strong></td><td> : </td><td> {{ $book->id }}</td></tr>
+																		<tr><td><strong>Judul Buku</strong></td><td> : </td><td> {{ $book->judul }}</td></tr>
+																		<tr><td><strong>Nama Peminjam</strong></td><td> : </td><td> {{ $nama }}</td></tr>
+																		<tr><td><strong>Alamat/Divisi</strong></td><td> : </td><td> {{ $alamat }}</td></tr>
+																		<tr><td><strong>Waktu Pinjam</strong></td><td> : </td><td> {{ tanggal($waktu) }}</td></tr>
+																	</tbody>
+																</table>
+																<button type="button" class="btn btn-danger pull-left flat" style="letter-spacing:3px">DIPINJAM</button>
+																<button type="button" class="btn btn-default pull-right flat" data-dismiss="modal">Close</button>
+															</div>
+														</div>
+													</div>
+												</div>
+											@else
+												{{ $book->id }}
+											@endif
+										</td>
 										<td>{{ $book->judul }}</td>
 										<td>{{ implode(', ',$authors) }}</td>
 										<td>{{ $book->publisher->nama }}</td>
@@ -88,7 +126,7 @@
 							</table>
 							<hr>
 						</div>
-						<div class="row clearfix">
+						<div class="row clearfix no-print">
 							<div class="col-md-12">
 								<span class="pull-left">
 									<small class="text-muted">
@@ -131,7 +169,7 @@
 					return (elem.textContent || elem.innerText || "").toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
 				}
 			});
-			$('td:containsN("'+search+'")').each(function(index, value){
+			$('td:containsN("'+search+'")').not('.nested').each(function(index, value){
 				$(this).html(function (i, str) {
 					return str.replace(new RegExp("("+search+")",'gi'), "<span style='background:#E5E5E5;border-radius:10%;'>$1</span>");
 				});

@@ -15,17 +15,17 @@
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-md-12 col-sm-12 col-xs-12">
-								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\MemberController@store') }}">
+								<form id="form4" class="form-horizontal icon-validation" role="form" method="POST" action="{{ action('Admin\MemberController@store') }}" parsley-validate>
 									<input type="hidden" name="_token" value="{{ csrf_token() }}">
 									<div class="form-group">
-										<label class="col-sm-3 control-label">NIP/NIM/NIS<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">NIP/NIM/NIS</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="text" name="id" class="form-control" value="{{ old('id') }}" parsley-type="digits" parsley-minlength="3" parsley-required="true" autocomplete="off" autofocus />
 										</div>
 									</div>
 									<div class="form-group">
-										<label class="col-sm-3 control-label">Nama<span class="c-gray">*</span></label>
+										<label class="col-sm-3 control-label">Nama</label>
 										<div class="col-sm-7 input-icon right">
 											<i class="fa"></i>
 											<input type="text" name="nama" class="form-control" value="{{ old('nama') }}" parsley-minlength="3" parsley-required="true" autocomplete="off" />
@@ -87,7 +87,7 @@
 										</div>
 									</div>
 									<div class="form-group text-center">
-										<button class="btn btn-danger" type="submit">Submit</button>
+										<button class="btn btn-danger" onclick="javascript:$('#form4').parsley('validate');">Submit</button>
 										<button type="reset" class="btn btn-default">Clear</button>
 									</div>
 								</form>
@@ -101,6 +101,8 @@
 @endsection
 
 @section('script')
+	<script src="{{ asset('/assets/plugins/parsley/parsley.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/parsley/parsley.extend.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/icheck/custom.js') }}"></script>
 	<script src="{{ asset('/assets/js/form.js') }}"></script>
 @endsection

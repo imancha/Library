@@ -31,10 +31,14 @@
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						<div class="row">
-							<div class="col-md-9 col-sm-9 col-xs-12">
-								<h2 class="panel-title w-100">Pemasukan Buku</h2>
+							<div class="col-md-3 col-sm-4 col-xs-12 pull-left">
+								<select class="form-control show-menu-arrow flat" name="tipe">
+									<option value="1">Anggota</option>
+									<option value="3" selected>Buku</option>
+									<option value="2">Peminjaman</option>
+								</select>
 							</div>
-							<div class="col-md-3 col-sm-9 col-xs-12">
+							<div class="col-md-3 col-sm-4 col-xs-12 pull-right">
 								<div class="input-group transparent">
 									<input class="form-control" id="range" type="text">
 									<span class="input-group-addon">
@@ -48,7 +52,7 @@
 						<div class="row">
 							<div class="col-md-3 col-sm-3 col-xs-12 p-5">
 								<div class="withScroll" data-height="400px">
-									<table class="table m-b-0">
+									<table class="table table-hover m-b-0">
 										<thead>
 											<tr>
 												<th class="text-center">#</th>
@@ -70,31 +74,6 @@
 								<figure id="chart" style="height:400px"></figure>
 							</div>
 						</div>
-						<div class="md-modal md-effect-3" id="exists" style="width:95%;max-width:95%;">
-							<div class="md-content md-content-white">
-								<h3><span id="judul"></span> <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
-								<div class="p-10 withScroll" data-height="400px">
-									<div class="table-responsive">
-										<table class="table table-hover table-vatop">
-											<thead>
-												<tr>
-													<th>Kode</th>
-													<th>Judul</th>
-													<th>Pengarang</th>
-													<th>Penerbit</th>
-													<th>Tahun</th>
-													<th>Subyek</th>
-													<th>Rak</th>
-													<th>Jenis</th>
-												</tr>
-											</thead>
-											<tbody></tbody>
-										</table>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="md-overlay"></div>
 					</div>
 				</div>
 			</div>
@@ -443,11 +422,30 @@
 				</div>
 			</div>
 		</div>
+		<div class="md-modal md-effect-3" id="exists" style="width:95%;max-width:95%;">
+			<div class="md-content md-content-white">
+				<h3><span id="judul"></span> <span class="pull-right" title="Close"><a class="c-dark md-close" href=""><i class="fa fa-times"></i></a></span></h3>
+				<div class="p-10 withScroll" data-height="400px">
+					<div class="table-responsive">
+						<h3 class="text-center visible-print"><u id="rjudul"></u></h3>
+						<table class="table table-hover table-vatop">
+							<thead></thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+				<div class="p-10">
+					<button class="btn btn-dark btn-transparent btn-rounded" id="bprint">Print</button>
+				</div>
+			</div>
+		</div>
+		<div class="md-overlay"></div>
 	</div>
 @endsection
 
 @section('script')
 	<script src="{{ asset('/assets/plugins/bootstrap-fileinput/bootstrap.file-input.js') }}"></script>
+	<script src="{{ asset('/assets/plugins/jquery-printElement/jquery.printElement.min.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/charts-d3/d3.v3.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/charts-d3/nv.d3.js') }}"></script>
 	<script src="{{ asset('/assets/plugins/xcharts/xcharts.min.js') }}"></script>
@@ -495,16 +493,12 @@
 		$('input:text[name="title"]').val($.trim($('#title').text()));
 		$('textarea[name="post"]').val($.trim($('#post').text()));
 		$('input[name="_file"]').val($('img#img').attr('alt'));
+		var sd = $('select[name="tipe"]').val();
 		var range = $('#range');
-		@if(count($bdate) == 1)
-		var startDate = Date.create('{!! date('F j, Y', strtotime('-30 day', strtotime($bdate->tanggal_masuk))) !!}'),
-				endDate		= Date.create('{!! date('F j, Y', strtotime($bdate->tanggal_masuk)) !!}');
-		@else
 		var startDate	= Date.create().addDays(-29),
 				endDate		= Date.create();
-		@endif
 		range.val(startDate.format('{yyyy}/{MM}/{dd}') + ' - ' + endDate.format('{yyyy}/{MM}/{dd}'));
-		ajaxLoadChart(startDate,endDate);
+		ajaxLoadChart(startDate,endDate,sd);
 		range.daterangepicker({
 			opens: 'left',
 			startDate: startDate,
@@ -515,8 +509,15 @@
 				'7 Hari Terakhir': [Date.create().addDays(-6), 'today'],
 				'30 Hari Terakhir': [Date.create().addDays(-29), 'today']
 			}
-		},function(start, end){
-			ajaxLoadChart(start, end);
+		},function(start, end, sd){
+			ajaxLoadChart(start, end, sd);
+		});
+		$('select[name="tipe"]').on('change', function(){
+			sd = $('select[name="tipe"]').val();
+			startDate	= Date.create().addDays(-29);
+			endDate		= Date.create();
+			range.val(startDate.format('{yyyy}/{MM}/{dd}') + ' - ' + endDate.format('{yyyy}/{MM}/{dd}'));
+			ajaxLoadChart(startDate,endDate,sd);
 		});
 		var tt = $('<div class="ex-tooltip">').appendTo('body'),
 			topOffset = -32;
@@ -551,11 +552,11 @@
 				tt.hide();
 			},
 			"click": function(d, i) {
-				exists(d.x.format('{yyyy}/{MM}/{dd}'));
+				exists(d.x.format('{yyyy}/{MM}/{dd}'),sd);
 			},
 		};
 		var chart = new xChart('line-dotted', data, '#chart' , opts);
-		function ajaxLoadChart(startDate,endDate) {
+		function ajaxLoadChart(startDate,endDate,sd) {
 			if(!startDate || !endDate){
 				chart.setData({
 					"xScale" : "time",
@@ -571,7 +572,8 @@
 			}
 			$.getJSON("{{ action('Admin\HomeController@getData') }}", {
 				start:	startDate.format('{yyyy}-{MM}-{dd}'),
-				end:	endDate.format('{yyyy}-{MM}-{dd}')
+				end:	endDate.format('{yyyy}-{MM}-{dd}'),
+				id: sd
 			}, function(data) {
 				var set = [];
 				var i = 0;
@@ -588,12 +590,12 @@
 						'<tr>'+
 							'<td class="text-center">'+(++i)+'</td>'+
 							'<td class="text-center">'+this.label+'</td>'+
-							'<td class="text-center"><a class="badge" href="javascript:;" onclick="exists(\''+this.label+'\');" title="Lihat">'+this.value+'</a></td>'+
+							'<td class="text-center"><a class="badge" href="javascript:;" onclick="exists(\''+this.label+'\','+sd+');" title="Lihat">'+this.value+'</a></td>'+
 						'</tr>'
 					);
 					total += parseInt(this.value);
 				});
-				$('#total').empty().append('<a class="badge" href="javascript:;" onclick="_tbook(\''+startDate.format('{yyyy}-{MM}-{dd}')+'\',\''+endDate.format('{yyyy}-{MM}-{dd}')+'\');" title="Lihat">'+total+'</a>');
+				$('#total').empty().append('<a class="badge" href="javascript:;" onclick="texists(\''+startDate.format('{yyyy}-{MM}-{dd}')+'\',\''+endDate.format('{yyyy}-{MM}-{dd}')+'\','+sd+');" title="Lihat">'+total+'</a>');
 				chart.setData({
 					"xScale" : "time",
 					"yScale" : "linear",
@@ -611,55 +613,76 @@
 			if($('#gallery button').hasClass('sr-only'))
 				$('#gallery button').removeClass('sr-only');
 		});
+		$('#bprint').on('click', function(){
+			$('#exists table').addClass('table-bordered');
+			$('#exists .table-responsive').printElement({
+				overrideElementCSS: ['{{ asset('/assets/css/bootstrap.min.css') }}']
+			});
+			$('#exists table').removeClass('table-bordered');
+		});
 	});
-	function exists(tid){
-		$('#exists table > tbody').empty();
-		$('#exists #judul').empty().text(Date.create(tid).format('{Weekday}, {dd} {Month} {yyyy}'));
-		$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
-			id: tid,
-		}, function(data){
-			var i = 0;
-			$.each(data, function(){
-				$('#exists table > tbody').append(
-					'<tr>'+
-						'<td class="text-left">'+this.kode+'</td>'+
-						'<td class="text-left">'+this.judul+'</td>'+
-						'<td class="text-left">'+this.pengarang+'</td>'+
-						'<td class="text-left">'+this.penerbit+'</td>'+
-						'<td class="text-left">'+this.tahun+'</td>'+
-						'<td class="text-left">'+this.subyek+'</td>'+
-						'<td class="text-left">'+this.rak+'</td>'+
-						'<td class="text-left">'+this.jenis+'</td>'+
-					'</tr>'
-				);
+	function exists(tid,sid){
+			$('#exists table > tbody').empty();
+			$('#exists #judul').empty().text(Date.create(tid).format('{Weekday}, {dd} {Month} {yyyy}'));
+			$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
+				id: tid,
+				it: sid
+			}, function(data){
+				if(sid == 1){
+					$('#exists #rjudul').empty().text('Data Anggota Perpustakaan INTI');
+					$('#exists table > thead').empty().append('<tr><th>NIP/NIM/NIS</th><th>Nama</th><th>Jenis Kelamin</th><th>Jenis Anggota</th><th>Alamat/Divisi</th><th>Waktu Daftar</th></tr>');
+					$.each(data, function(){
+						$('#exists table > tbody').append('<tr><td class="text-left">'+this.kode+'</td><td class="text-left">'+this.nama+'</td><td class="text-left">'+this.jkel+'</td><td class="text-left">'+this.jang+'</td><td class="text-left">'+this.alam+'</td><td class="text-left">'+this.wakt+'</td></tr>');
+					});
+				}else if(sid == 2){
+					$('#exists #rjudul').empty().text('Data Peminjaman Perpustakaan INTI');
+					$('#exists table > thead').empty().append('<tr><th class="text-center">ID</th><th class="text-center" width="100px" >Waktu Pinjam</th><th class="text-center">NIP/NIM/NIS</th><th class="text-center">Nama</th><th class="text-center" width="79px">Kode Buku</th><th class="text-center" width="385px">Judul Buku</th><th class="text-center" width="100px">Waktu Kembali</th><th class="text-center" width="126px">Keterangan</th></tr>');
+					var j = '';
+					$.each(data, function(){
+						j += '<tr><td class="text-center">'+this.kode+'</td><td class="text-center">'+this.pinj+'</td><td class="text-center">'+this.nipn+'</td><td class="text-center">'+this.nama+'</td><td class="text-center" colspan="4" style="padding:0px" class="nested"><table class="table table-bordered table-hover" style="margin-bottom:0px;"><tbody>'+this.buku+'</tbody></table></td></tr>'
+					});
+					$('#exists table > tbody').append(j);
+				}else{
+					$('#exists #rjudul').empty().text('Data Buku Perpustakaan INTI');
+					$('#exists table > thead').empty().append('<tr><th>Kode</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Subyek</th><th>Rak</th><th>Jenis</th></tr>');
+					$.each(data, function(){
+						$('#exists table > tbody').append('<tr><td class="text-left">'+this.kode+'</td><td class="text-left">'+this.judul+'</td><td class="text-left">'+this.pengarang+'</td><td class="text-left">'+this.penerbit+'</td><td class="text-left">'+this.tahun+'</td><td class="text-left">'+this.subyek+'</td><td class="text-left">'+this.rak+'</td><td class="text-left">'+this.jenis+'</td></tr>');
+					});
+				}
+				$('#exists').addClass('md-show');
 			});
-		});
-		$('#exists').addClass('md-show');
-	}
-	function _tbook(istart,iend){
-		$('#exists table > tbody').empty();
-		$('#exists #judul').empty().text(Date.create(istart).format('{dd} {Month} {yyyy}')+' - '+Date.create(iend).format('{dd} {Month} {yyyy}'));
-		$.getJSON("{{ action('Admin\HomeController@getDetail') }}", {
-			start: istart,
-			end: iend,
-		}, function(data){
-			var i = 0;
-			$.each(data, function(){
-				$('#exists table > tbody').append(
-					'<tr>'+
-						'<td class="text-left">'+this.kode+'</td>'+
-						'<td class="text-left">'+this.judul+'</td>'+
-						'<td class="text-left">'+this.pengarang+'</td>'+
-						'<td class="text-left">'+this.penerbit+'</td>'+
-						'<td class="text-left">'+this.tahun+'</td>'+
-						'<td class="text-left">'+this.jenis+'</td>'+
-						'<td class="text-left">'+this.subyek+'</td>'+
-						'<td class="text-left">'+this.rak+'</td>'+
-					'</tr>'
-				);
+		}
+		function texists(istart,iend,sid){
+			$('#exists table > tbody').empty();
+			$('#exists #judul').empty().text(Date.create(istart).format('{dd} {Month} {yyyy}')+' - '+Date.create(iend).format('{dd} {Month} {yyyy}'));
+			$.getJSON("{{ action('PublicController@getDetail') }}", {
+				start: istart,
+				end: iend,
+				it: sid
+			}, function(data){
+				if(sid == 1){
+					$('#exists #rjudul').empty().text('Data Anggota Perpustakaan INTI');
+					$('#exists table > thead').empty().append('<tr><th>NIP/NIM/NIS</th><th>Nama</th><th>Jenis Kelamin</th><th>Jenis Anggota</th><th>Alamat/Divisi</th></tr>');
+					$.each(data, function(){
+						$('#exists table > tbody').append('<tr><td class="text-left">'+this.kode+'</td><td class="text-left">'+this.nama+'</td><td class="text-left">'+this.jkel+'</td><td class="text-left">'+this.jang+'</td><td class="text-left">'+this.alam+'</td></tr>');
+					});
+				}else if(sid == 2){
+					$('#exists #rjudul').empty().text('Data Peminjaman Perpustakaan INTI');
+					$('#exists table > thead').empty().append('<tr><th class="text-center">ID</th><th class="text-center" width="100px" >Waktu Pinjam</th><th class="text-center">NIP/NIM/NIS</th><th class="text-center">Nama</th><th class="text-center" width="79px">Kode Buku</th><th class="text-center" width="385px">Judul Buku</th><th class="text-center" width="100px">Waktu Kembali</th><th class="text-center" width="126px">Keterangan</th></tr>');
+					var j = '';
+					$.each(data, function(){
+						j += '<tr><td class="text-center">'+this.kode+'</td><td class="text-center">'+this.pinj+'</td><td class="text-center">'+this.nipn+'</td><td class="text-center">'+this.nama+'</td><td class="text-center" colspan="4" style="padding:0px" class="nested"><table class="table table-bordered table-hover" style="margin-bottom:0px;"><tbody>'+this.buku+'</tbody></table></td></tr>'
+					});
+					$('#exists table > tbody').append(j);
+				}else{
+					$('#exists #rjudul').empty().text('Data Buku Perpustakaan INTI');
+					$('#exists table > thead').empty().append('<tr><th>Kode</th><th>Judul</th><th>Pengarang</th><th>Penerbit</th><th>Tahun</th><th>Subyek</th><th>Rak</th><th>Jenis</th></tr>');
+					$.each(data, function(){
+						$('#exists table > tbody').append('<tr><td class="text-left">'+this.kode+'</td><td class="text-left">'+this.judul+'</td><td class="text-left">'+this.pengarang+'</td><td class="text-left">'+this.penerbit+'</td><td class="text-left">'+this.tahun+'</td><td class="text-left">'+this.subyek+'</td><td class="text-left">'+this.rak+'</td><td class="text-left">'+this.jenis+'</td></tr>');
+					});
+				}
+				$('#exists').addClass('md-show');
 			});
-		});
-		$('#exists').addClass('md-show');
-	}
+		}
 	</script>
 @endsection
